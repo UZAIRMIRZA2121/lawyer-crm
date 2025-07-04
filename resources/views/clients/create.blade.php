@@ -58,10 +58,45 @@
                                 target="_blank">View Back</a></small>
                     @endif
                 </div>
+                <div class="mb-3 col-md-6">
+                    <label class="form-label">Assigned To</label>
+                    <select id="assigned_to_select" name="assigned_to[]" multiple class="form-control">
+                        @foreach ($users as $user)
+                            @if ($user->role === 'team')
+                                <option value="{{ $user->id }}"
+                                    {{ isset($client) && $client->assignedUsers->contains($user->id) ? 'selected' : '' }}>
+                                    {{ $user->name }}
+                                </option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
+
+
+
             </div>
 
             <button type="submit" class="btn btn-success">Save</button>
             <a href="{{ route('clients.index') }}" class="btn btn-secondary">Back</a>
         </form>
     </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <script>
+        $(document).ready(function() {
+            $('#assigned_to_select').select2({
+                placeholder: "Select team members",
+                allowClear: true,
+                width: '100%'
+            });
+        });
+    </script>
 @endsection

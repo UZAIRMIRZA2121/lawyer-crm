@@ -9,27 +9,40 @@ class ClientController extends Controller
     // Display all clients
     public function index()
     {
-        $clients = Client::latest()->paginate(10);
+        $user = auth()->user();
+
+        if ($user->role === 'team') {
+            // Only clients assigned to this user
+            $clients = $user->assignedClients()->latest()->paginate(10);
+        } else {
+            // Admin can see all
+            $clients = Client::with('assignedUsers')->latest()->paginate(10);
+        }
+
         return view('clients.index', compact('clients'));
     }
+
 
     // Show form to create a new client
     public function create()
     {
-        return view('clients.create');
+        $users = \App\Models\User::where('role', 'team')->get(); // Get all team members
+        return view('clients.create', compact('users'));
     }
 
     // Store a new client
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|string|max:255',
             'email' => 'nullable|email',
             'cnic_front' => 'nullable|image|max:2048',
             'cnic_back' => 'nullable|image|max:2048',
+            'assigned_to' => 'array|nullable',
+            'assigned_to.*' => 'exists:users,id',
         ]);
 
-        // Create the client first (without images)
+        // Step 1: Create client without image paths
         $client = Client::create([
             'name' => $request->name,
             'cnic' => $request->cnic,
@@ -38,28 +51,33 @@ class ClientController extends Controller
             'address' => $request->address,
         ]);
 
-        // Create folder name: {id}-{slugified_name}
+        // Step 2: Create folder for storing CNICs
         $folder = 'clients/' . $client->id . '-' . \Str::slug($client->name);
-
         $updateData = [];
 
-        // Store CNIC front image if present
+        // Step 3: Handle CNIC front upload
         if ($request->hasFile('cnic_front')) {
             $updateData['cnic_front'] = $request->file('cnic_front')->store($folder, 'public');
         }
 
-        // Store CNIC back image if present
+        // Step 4: Handle CNIC back upload
         if ($request->hasFile('cnic_back')) {
             $updateData['cnic_back'] = $request->file('cnic_back')->store($folder, 'public');
         }
 
-        // Update the client record with image paths
+        // Step 5: Update client with image paths if any
         if (!empty($updateData)) {
             $client->update($updateData);
         }
 
+        // Step 6: Assign multiple users to this client
+        if ($request->filled('assigned_to')) {
+            $client->assignedUsers()->sync($request->assigned_to);
+        }
+
         return redirect()->route('clients.index')->with('success', 'Client created successfully.');
     }
+
 
 
 
@@ -72,20 +90,23 @@ class ClientController extends Controller
     // Show form to edit a client
     public function edit(Client $client)
     {
-        return view('clients.edit', compact('client'));
+        $users = \App\Models\User::where('role', 'team')->get(); // Get all team members
+        return view('clients.edit', compact('client', 'users'));
     }
 
     // Update a client
     public function update(Request $request, Client $client)
     {
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|string|max:255',
             'email' => 'nullable|email',
             'cnic_front' => 'nullable|image|max:2048',
             'cnic_back' => 'nullable|image|max:2048',
+            'assigned_to' => 'array|nullable',
+            'assigned_to.*' => 'exists:users,id',
         ]);
 
-        // Update all text fields first
+        // Step 1: Update text fields
         $client->update([
             'name' => $request->name,
             'cnic' => $request->cnic,
@@ -94,36 +115,37 @@ class ClientController extends Controller
             'address' => $request->address,
         ]);
 
-        // Determine folder based on updated name
+        // Step 2: Define folder path
         $folder = 'clients/' . $client->id . '-' . \Str::slug($client->name);
-
         $updateData = [];
 
-        // Handle CNIC front image
+        // Step 3: Update CNIC front image
         if ($request->hasFile('cnic_front')) {
-            // Optionally delete old image
             if ($client->cnic_front && \Storage::disk('public')->exists($client->cnic_front)) {
                 \Storage::disk('public')->delete($client->cnic_front);
             }
-
-            // Store new file
             $updateData['cnic_front'] = $request->file('cnic_front')->store($folder, 'public');
         }
 
-        // Handle CNIC back image
+        // Step 4: Update CNIC back image
         if ($request->hasFile('cnic_back')) {
-            // Optionally delete old image
             if ($client->cnic_back && \Storage::disk('public')->exists($client->cnic_back)) {
                 \Storage::disk('public')->delete($client->cnic_back);
             }
-
-            // Store new file
             $updateData['cnic_back'] = $request->file('cnic_back')->store($folder, 'public');
         }
 
-        // Update image paths if needed
+        // Step 5: Update image paths
         if (!empty($updateData)) {
             $client->update($updateData);
+        }
+
+        // Step 6: Sync assigned users (Many-to-Many)
+        if ($request->filled('assigned_to')) {
+            $client->assignedUsers()->sync($request->assigned_to);
+        } else {
+            // If no user selected, detach all
+            $client->assignedUsers()->detach();
         }
 
         return redirect()->route('clients.index')->with('success', 'Client updated successfully.');

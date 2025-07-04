@@ -18,4 +18,9 @@ class Client extends Model
         'cnic_front', // ✅ Add this
         'cnic_back',  // ✅ And this
     ];
+    public function assignedUsers()
+    {
+        return $this->belongsToMany(User::class, 'client_user');
+    }
+  
 }

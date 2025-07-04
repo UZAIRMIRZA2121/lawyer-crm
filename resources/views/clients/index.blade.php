@@ -7,8 +7,9 @@
         @if (session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
-
-        <a href="{{ route('clients.create') }}" class="btn btn-primary mb-3">Add New Client</a>
+        @if (Auth::user()->role == 'admin')
+            <a href="{{ route('clients.create') }}" class="btn btn-primary mb-3">Add New Client</a>
+        @endif
 
         <div class="table-responsive">
             <table class="table table-bordered table-striped align-middle">
@@ -19,6 +20,7 @@
                         <th>Contact No.</th>
                         <th>Email</th>
                         <th>Address</th>
+                        <th>Assigned Users</th>
                         <th class="text-nowrap">Actions</th>
                     </tr>
                 </thead>
@@ -30,6 +32,11 @@
                             <td>{{ $client->contact_no }}</td>
                             <td>{{ $client->email }}</td>
                             <td>{{ $client->address }}</td>
+                            <td>
+                                @foreach ($client->assignedUsers as $user)
+                                    <span class="badge bg-primary">{{ $user->name }}</span>
+                                @endforeach
+                            </td>
                             <td class="text-nowrap">
                                 <a href="{{ route('clients.show', $client) }}" class="btn btn-info btn-sm">View</a>
                                 <a href="{{ route('clients.edit', $client) }}" class="btn btn-warning btn-sm">Edit</a>
@@ -39,7 +46,7 @@
                                     @method('DELETE')
                                     <button class="btn btn-danger btn-sm">Delete</button>
                                 </form>
-                              
+
                             </td>
                         </tr>
                     @endforeach

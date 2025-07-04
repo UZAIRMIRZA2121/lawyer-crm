@@ -12,13 +12,17 @@ use App\Http\Controllers\DocumentController;
 Route::get('/', function () {
     return view('home'); // Create a 'dashboard.blade.php' if you want a landing page
 })->name('home');
+Auth::routes();
 
-Route::resource('clients', ClientController::class);
-Route::resource('cases', CaseController::class);
-Route::resource('hearings', HearingController::class);
-Route::resource('documents', DocumentController::class);
+// Protected routes (only for authenticated users)
+Route::middleware(['auth'])->group(function () {
 
-// Nested resource for case files
-Route::resource('case.files', CaseFileController::class)->shallow();
+    Route::resource('clients', ClientController::class);
+    Route::resource('cases', CaseController::class);
+    Route::resource('hearings', HearingController::class);
+    Route::resource('documents', DocumentController::class);
 
-Route::post('/case/{case}/files', [CaseFileController::class, 'store'])->name('case.files.store');
+    // Nested resource for case files
+    Route::resource('case.files', CaseFileController::class)->shallow();
+    Route::post('/case/{case}/files', [CaseFileController::class, 'store'])->name('case.files.store');
+});

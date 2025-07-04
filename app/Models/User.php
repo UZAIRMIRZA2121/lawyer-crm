@@ -19,19 +19,24 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
+        'role',
+        'status',
+        'profile_img',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'status' => 'boolean',
+    ];
+
 
     /**
      * Get the attributes that should be cast.
@@ -45,4 +50,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function assignedClients()
+    {
+        return $this->belongsToMany(Client::class, 'client_user');
+    }
+
 }
