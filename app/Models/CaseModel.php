@@ -17,6 +17,7 @@ class CaseModel extends Model
         'status',
         'hearing_date',
         'judge_name',
+        'amount', // ✅ add this line
     ];
 
     public function client()
@@ -24,7 +25,16 @@ class CaseModel extends Model
         return $this->belongsTo(Client::class);
     }
     public function files()
-{
-    return $this->hasMany(\App\Models\CaseFile::class, 'case_id');
-}
+    {
+        return $this->hasMany(\App\Models\CaseFile::class, 'case_id');
+    }
+    public function hearings()
+    {
+        return $this->hasMany(Hearing::class, 'case_id');
+    }
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'case_id');
+    }
+
 }

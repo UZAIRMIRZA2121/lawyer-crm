@@ -21,7 +21,7 @@
     </style>
 
     <!-- Toggle Button for mobile -->
-    <nav class="navbar navbar-light bg-light d-md-none">
+    <nav class="navbar navbar-light bg-white d-md-none">
         <div class="container-fluid">
             <button class="btn btn-outline-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
                 ☰ Menu
@@ -30,12 +30,14 @@
     </nav>
 
     <!-- Sidebar for larger screens -->
-    <div class="d-none d-md-block col-md-2 sidebar bg-light">
+    <div class="d-none d-md-block col-md-1 sidebar bg-white">
+              <a href="{{ route('dashboard') }}"
+                class="sidebar-link d-block {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
         <a href="{{ route('clients.index') }}"
             class="sidebar-link {{ request()->routeIs('clients.*') ? 'active' : '' }}">Clients</a>
         <a href="{{ route('cases.index') }}"
             class="sidebar-link {{ request()->routeIs('cases.*') ? 'active' : '' }}">Cases</a>
-        <a href="{{ route('hearings.index') }}"
+        <a href="#"
             class="sidebar-link {{ request()->routeIs('hearings.*') ? 'active' : '' }}">Hearings</a>
         <a href="#" class="sidebar-link">Documents</a>
         <a class="sidebar-link text-danger text-bold" href="{{ route('logout') }}"
@@ -54,11 +56,13 @@
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
         </div>
         <div class="offcanvas-body">
+               <a href="{{ route('dashboard') }}"
+                class="sidebar-link d-block {{ request()->routeIs('dashboard.*') ? 'active' : '' }}">Dashboard</a>
             <a href="{{ route('clients.index') }}"
                 class="sidebar-link d-block {{ request()->routeIs('clients.*') ? 'active' : '' }}">Clients</a>
             <a href="{{ route('cases.index') }}"
                 class="sidebar-link d-block {{ request()->routeIs('cases.*') ? 'active' : '' }}">Cases</a>
-            <a href="{{ route('hearings.index') }}"
+            <a href="#"
                 class="sidebar-link d-block {{ request()->routeIs('hearings.*') ? 'active' : '' }}">Hearings</a>
             <a href="#" class="sidebar-link d-block">Documents</a>
             <a class="sidebar-link d-block btn btn-danger" href="{{ route('logout') }}"

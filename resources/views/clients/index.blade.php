@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container-fluid px-3 py-4">
+    <div class="container">
         <h1 class="mb-4">Clients</h1>
 
         @if (session('success'))
@@ -40,14 +40,16 @@
                             <td class="text-nowrap">
                                 <a href="{{ route('clients.show', $client) }}" class="btn btn-info btn-sm">View</a>
                                 <a href="{{ route('clients.edit', $client) }}" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="{{ route('cases.index', ['client_id' => $client->id]) }}"
+                                    class="btn btn-secondary btn-sm">Cases</a>
                                 <form action="{{ route('clients.destroy', $client) }}" method="POST" class="d-inline"
                                     onsubmit="return confirm('Are you sure?');">
                                     @csrf
                                     @method('DELETE')
                                     <button class="btn btn-danger btn-sm">Delete</button>
                                 </form>
-
                             </td>
+
                         </tr>
                     @endforeach
                 </tbody>

@@ -9,7 +9,11 @@
         @if (session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
-
+        @if (auth()->user()->role === 'admin')
+            <div class="alert alert-info">
+                <strong>Total Transactions Amount:</strong> {{ number_format($totalTransactionsAmount, 2) }}
+            </div>
+        @endif
         <div class="table-responsive">
             <table class="table table-bordered table-striped align-middle">
                 <thead class="table-light">
@@ -20,6 +24,8 @@
                         <th>Status</th>
                         <th>Hearing Date</th>
                         <th>Judge</th>
+                        {{-- <th>Paid Amount</th> <!-- 👈 New Column --> --}}
+
                         <th class="text-nowrap">Actions</th>
                     </tr>
                 </thead>
@@ -41,6 +47,8 @@
 
 
                             <td>{{ $case->judge_name ?? 'N/A' }}</td>
+                            {{-- <td>{{ number_format($case->amount) ?? 'N/A' }} /{{ number_format($case->transactions->sum('amount'), 2) }}</td> <!-- 👈 New Data --> --}}
+
                             <td class="text-nowrap">
                                 <div class="d-flex flex-wrap gap-1">
                                     <a href="{{ route('cases.show', $case) }}" class="btn btn-info btn-sm">View</a>
@@ -54,7 +62,21 @@
                                     <a href="{{ route('case.files.create', $case) }}" class="btn btn-primary btn-sm">
                                         Upload Files
                                     </a>
+
+                                    <a href="{{ route('hearings.index', $case) }}" class="btn btn-success btn-sm">View
+                                        Hearings</a>
+                                    @if (auth()->user()->role === 'admin')
+                                        <a href="{{ route('cases.transactions.index', $case) }}"
+                                            class="btn btn-primary btn-sm">
+                                             Payment
+                                        </a>
+                                    @endif  
+                                   
+
+
                                 </div>
+
+
                             </td>
 
                         </tr>

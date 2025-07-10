@@ -15,6 +15,7 @@
 
     <!-- Bootstrap 5 CSS (Required) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
     <!-- Custom Style -->
     <style>
@@ -34,6 +35,22 @@
             font-weight: bold;
         }
     </style>
+    <style>
+    .container {
+        margin: auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 8px;
+    }
+
+    .form-label {
+        font-weight: bold;
+    }
+
+    .btn {
+        margin-right: 10px;
+    }
+</style>
 
     <!-- Vite Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])

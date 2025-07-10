@@ -8,23 +8,68 @@ use Illuminate\Http\Request;
 
 class CaseFileController extends Controller
 {
-    public function index(CaseModel $case)
-    {
-        $files = $case->files()->latest()->get();
-        return view('case-files.index', compact('case', 'files'));
+  public function index(CaseModel $case)
+{
+    $user = auth()->user();
+
+    // Enforce assignment check if user role is 'team'
+    if ($user->role === 'team') {
+        $client = $case->client;
+
+        $isAssigned = $client->assignedUsers()
+            ->where('user_id', $user->id)
+            ->exists();
+
+        if (!$isAssigned) {
+            abort(403, 'You are not assigned to this client.');
+        }
     }
+
+    $files = $case->files()->latest()->get();
+
+    return view('case-files.index', compact('case', 'files'));
+}
 
     public function create(CaseModel $case)
     {
+        $user = auth()->user();
+
+        // Only enforce assignment check if user is a team member
+        if ($user->role === 'team') {
+            $client = $case->client; // assuming $case->client relationship exists
+
+            $isAssigned = $client->assignedUsers()
+                ->where('user_id', $user->id)
+                ->exists();
+
+            if (!$isAssigned) {
+                abort(403, 'You are not assigned to this client.');
+            }
+        }
+
         $all_case_files = CaseFile::where('case_id', $case->id)
             ->orderBy('created_at', 'desc')
             ->get();
 
         return view('case-files.create', compact('case', 'all_case_files'));
     }
+
     public function store(Request $request, CaseModel $case)
     {
+        $user = auth()->user();
 
+        // Only enforce assignment check if user is a team member
+        if ($user->role === 'team') {
+            $client = $case->client; // assuming case has client() relationship
+
+            $isAssigned = $client->assignedUsers()
+                ->where('user_id', $user->id)
+                ->exists();
+
+            if (!$isAssigned) {
+                abort(403, 'You are not assigned to this client.');
+            }
+        }
 
         // Initialize the sequence properly
         $sequence = $case->files()->max('sequence') ?? 0;
@@ -47,7 +92,7 @@ class CaseFileController extends Controller
 
                 CaseFile::create([
                     'case_id' => $case->id,
-                    'user_id' => auth()->id() ?? 1,
+                    'user_id' => $user->id ?? 1,
                     'file_path' => $filePath,
                     'sequence' => $sequence,
                 ]);

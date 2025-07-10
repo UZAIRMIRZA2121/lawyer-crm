@@ -2,63 +2,68 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Hearing;
+use App\Models\CaseModel;
 use Illuminate\Http\Request;
 
 class HearingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    // Show list of hearings for a case
+    public function index(CaseModel $case)
     {
-        //
+        $hearings = $case->hearings()->latest()->paginate(10);
+
+        return view('hearings.index', compact('case', 'hearings'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    // Show form to create hearing
+    public function create(CaseModel $case)
     {
-        //
+        return view('hearings.create', compact('case'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    // Store new hearing
+    public function store(Request $request, CaseModel $case)
     {
-        //
+      
+        $request->validate([
+            'judge_name' => 'required|string|max:255',
+            'judge_remarks' => 'nullable|string',
+            'my_remarks' => 'nullable|string',
+            'next_hearing' => 'nullable|date',
+            'priority' => 'required|in:important,normal',
+        ]);
+        $case->hearings()->create($request->all());
+
+        return redirect()->route('hearings.index', $case)->with('success', 'Hearing created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    // Show form to edit hearing
+    public function edit(CaseModel $case, Hearing $hearing)
     {
-        //
+        return view('hearings.edit', compact('case', 'hearing'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    // Update hearing
+    public function update(Request $request, CaseModel $case, Hearing $hearing)
     {
-        //
+        $request->validate([
+            'judge_name' => 'required|string|max:255',
+            'judge_remarks' => 'nullable|string',
+            'my_remarks' => 'nullable|string',
+            'next_hearing' => 'nullable|date',
+            'priority' => 'required|in:important,normal',
+        ]);
+
+        $hearing->update($request->all());
+
+        return redirect()->route('hearings.index', $case)->with('success', 'Hearing updated successfully.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    // Delete hearing
+    public function destroy(CaseModel $case, Hearing $hearing)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $hearing->delete();
+        return redirect()->route('hearings.index', $case)->with('success', 'Hearing deleted successfully.');
     }
 }

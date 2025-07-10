@@ -7,11 +7,49 @@ use Illuminate\Http\Request;
 
 class CaseController extends Controller
 {
-    public function index()
-    {
-        $cases = CaseModel::with('client')->paginate(10);
-        return view('cases.index', compact('cases'));
+   public function index(Request $request)
+{
+    $user = auth()->user();
+    $query = CaseModel::query();
+
+    if ($request->has('client_id')) {
+        $client = Client::findOrFail($request->client_id);
+
+        // Only enforce assignment check if user is a team member
+        if ($user->role === 'team') {
+            $isAssigned = $client->assignedUsers()
+                ->where('user_id', $user->id)
+                ->exists();
+
+            if (!$isAssigned) {
+                abort(403, 'You are not assigned to this client.');
+            }
+        }
+
+        // Filter cases for this client
+        $query->where('client_id', $client->id);
+    } else {
+        // No client_id provided
+        if ($user->role === 'team') {
+            // Show only cases where client is assigned to this team member
+            $query->whereHas('client.assignedUsers', function ($q) use ($user) {
+                $q->where('user_id', $user->id);
+            });
+        }
+        // else: show all cases for other roles
     }
+
+    $cases = $query->latest()->paginate(15);
+
+    // If admin, calculate sum of all transactions
+    $totalTransactionsAmount = null;
+    if ($user->role === 'admin') {
+        $totalTransactionsAmount = \App\Models\Transaction::sum('amount');
+    }
+
+    return view('cases.index', compact('cases', 'totalTransactionsAmount'));
+}
+
 
     public function create()
     {
@@ -52,9 +90,33 @@ class CaseController extends Controller
 
     public function edit(CaseModel $case)
     {
-        $clients = Client::orderBy('name')->get();
+        $user = auth()->user();
+
+        // Enforce assignment check only if role is 'team'
+        if ($user->role === 'team') {
+            $client = $case->client; // assuming $case has a client() relationship
+
+            $isAssigned = $client->assignedUsers()
+                ->where('user_id', $user->id)
+                ->exists();
+
+            if (!$isAssigned) {
+                abort(403, 'You are not assigned to this client.');
+            }
+
+            // Fetch only clients assigned to this team member
+            $clients = Client::whereHas('assignedUsers', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })->orderBy('name')->get();
+        } else {
+            // For other roles, get all clients
+            $clients = Client::orderBy('name')->get();
+        }
+
         return view('cases.edit', compact('case', 'clients'));
     }
+
+
 
     public function update(Request $request, CaseModel $case)
     {
