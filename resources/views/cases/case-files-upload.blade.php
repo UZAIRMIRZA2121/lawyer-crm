@@ -42,7 +42,7 @@
                         <td>{{ $file->user->name }}</td>
                         <td>{{ $file->created_at->format('d-m-Y h:i A') }}</td>
                         <td>
-                            <a href="{{ asset('storage/' . $file->file_path) }}" target="_blank" class="btn btn-sm btn-success">Download</a>
+                            <a href="{{ asset('public/storage/' . $file->file_path) }}" target="_blank" class="btn btn-sm btn-success">Download</a>
                         </td>
                     </tr>
                 @endforeach
