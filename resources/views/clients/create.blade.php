@@ -45,7 +45,7 @@
                     <label class="form-label">CNIC Front Image</label>
                     <input type="file" name="cnic_front" class="form-control">
                     @if (!empty($client->cnic_front))
-                        <small class="d-block mt-1">Current: <a href="{{ asset('public/storage/' . $client->cnic_front) }}"
+                        <small class="d-block mt-1">Current: <a href="{{ asset( 'storage/storage/' . $client->cnic_front) }}"
                                 target="_blank">View Front</a></small>
                     @endif
                 </div>
@@ -54,7 +54,7 @@
                     <label class="form-label">CNIC Back Image</label>
                     <input type="file" name="cnic_back" class="form-control">
                     @if (!empty($client->cnic_back))
-                        <small class="d-block mt-1">Current: <a href="{{ asset('public/storage/' . $client->cnic_back) }}"
+                        <small class="d-block mt-1">Current: <a href="{{ asset( 'storage/storage/' . $client->cnic_back) }}"
                                 target="_blank">View Back</a></small>
                     @endif
                 </div>

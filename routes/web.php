@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CaseController;
@@ -8,34 +9,35 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TransactionController;
 
-
-// Dashboard Home (optional)
+// Home (public landing page)
 Route::get('/', function () {
-    return view('home'); // Create a 'dashboard.blade.php' if you want a landing page
+    return view('home'); // Create resources/views/home.blade.php if you want a homepage
 })->name('home');
+
+// Laravel Auth routes (login, register, etc.)
 Auth::routes();
 
-// Protected routes (only for authenticated users)
+// Protected routes (only authenticated users can access)
 Route::middleware(['auth'])->group(function () {
 
-    // Dashboard page for admins
+    // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Clients CRUD
     Route::resource('clients', ClientController::class);
+
+    // Cases CRUD
     Route::resource('cases', CaseController::class);
-    Route::resource('hearings', HearingController::class);
+
+    // Documents CRUD
     Route::resource('documents', DocumentController::class);
 
-    // Nested resource for case files
-    Route::resource('case.files', CaseFileController::class)->shallow();
-    Route::post('/case/{case}/files', [CaseFileController::class, 'store'])->name('case.files.store');
-    Route::get('/case/{case}/hearings/create', [HearingController::class, 'create'])->name('hearings.create');
+    // Case Files (nested under cases)
+    Route::resource('cases.files', CaseFileController::class)->shallow();
 
-    Route::prefix('cases/{case}')->group(function () {
-        Route::resource('/hearings', HearingController::class);
-        Route::get('/hearings/create', [HearingController::class, 'create'])->name('hearings.create');
-    });
-    
+    // Hearings nested under cases
+    Route::resource('cases.hearings', HearingController::class);
+
+    // Transactions nested under cases
     Route::resource('cases.transactions', TransactionController::class);
-
 });

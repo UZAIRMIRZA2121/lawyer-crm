@@ -21,7 +21,7 @@
             <div class="col-md-3 mb-3">
                 <div class="card">
                     @php
-                        $fileUrl = asset('public/storage/' . $file->file_path);
+                        $fileUrl = asset( 'storage/storage/' . $file->file_path);
                         $ext = pathinfo($file->file_path, PATHINFO_EXTENSION);
                     @endphp
 

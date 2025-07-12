@@ -1,0 +1,201 @@
+:root {
+  --primary: #1a4d2e;
+  --accent: #f4a261;
+  --text: #333;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  color: var(--text);
+}
+
+.container {
+  width: 90%;
+  margin: auto;
+  max-width: 1200px;
+}
+
+/* Header */
+.site-header {
+  background: var(--primary);
+  color: white;
+}
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1em 0;
+}
+.nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1em;
+}
+.nav a {
+  color: white;
+  text-decoration: none;
+}
+.nav-toggle {
+  display: none;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+/* Hero */
+.hero {
+  position: relative;
+  height: 800px;
+}
+.hero img {
+  width: 100%;
+  height: 700px;
+  object-fit: cover;
+}
+.hero-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  text-align: center;
+}
+.btn-primary {
+  background: var(--accent);
+  color: white;
+  padding: 0.5em 1em;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+/* Services */
+.services .service-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1em;
+  margin: 2em 0;
+}
+.service-card {
+  border: 1px solid #ddd;
+  padding: 1em;
+  text-align: center;
+}
+.service-card i {
+  font-size: 2em;
+  margin-bottom: 0.5em;
+}
+.service-card a {
+  display: inline-block;
+  margin-top: 0.5em;
+  color: var(--accent);
+}
+
+/* Blogs */
+
+.blogs h2 {
+  text-align: center;
+}
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1em;
+}
+.blog-card {
+  border: 1px solid #ddd;
+  padding: 1em;
+}
+.blog-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+
+
+/* Footer */
+.footer {
+    margin-top: 10px;
+  background: #222;
+  color: white;
+  padding: 2em 0;
+}
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2em;
+}
+.footer-container > div {
+  flex: 1 1 200px;
+}
+.footer a {
+  color: #ddd;
+  text-decoration: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav {
+    position: absolute;
+    top: 60px; /* below header */
+    left: 0;
+    width: 100%;
+    background: var(--primary);
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease;
+  }
+  .nav ul {
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+  }
+  .nav ul li {
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .nav ul li a {
+    display: block;
+    padding: 1em;
+  }
+  .nav.active {
+    max-height: 500px; /* enough to show all links */
+  }
+  .nav-toggle {
+    display: block;
+    font-size: 1.5em;
+    cursor: pointer;
+  }
+  .site-header {
+  position: relative;
+  z-index: 10;
+}
+
+}
+.login-container {
+    max-width: 500px;
+    margin: 50px auto;
+}
+.login-card {
+    padding: 2rem;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    width: 500px;
+}
+.login-card h2 {
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+.btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}

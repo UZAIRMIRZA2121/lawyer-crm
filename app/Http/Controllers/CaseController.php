@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class CaseController extends Controller
 {
-   public function index(Request $request)
+  public function index(Request $request)
 {
     $user = auth()->user();
     $query = CaseModel::query();
@@ -15,8 +15,8 @@ class CaseController extends Controller
     if ($request->has('client_id')) {
         $client = Client::findOrFail($request->client_id);
 
-        // Only enforce assignment check if user is a team member
         if ($user->role === 'team') {
+            // Team members must be assigned to the client
             $isAssigned = $client->assignedUsers()
                 ->where('user_id', $user->id)
                 ->exists();
@@ -25,22 +25,21 @@ class CaseController extends Controller
                 abort(403, 'You are not assigned to this client.');
             }
         }
-
-        // Filter cases for this client
+     
+        // For both admin and team, filter by client_id
         $query->where('client_id', $client->id);
+
     } else {
-        // No client_id provided
         if ($user->role === 'team') {
-            // Show only cases where client is assigned to this team member
+            // Team members without client_id see only assigned clients' cases
             $query->whereHas('client.assignedUsers', function ($q) use ($user) {
                 $q->where('user_id', $user->id);
             });
         }
-        // else: show all cases for other roles
+        // Admins and other roles see all cases when no client_id
     }
 
     $cases = $query->latest()->paginate(15);
-
     // If admin, calculate sum of all transactions
     $totalTransactionsAmount = null;
     if ($user->role === 'admin') {
@@ -49,6 +48,7 @@ class CaseController extends Controller
 
     return view('cases.index', compact('cases', 'totalTransactionsAmount'));
 }
+
 
 
     public function create()
