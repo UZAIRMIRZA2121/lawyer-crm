@@ -2,12 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\CaseAgainstClientController;
 use App\Http\Controllers\CaseController;
 use App\Http\Controllers\CaseFileController;
 use App\Http\Controllers\HearingController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\NoticeController;
 
 // Home (public landing page)
 Route::get('/', function () {
@@ -41,4 +43,10 @@ Route::middleware(['auth'])->group(function () {
 
     // Transactions nested under cases
     Route::resource('cases.transactions', TransactionController::class);
+    Route::resource('case-against-clients', CaseAgainstClientController::class);
+    Route::resource('notices', NoticeController::class);
+    Route::get('notices/clients-by-case/{caseId}', [NoticeController::class, 'getClientsByCase']);
+
+
+
 });

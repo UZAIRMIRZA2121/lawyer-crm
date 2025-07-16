@@ -31,18 +31,21 @@
 
     <!-- Sidebar for larger screens -->
     <div class="d-none d-md-block col-md-1 sidebar bg-white">
-              <a href="{{ route('dashboard') }}"
-                class="sidebar-link d-block {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
+        <a href="{{ route('dashboard') }}"
+            class="sidebar-link d-block {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
         <a href="{{ route('clients.index') }}"
             class="sidebar-link {{ request()->routeIs('clients.*') ? 'active' : '' }}">Clients</a>
+                   <a href="{{ route('case-against-clients.index') }}"
+            class="sidebar-link {{ request()->routeIs('case-against-clients.*') ? 'active' : '' }}">Against Clients</a>
+            
         <a href="{{ route('cases.index') }}"
             class="sidebar-link {{ request()->routeIs('cases.*') ? 'active' : '' }}">Cases</a>
-        <a href="#"
-            class="sidebar-link {{ request()->routeIs('hearings.*') ? 'active' : '' }}">Hearings</a>
+        <a href="#" class="sidebar-link {{ request()->routeIs('hearings.*') ? 'active' : '' }}">Hearings</a>
+        <a href="{{ route('notices.index') }}" class="sidebar-link {{ request()->routeIs('notices.*') ? 'active' : '' }}">Notices</a>
         <a href="#" class="sidebar-link">Documents</a>
         <a class="sidebar-link text-danger text-bold" href="{{ route('logout') }}"
             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-           <b >logout</b> 
+            <b>logout</b>
         </a>
         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
             @csrf
@@ -56,7 +59,7 @@
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
         </div>
         <div class="offcanvas-body">
-               <a href="{{ route('dashboard') }}"
+            <a href="{{ route('dashboard') }}"
                 class="sidebar-link d-block {{ request()->routeIs('dashboard.*') ? 'active' : '' }}">Dashboard</a>
             <a href="{{ route('clients.index') }}"
                 class="sidebar-link d-block {{ request()->routeIs('clients.*') ? 'active' : '' }}">Clients</a>

@@ -15,17 +15,12 @@
             </div>
         @endif
         <form method="GET" action="{{ route('cases.index') }}" class="mb-3">
-    <div class="input-group">
-        <input
-            type="text"
-            name="search"
-            class="form-control"
-            placeholder="Search by Case Number, Title, Client Name, or Status"
-            value="{{ request('search') }}"
-        >
-        <button type="submit" class="btn btn-primary">Search</button>
-    </div>
-</form>
+            <div class="input-group">
+                <input type="text" name="search" class="form-control"
+                    placeholder="Search by Case Number, Title, Client Name, or Status" value="{{ request('search') }}">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
 
         <div class="table-responsive">
             <table class="table table-bordered table-striped align-middle">
@@ -64,6 +59,11 @@
 
                             <td class="text-nowrap">
                                 <div class="d-flex flex-wrap gap-1">
+                                         <!-- 👇 Add this button -->
+                                    <a href="{{ route('case-against-clients.index') }}?case_id={{ $case->id }}"
+                                        class="btn btn-secondary btn-sm">
+                                        Against Client
+                                    </a>
                                     <a href="{{ route('cases.show', $case) }}" class="btn btn-info btn-sm">View</a>
                                     <a href="{{ route('cases.edit', $case) }}" class="btn btn-warning btn-sm">Edit</a>
                                     <form action="{{ route('cases.destroy', $case) }}" method="POST"
@@ -81,10 +81,10 @@
                                     @if (auth()->user()->role === 'admin')
                                         <a href="{{ route('cases.transactions.index', $case) }}"
                                             class="btn btn-primary btn-sm">
-                                             Payment
+                                            Payment
                                         </a>
-                                    @endif  
-                                   
+                                    @endif
+                               
 
 
                                 </div>
