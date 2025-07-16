@@ -3,7 +3,7 @@
 @section('main')
     <!-- Hero Section -->
     <section class="hero">
-        <img src="{{ asset('imgs/hero.jpg') }}" alt="Team of Lawyers" />
+        <img src="{{ asset('public/imgs/hero.jpg') }}" alt="Team of Lawyers" />
         <div class="hero-text">
             <h1>WE ARE VOICE OF JUSTICE</h1>
             <p>Lawyer / Law Firm / Attorney</p>
@@ -58,19 +58,19 @@
         <h2>Recent Blogs</h2>
         <div class="blog-grid">
             <div class="blog-card">
-                <img src="{{ asset('imgs/hero.jpg') }}" alt="Blog Image" />
+                <img src="{{ asset('public/imgs/hero.jpg') }}" alt="Blog Image" />
                 <h3>2024 MLD 1316</h3>
                 <p>Details about case law and legal references.</p>
                 <a href="#">Read More</a>
             </div>
             <div class="blog-card">
-                <img src="{{ asset('imgs/hero.jpg') }}" alt="Blog Image" />
+                <img src="{{ asset('public/imgs/hero.jpg') }}" alt="Blog Image" />
                 <h3>2024 SCMR 1413</h3>
                 <p>Important observations about case verdicts.</p>
                 <a href="#">Read More</a>
             </div>
             <div class="blog-card">
-                <img src="{{ asset('imgs/1hero.jpg') }}" alt="Blog Image" />
+                <img src="{{ asset('public/imgs/1hero.jpg') }}" alt="Blog Image" />
                 <h3>2024 YLR 1139</h3>
                 <p>Breaking of fetters and related implications.</p>
                 <a href="#">Read More</a>

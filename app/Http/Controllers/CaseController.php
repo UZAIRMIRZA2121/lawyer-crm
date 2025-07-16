@@ -7,16 +7,17 @@ use Illuminate\Http\Request;
 
 class CaseController extends Controller
 {
-  public function index(Request $request)
+ public function index(Request $request)
 {
     $user = auth()->user();
-    $query = CaseModel::query();
+    $query = CaseModel::query()->with('client');
 
+    // Apply client filtering if client_id provided
     if ($request->has('client_id')) {
         $client = Client::findOrFail($request->client_id);
 
         if ($user->role === 'team') {
-            // Team members must be assigned to the client
+            // Check assignment
             $isAssigned = $client->assignedUsers()
                 ->where('user_id', $user->id)
                 ->exists();
@@ -25,22 +26,35 @@ class CaseController extends Controller
                 abort(403, 'You are not assigned to this client.');
             }
         }
-     
-        // For both admin and team, filter by client_id
-        $query->where('client_id', $client->id);
 
+        $query->where('client_id', $client->id);
     } else {
+        // If no client filter and user is team, restrict to assigned clients' cases
         if ($user->role === 'team') {
-            // Team members without client_id see only assigned clients' cases
             $query->whereHas('client.assignedUsers', function ($q) use ($user) {
                 $q->where('user_id', $user->id);
             });
         }
-        // Admins and other roles see all cases when no client_id
+        // Admins see all
+    }
+
+    // === Search filter ===
+    if ($request->filled('search')) {
+        $search = $request->search;
+
+        $query->where(function ($q) use ($search) {
+            $q->where('case_number', 'like', "%{$search}%")
+              ->orWhere('case_title', 'like', "%{$search}%")
+              ->orWhere('status', 'like', "%{$search}%")
+              ->orWhereHas('client', function ($q2) use ($search) {
+                  $q2->where('name', 'like', "%{$search}%");
+              });
+        });
     }
 
     $cases = $query->latest()->paginate(15);
-    // If admin, calculate sum of all transactions
+
+    // Calculate total transactions if admin
     $totalTransactionsAmount = null;
     if ($user->role === 'admin') {
         $totalTransactionsAmount = \App\Models\Transaction::sum('amount');
@@ -48,6 +62,7 @@ class CaseController extends Controller
 
     return view('cases.index', compact('cases', 'totalTransactionsAmount'));
 }
+
 
 
 
@@ -85,7 +100,8 @@ class CaseController extends Controller
     public function show(CaseModel $case)
     {
         $case->load('client');
-        return view('cases.show', compact('case'));
+          $all_case_files = $case->files()->latest()->get();
+        return view('cases.show', compact('case','all_case_files'));
     }
 
     public function edit(CaseModel $case)

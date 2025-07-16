@@ -14,6 +14,19 @@
                 <strong>Total Transactions Amount:</strong> {{ number_format($totalTransactionsAmount, 2) }}
             </div>
         @endif
+        <form method="GET" action="{{ route('cases.index') }}" class="mb-3">
+    <div class="input-group">
+        <input
+            type="text"
+            name="search"
+            class="form-control"
+            placeholder="Search by Case Number, Title, Client Name, or Status"
+            value="{{ request('search') }}"
+        >
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+</form>
+
         <div class="table-responsive">
             <table class="table table-bordered table-striped align-middle">
                 <thead class="table-light">
@@ -59,7 +72,7 @@
                                         @method('DELETE')
                                         <button class="btn btn-danger btn-sm" type="submit">Delete</button>
                                     </form>
-                                    <a href="{{ route('case.files.create', $case) }}" class="btn btn-primary btn-sm">
+                                    <a href="{{ route('cases.files.create', $case) }}" class="btn btn-primary btn-sm">
                                         Upload Files
                                     </a>
 

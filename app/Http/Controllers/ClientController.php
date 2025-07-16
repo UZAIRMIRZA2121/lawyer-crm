@@ -7,20 +7,34 @@ use Illuminate\Http\Request;
 class ClientController extends Controller
 {
     // Display all clients
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
 
         if ($user->role === 'team') {
-            // Only clients assigned to this user
-            $clients = $user->assignedClients()->latest()->paginate(10);
+            // Start from only assigned clients
+            $query = $user->assignedClients()->latest();
         } else {
-            // Admin can see all
-            $clients = Client::with('assignedUsers')->latest()->paginate(10);
+            // Admin can see all clients
+            $query = Client::with('assignedUsers')->latest();
         }
+
+        // Apply search if present
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('name', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('cnic', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('contact_no', 'like', '%' . $searchTerm . '%');
+            });
+        }
+
+        $clients = $query->paginate(10);
 
         return view('clients.index', compact('clients'));
     }
+
 
 
     // Show form to create a new client

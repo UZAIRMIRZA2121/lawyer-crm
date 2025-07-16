@@ -10,6 +10,17 @@
         @if (Auth::user()->role == 'admin')
             <a href="{{ route('clients.create') }}" class="btn btn-primary mb-3">Add New Client</a>
         @endif
+        <form method="GET" action="{{ route('clients.index') }}" class="mb-3">
+            <div class="row g-2">
+                <div class="col-md-9">
+                    <input type="text" name="search" class="form-control" placeholder="Search by Name, CNIC, or Phone"
+                        value="{{ request('search') }}">
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                </div>
+            </div>
+        </form>
 
         <div class="table-responsive">
             <table class="table table-bordered table-striped align-middle">

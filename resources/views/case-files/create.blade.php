@@ -4,7 +4,7 @@
     <div class="container">
         <h3>Upload Files for Case: {{ $case->case_title }}</h3>
 
-        <form action="{{ route('case.files.store', $case) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('cases.files.store', $case) }}" method="POST" enctype="multipart/form-data">
 
             @csrf
             <div class="mb-3">

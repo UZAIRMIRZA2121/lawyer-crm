@@ -37,6 +37,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Hearings nested under cases
     Route::resource('cases.hearings', HearingController::class);
+    Route::resource('hearings', HearingController::class);
 
     // Transactions nested under cases
     Route::resource('cases.transactions', TransactionController::class);

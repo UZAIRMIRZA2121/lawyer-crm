@@ -17,44 +17,104 @@
     <!-- Bootstrap 5 CSS (Required) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+    :root {
+        --primary: #1a4d2e;
+        --accent: #f4a261;
+        --text: #333;
+        --background: #f9f9f9;
+        --sidebar-bg: #ffffff;
+        --hover-bg: #eaf4ef;
+        --border: #e0e0e0;
+    }
 
-    <!-- Custom Style -->
-    <style>
-        .sidebar {
-            min-height: 100vh;
-            background-color: #f8f9fa;
-            padding-top: 1rem;
-        }
+    body {
+        background-color: var(--background);
+        color: var(--text);
+        font-family: 'Nunito', sans-serif;
+    }
 
-        .sidebar-link {
-            display: block;
-            padding: 10px 15px;
-            color: #000;
-            text-decoration: none;
-        }
+    .navbar {
+        background-color: var(--primary) !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
 
-        .sidebar-link:hover,
-        .sidebar-link.active {
-            background-color: #e9ecef;
-            font-weight: bold;
-        }
-    </style>
-    <style>
-        .container {
-            margin: auto;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-        }
+    .navbar .navbar-brand,
+    .navbar .nav-link,
+    .navbar .dropdown-toggle {
+        color: #fff !important;
+    }
 
-        .form-label {
-            font-weight: bold;
-        }
+    .navbar .nav-link:hover,
+    .navbar .dropdown-toggle:hover {
+        color: var(--accent) !important;
+    }
 
-        .btn {
-            margin-right: 10px;
-        }
-    </style>
+    .sidebar {
+        min-height: 100vh;
+        background-color: var(--sidebar-bg);
+        padding: 1rem;
+        border-right: 1px solid var(--border);
+    }
+
+    .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 15px;
+        color: var(--text);
+        text-decoration: none;
+        border-radius: 6px;
+        transition: background-color 0.2s, color 0.2s;
+        font-weight: 500;
+    }
+
+    .sidebar-link:hover,
+    .sidebar-link.active {
+        background-color: var(--hover-bg);
+        color: var(--primary);
+    }
+
+    main {
+        padding: 2rem;
+        background: #fff;
+        border-radius: 8px;
+        margin: 1rem;
+        box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: var(--primary);
+    }
+
+    .btn-primary {
+        background-color: var(--primary);
+        border-color: var(--primary);
+    }
+
+    .btn-primary:hover {
+        background-color: #145137;
+        border-color: #145137;
+    }
+
+    .btn-accent {
+        background-color: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+    }
+
+    .btn-accent:hover {
+        background-color: #e9974f;
+        border-color: #e9974f;
+    }
+
+    .btn {
+        border-radius: 4px;
+        font-weight: 500;
+    }
+</style>
+
 
     <!-- Vite Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
