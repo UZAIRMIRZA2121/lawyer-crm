@@ -10,9 +10,9 @@
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
         @if (auth()->user()->role === 'admin')
-            <div class="alert alert-info">
+            {{-- <div class="alert alert-info">
                 <strong>Total Transactions Amount:</strong> {{ number_format($totalTransactionsAmount, 2) }}
-            </div>
+            </div> --}}
         @endif
         <form method="GET" action="{{ route('cases.index') }}" class="mb-3">
             <div class="input-group">
@@ -59,7 +59,7 @@
 
                             <td class="text-nowrap">
                                 <div class="d-flex flex-wrap gap-1">
-                                         <!-- 👇 Add this button -->
+                                    <!-- 👇 Add this button -->
                                     <a href="{{ route('case-against-clients.index') }}?case_id={{ $case->id }}"
                                         class="btn btn-secondary btn-sm">
                                         Against Client
@@ -76,15 +76,16 @@
                                         Upload Files
                                     </a>
 
-                                    <a href="{{ route('hearings.index', $case) }}" class="btn btn-success btn-sm">View
-                                        Hearings</a>
+                                    <a href="{{ route('hearings.index', ['case_id' => $case->id]) }}"
+                                        class="btn btn-success btn-sm">View Hearings</a>
+
                                     @if (auth()->user()->role === 'admin')
                                         <a href="{{ route('cases.transactions.index', $case) }}"
                                             class="btn btn-primary btn-sm">
                                             Payment
                                         </a>
                                     @endif
-                               
+
 
 
                                 </div>

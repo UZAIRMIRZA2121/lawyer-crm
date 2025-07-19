@@ -34,7 +34,7 @@
                 <div class="col-md-3 mb-3">
                     <label>Transaction Date <span class="text-danger">*</span></label>
                     <input type="datetime-local" name="transaction_date" class="form-control"
-                        value="{{ old('transaction_date') }}" >
+                        value="{{ old('transaction_date') }}">
                 </div>
             </div>
 
@@ -43,6 +43,23 @@
             <div class="mb-3">
                 <label>Description</label>
                 <textarea name="description" class="form-control">{{ old('description') }}</textarea>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label>Status <span class="text-danger">*</span></label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="status" id="paid" value="paid"
+                        {{ old('status') == 'paid' ? 'checked' : '' }} required>
+                    <label class="form-check-label" for="paid">
+                        Paid
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="status" id="pending" value="pending"
+                        {{ old('status') == 'pending' ? 'checked' : '' }}>
+                    <label class="form-check-label" for="pending">
+                        Pending
+                    </label>
+                </div>
             </div>
 
             <button class="btn btn-primary">Save Transaction</button>

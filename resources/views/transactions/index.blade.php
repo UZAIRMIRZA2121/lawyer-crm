@@ -12,7 +12,7 @@
                 <div class="card border-primary mb-3">
                     <div class="card-body text-primary text-center">
                         <i class="bi bi-cash-stack" style="font-size: 2rem;"></i>
-                        <h3 class="card-title mt-2">Rs {{ number_format($case->amount, 0) }}</h3>
+                        <h3 class="card-title mt-2">Rs {{ number_format($totalAmount, 0) }}</h3>
                         <p class="card-text">Total Amount</p>
                     </div>
                 </div>
@@ -34,7 +34,7 @@
                 <div class="card border-warning mb-3">
                     <div class="card-body text-warning text-center">
                         <i class="bi bi-wallet-fill" style="font-size: 2rem;"></i>
-                        <h3 class="card-title mt-2">Rs {{ number_format($remainingAmount, 0) }}</h3>
+                        <h3 class="card-title mt-2">Rs {{ number_format($pendingAmount, 0) }}</h3>
                         <p class="card-text">Remaining Amount</p>
                     </div>
                 </div>
@@ -51,6 +51,7 @@
                         <th>Payment Method</th>
                         <th>Date</th>
                         <th>Description</th>
+                        <th>Status</th> <!-- ✅ Added -->
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -62,6 +63,13 @@
                             <td>{{ ucfirst($transaction->payment_method) }}</td>
                             <td>{{ \Carbon\Carbon::parse($transaction->transaction_date)->format('d-m-Y H:i') }}</td>
                             <td>{{ $transaction->description ?? '-' }}</td>
+                            <td>
+                                @if ($transaction->status === 'paid')
+                                    <span class="badge bg-success">Paid</span>
+                                @else
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                @endif
+                            </td>
                             <td>
                                 <a href="{{ route('cases.transactions.edit', [$case, $transaction]) }}"
                                     class="btn btn-warning btn-sm">Edit</a>
@@ -83,5 +91,6 @@
         @else
             <p>No transactions found.</p>
         @endif
+
     </div>
 @endsection

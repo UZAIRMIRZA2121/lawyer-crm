@@ -13,6 +13,7 @@ class Notice extends Model
     'against_client_id',
     'notice',
     'status',
+    'notice_base64',
     ];
     // If you have a Case model:
     public function case()

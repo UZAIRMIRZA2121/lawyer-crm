@@ -2,10 +2,13 @@
 
 @section('content')
 <div class="container">
-    <h1 class="mb-4">Add Notice</h1>
+    <h1 class="mb-4 text-center">Add Notice & عدالتی حاضری فارم</h1>
 
-    <form action="{{ route('notices.store') }}" method="POST">
+    <form action="{{ route('notices.store') }}" method="POST" target="_blank">
         @csrf
+
+        {{-- === Notice Section === --}}
+        <h3 class="mb-3">Add Notice</h3>
 
         <div class="row">
             <div class="col-md-6 mb-3">
@@ -39,7 +42,62 @@
             </select>
         </div>
 
-        <button type="submit" class="btn btn-success">Create</button>
+        <hr>
+
+        {{-- === عدالتی حاضری فارم Section === --}}
+        <h3 class="mb-3 text-center">عدالتی حاضری فارم</h3>
+
+        <div class="mb-3">
+            <label class="form-label">جج کا نام</label>
+            <input type="text" name="judge_name" class="form-control text-end" placeholder="مثلاً: سینئر سول جج، فیصل آباد" value="{{ old('judge_name') }}">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">مقدمہ نمبر / عدالت</label>
+            <input type="text" name="case_number" class="form-control text-end" value="{{ old('case_number') }}">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">مدعی کا نام</label>
+            <input type="text" name="plaintiff_name" class="form-control text-end" value="{{ old('plaintiff_name') }}">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">مدعی کا پتہ</label>
+            <input type="text" name="plaintiff_address" class="form-control text-end" value="{{ old('plaintiff_address') }}">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">نام مدعا علیہ</label>
+            <input type="text" name="defendant_name" class="form-control text-end" value="{{ old('defendant_name') }}">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">ولدیت / پتہ مدعا علیہ</label>
+            <input type="text" name="defendant_father_address" class="form-control text-end" value="{{ old('defendant_father_address') }}">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">مدعا علیہ کی حیثیت</label>
+            <input type="text" name="defendant_role" class="form-control text-end" placeholder="مثلاً: گواہ، مخالف" value="{{ old('defendant_role') }}">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">تاریخ پیشی</label>
+            <input type="date" name="hearing_date" class="form-control text-end" value="{{ old('hearing_date') }}">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">وقت</label>
+            <input type="time" name="hearing_time" class="form-control text-end" value="{{ old('hearing_time', '08:00') }}">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">مہینہ / سال</label>
+            <input type="text" name="month_year" class="form-control text-end" placeholder="مثلاً: جولائی 2025" value="{{ old('month_year') }}">
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">Create & Print</button>
     </form>
 </div>
 
@@ -65,7 +123,7 @@
             height: 200
         });
 
-        // AJAX Load Clients
+        // AJAX Load Clients on Case change
         $('#case_id').on('change', function() {
             var caseId = $(this).val();
             var clientSelect = $('#against_client_id');

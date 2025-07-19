@@ -7,12 +7,14 @@
         @if (session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
-        <a href="{{ route('hearings.create', $case) }}" class="btn btn-success btn-sm">
+        <a href="{{ route('hearings.create', ['case_id' => request()->query('case_id') ?? $case->id]) }}"
+            class="btn btn-success btn-sm">
             Add Hearing
         </a>
 
+
         @if ($hearings->count())
-            <table class="table table-bordered">
+            <table class="table table-bordered m-3">
                 <thead>
                     <tr>
                         <th>Judge Name</th>
@@ -35,20 +37,24 @@
                                 @if ($hearing->priority === 'important') style="background-color: #f8d7da; font-weight: bold; color: #721c24;" @endif>
                                 {{ ucfirst($hearing->priority) }}
                             </td>
-
                             <td>
-                                <a href="{{ route('hearings.edit', [$case, $hearing]) }}"
+                                <a href="{{ route('hearings.edit', $hearing) }}?case_id={{ $case->id }}"
                                     class="btn btn-warning btn-sm">Edit</a>
 
-                                <form action="{{ route('hearings.destroy', [$case, $hearing]) }}" method="POST"
-                                    style="display:inline-block"
+
+                                <form action="{{ route('hearings.destroy', $hearing) }}?case_id={{ $case->id }}"
+                                    method="POST" style="display:inline-block"
                                     onsubmit="return confirm('Are you sure to delete this hearing?')">
                                     @csrf
                                     @method('DELETE')
+
+                                    <input type="hidden" name="case_id" value="{{ $case->id }}">
+
                                     <button class="btn btn-danger btn-sm" type="submit">Delete</button>
                                 </form>
-
                             </td>
+
+
                         </tr>
                     @endforeach
                 </tbody>

@@ -40,9 +40,9 @@
             
         <a href="{{ route('cases.index') }}"
             class="sidebar-link {{ request()->routeIs('cases.*') ? 'active' : '' }}">Cases</a>
-        <a href="#" class="sidebar-link {{ request()->routeIs('hearings.*') ? 'active' : '' }}">Hearings</a>
+ 
         <a href="{{ route('notices.index') }}" class="sidebar-link {{ request()->routeIs('notices.*') ? 'active' : '' }}">Notices</a>
-        <a href="#" class="sidebar-link">Documents</a>
+    
         <a class="sidebar-link text-danger text-bold" href="{{ route('logout') }}"
             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
             <b>logout</b>
@@ -65,9 +65,8 @@
                 class="sidebar-link d-block {{ request()->routeIs('clients.*') ? 'active' : '' }}">Clients</a>
             <a href="{{ route('cases.index') }}"
                 class="sidebar-link d-block {{ request()->routeIs('cases.*') ? 'active' : '' }}">Cases</a>
-            <a href="#"
-                class="sidebar-link d-block {{ request()->routeIs('hearings.*') ? 'active' : '' }}">Hearings</a>
-            <a href="#" class="sidebar-link d-block">Documents</a>
+ 
+           
             <a class="sidebar-link d-block btn btn-danger" href="{{ route('logout') }}"
                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 {{ __('Logout') }}

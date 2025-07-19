@@ -26,23 +26,48 @@ class NoticeController extends Controller
         return view('notices.create', compact('cases', 'users', 'clients'));
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'case_id' => 'nullable|exists:case_models,id',
-            'user_id' => 'nullable|exists:users,id',
-            'against_client_id' => 'nullable|exists:case_against_clients,id',
-            'notice' => 'required|string',
-            'status' => 'required|boolean',
-        ]);
+ public function store(Request $request)
+{
+    // Validate all fields
+    $request->validate([
+        'case_id' => 'nullable|exists:case_models,id',
+        'user_id' => 'nullable|exists:users,id',
+        'against_client_id' => 'nullable|exists:case_against_clients,id',
+        'notice' => 'required|string',
+        'status' => 'required|boolean',
 
-        $data = $request->all();
-        $data['user_id'] = Auth::id(); // ✅ Set current authenticated user
+        'judge_name' => 'nullable|string|max:255',
+        'case_number' => 'nullable|string|max:255',
+        'plaintiff_name' => 'nullable|string|max:255',
+        'plaintiff_address' => 'nullable|string|max:255',
+        'defendant_name' => 'nullable|string|max:255',
+        'defendant_father_address' => 'nullable|string|max:255',
+        'defendant_role' => 'nullable|string|max:255',
+        'hearing_date' => 'nullable|date',
+        'hearing_time' => 'nullable',
+        'month_year' => 'nullable|string|max:255',
+    ]);
 
-        Notice::create($data);
+    // Set authenticated user id
+    $data = $request->all();
+    $data['user_id'] = Auth::id();
 
-        return redirect()->route('notices.index')->with('success', 'Notice created successfully.');
-    }
+    // Render summon print view HTML
+    $html = view('notices.print-summon', ['data' => $data])->render();
+
+    // Encode HTML as base64
+    $base64Html = base64_encode($html);
+
+    // Add base64 HTML to data
+    $data['notice_base64'] = $base64Html;
+
+    // Save notice including base64 encoded HTML
+    Notice::create($data);
+
+    // Return summon print view normally (for printing)
+    return response($html);
+}
+
 
     public function edit(Notice $notice)
     {
@@ -87,9 +112,16 @@ class NoticeController extends Controller
 
         return response()->json($clients);
     }
-      public function print(Request $request)
+    public function print(Request $request)
     {
         $data = $request->all();
+        dd($data);
+
+        // Render the Blade view as HTML string
+        $html = view('notices.print-summon', compact('data'))->render();
+
+
+        dd($html);
         return view('notices.print-summon', compact('data'));
     }
 }

@@ -15,13 +15,26 @@ use App\Http\Controllers\NoticeController;
 Route::get('/', function () {
     return view('home'); // Create resources/views/home.blade.php if you want a homepage
 })->name('home');
-    Route::post('/summon-print', [NoticeController::class, 'print'])->name('summon.print');
+Route::get('/services', function () {
+    return view('services'); // Create resources/views/home.blade.php if you want a homepage
+})->name('services');
+Route::get('/team', function () {
+    return view('team'); // Create resources/views/home.blade.php if you want a homepage
+})->name('team');
+Route::get('/blogs', function () {
+    return view('blogs'); // Create resources/views/home.blade.php if you want a homepage
+})->name('blogs');
+Route::get('/contact', function () {
+    return view('contact'); // Create resources/views/home.blade.php if you want a homepage
+})->name('contact');
+
+
 // Laravel Auth routes (login, register, etc.)
 Auth::routes();
 
 // Protected routes (only authenticated users can access)
 Route::middleware(['auth'])->group(function () {
-
+    
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -47,6 +60,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('notices', NoticeController::class);
     Route::get('notices/clients-by-case/{caseId}', [NoticeController::class, 'getClientsByCase']);
 
+Route::post('/summon-print', [NoticeController::class, 'print'])->name('summon.print');
 
 
 

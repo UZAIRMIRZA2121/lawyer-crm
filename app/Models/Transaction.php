@@ -13,6 +13,7 @@ class Transaction extends Model
         'payment_method',
         'transaction_date',
         'description',
+        'status',
     ];
        public function case()
     {
