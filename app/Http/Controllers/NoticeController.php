@@ -87,4 +87,9 @@ class NoticeController extends Controller
 
         return response()->json($clients);
     }
+      public function print(Request $request)
+    {
+        $data = $request->all();
+        return view('notices.print-summon', compact('data'));
+    }
 }

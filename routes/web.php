@@ -15,7 +15,7 @@ use App\Http\Controllers\NoticeController;
 Route::get('/', function () {
     return view('home'); // Create resources/views/home.blade.php if you want a homepage
 })->name('home');
-
+    Route::post('/summon-print', [NoticeController::class, 'print'])->name('summon.print');
 // Laravel Auth routes (login, register, etc.)
 Auth::routes();
 
@@ -46,6 +46,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('case-against-clients', CaseAgainstClientController::class);
     Route::resource('notices', NoticeController::class);
     Route::get('notices/clients-by-case/{caseId}', [NoticeController::class, 'getClientsByCase']);
+
 
 
 
