@@ -128,7 +128,7 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container-fluid">
                 <a class="navbar-brand  text-dark" href="{{ url('/') }}">
-                   <span class="text-dark">Lawyer CRM</span> 
+                  Lawyer CRM
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent">
