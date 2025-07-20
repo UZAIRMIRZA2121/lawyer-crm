@@ -7,7 +7,7 @@
         @if (session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
-        <a href="{{ route('case-against-clients.create') }}" class="btn btn-info mt-4">
+        <a href="{{ route('case-against-clients.create') }}" class="btn btn-primary mt-4">
             Add Against Client
         </a>
         <form method="GET" action="" class="m-3">
