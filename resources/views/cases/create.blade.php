@@ -75,15 +75,6 @@
                 </div>
             </div>
 
-            <div class="row mb-3">
-                <div class="col-md-12">
-                    <label class="form-label">Description</label>
-                    <textarea name="description" class="form-control" rows="4">{{ old('description') }}</textarea>
-                    @error('description')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
 
             <div class="row mb-3">
                 <div class="col-md-6">
@@ -93,22 +84,74 @@
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                @if(Auth::user()->role == 'admin')
-                <div class="col-md-6">
-                    <label class="form-label">Total Amount</label>
-                    <input type="text" name="amount" class="form-control" value="{{ old('amount') }}"
-                        required>
-                    @error('amount')
+                @if (Auth::user()->role == 'admin')
+                    <div class="col-md-6">
+                        <label class="form-label">Total Amount</label>
+                        <input type="text" name="amount" class="form-control" value="{{ old('amount') }}" required>
+                        @error('amount')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                @endif
+            </div>
+            {{-- Summernote CSS --}}
+            <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <label class="form-label">Description</label>
+                    <textarea id="summernote" name="description" class="form-control">{{ old('description') }}</textarea>
+                    @error('description')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                @endif
             </div>
+
+            {{-- Summernote JS --}}
+            <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+
+            {{-- Initialize Summernote --}}
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    $('#summernote').summernote({
+                        height: 200, // Set editor height
+                        toolbar: [
+                            ['style', ['style']],
+                            ['font', ['bold', 'italic', 'underline', 'clear']],
+                            ['fontname', ['fontname']],
+                            ['fontsize', ['fontsize']],
+                            ['color', ['color']],
+                            ['para', ['ul', 'ol', 'paragraph']],
+                            ['insert', ['link', 'picture', 'video']],
+                            ['view', ['fullscreen', 'codeview']]
+                        ]
+                    });
+                });
+            </script>
+
 
             <button class="btn btn-success" type="submit">Save Case</button>
             <a href="{{ route('cases.index') }}" class="btn btn-secondary ms-2">Cancel</a>
         </form>
     </div>
+
+
+    <!-- jQuery (required) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Summernote JS -->
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+    <!-- Popper.js (required for Bootstrap 4 dropdowns) -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+    <!-- Bootstrap 4 JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Summernote JS -->
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
     {{-- Optional JavaScript to link client_name to client_id --}}
     <script>

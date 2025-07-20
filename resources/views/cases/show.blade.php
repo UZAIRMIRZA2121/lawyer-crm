@@ -20,10 +20,7 @@
                     <div class="col-md-9">{{ $case->case_title }}</div>
                 </div>
 
-                <div class="row mb-3">
-                    <div class="col-md-3 fw-semibold text-muted">Description:</div>
-                    <div class="col-md-9">{{ $case->description ?? '-' }}</div>
-                </div>
+
 
                 <div class="row mb-3">
                     <div class="col-md-3 fw-semibold text-muted">Status:</div>
@@ -39,6 +36,16 @@
                     <div class="col-md-3 fw-semibold text-muted">Judge Name:</div>
                     <div class="col-md-9">{{ $case->judge_name ?? 'N/A' }}</div>
                 </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-3 fw-semibold text-muted">Description:</div>
+                    <div class="col-md-9">
+                        <div class="p-3 bg-light border rounded shadow-sm" style="min-height: 100px;">
+                            {!! $case->description ?? '-' !!}
+                        </div>
+                    </div>
+                </div>
+
 
                 <a href="{{ route('cases.index') }}" class="btn btn-secondary">Back</a>
                 <a href="{{ route('cases.edit', $case) }}" class="btn btn-primary">Edit</a>
