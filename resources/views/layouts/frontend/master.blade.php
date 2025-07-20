@@ -37,7 +37,8 @@
     @include('layouts.frontend.header')
 
     @yield('main')
-    <!-- WhatsApp Floating Button -->
+   
+    
     <a href="https://wa.me/923057191127" class="whatsapp-float" target="_blank" title="Chat with us on WhatsApp">
         <i class="fab fa-whatsapp whatsapp-icon"></i>
     </a>
