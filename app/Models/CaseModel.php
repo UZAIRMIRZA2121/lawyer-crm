@@ -17,6 +17,7 @@ class CaseModel extends Model
         'status',
         'hearing_date',
         'judge_name',
+        'case_nature',
         'amount', // ✅ add this line
     ];
 

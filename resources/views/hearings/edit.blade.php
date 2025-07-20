@@ -66,6 +66,15 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
+                 
+              <div class="col-md-6">
+                <label for="nature" class="form-label">Nature</label>
+                <textarea name="nature" id="nature" rows="3"
+                    class="form-control @error('nature') is-invalid @enderror">{{ old('nature') }}</textarea>
+                @error('nature')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
             </div>
 
             <button type="submit" class="btn btn-primary">Update Hearing</button>

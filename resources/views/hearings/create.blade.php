@@ -31,14 +31,19 @@
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
-            <div class="col-md-3">
-                <label for="next_hearing" class="form-label">Next Hearing Date & Time</label>
-                <input type="datetime-local" name="next_hearing" id="next_hearing"
-                    class="form-control @error('next_hearing') is-invalid @enderror" value="{{ old('next_hearing') }}">
-                @error('next_hearing')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
+          @php
+    $now = \Carbon\Carbon::now()->format('Y-m-d\TH:i');
+@endphp
+
+<div class="col-md-3">
+    <label for="next_hearing" class="form-label">Next Hearing Date & Time</label>
+    <input type="datetime-local" name="next_hearing" id="next_hearing"
+        class="form-control @error('next_hearing') is-invalid @enderror"
+        value="{{ old('next_hearing', $now) }}">
+    @error('next_hearing')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+</div>
         </div>
 
         <div class="row mb-3">
@@ -56,6 +61,15 @@
                 <textarea name="my_remarks" id="my_remarks" rows="3"
                     class="form-control @error('my_remarks') is-invalid @enderror">{{ old('my_remarks') }}</textarea>
                 @error('my_remarks')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+            
+              <div class="col-md-6">
+                <label for="nature" class="form-label">Nature</label>
+                <textarea name="nature" id="nature" rows="3"
+                    class="form-control @error('nature') is-invalid @enderror">{{ old('nature') }}</textarea>
+                @error('nature')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>

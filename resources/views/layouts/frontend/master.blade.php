@@ -9,6 +9,27 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        .whatsapp-float {
+  position: fixed;
+  width: 60px;
+  height: 60px;
+  bottom: 20px;
+  right: 20px;
+  background-color: #25d366;
+  color: #fff;
+  border-radius: 50px;
+  text-align: center;
+  font-size: 30px;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.whatsapp-icon {
+  margin-top: 14px;
+}
+
+    </style>
 </head>
 
 <body>
@@ -16,12 +37,16 @@
     @include('layouts.frontend.header')
 
     @yield('main')
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/923057191127" class="whatsapp-float" target="_blank" title="Chat with us on WhatsApp">
+        <i class="fab fa-whatsapp whatsapp-icon"></i>
+    </a>
 
     @include('layouts.frontend.footer')
     <script src="{{ asset('public/asset/js/script.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-      function openModal(member) {
+    <script>
+        function openModal(member) {
             document.getElementById('modalName').innerText = member.name;
             document.getElementById('modalRole').innerText = member.role;
             document.getElementById('modalQualification').innerText = member.qualification;
@@ -37,7 +62,7 @@
             modal.show();
 
         }
-</script>
+    </script>
 </body>
 
 </html>

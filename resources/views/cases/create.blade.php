@@ -50,6 +50,13 @@
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
+                <div class="col-md-6">
+                    <label class="form-label">Case Nature</label>
+                    <input type="text" name="case_nature" class="form-control" value="{{ old('case_nature') }}" required>
+                    @error('case_nature')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
 
                 <div class="col-md-6">
                     <label class="form-label">Status</label>
@@ -80,22 +87,22 @@
 
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <label class="form-label">Hearing Date & Time</label>
-                    <input type="datetime-local" name="hearing_date" class="form-control"
-                        value="{{ old('hearing_date') }}">
-                    @error('hearing_date')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-
-
-                <div class="col-md-6">
                     <label class="form-label">Judge Name</label>
                     <input type="text" name="judge_name" class="form-control" value="{{ old('judge_name') }}">
                     @error('judge_name')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
+                @if(Auth::user()->role == 'admin')
+                <div class="col-md-6">
+                    <label class="form-label">Total Amount</label>
+                    <input type="text" name="amount" class="form-control" value="{{ old('amount') }}"
+                        required>
+                    @error('amount')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+                @endif
             </div>
 
             <button class="btn btn-success" type="submit">Save Case</button>

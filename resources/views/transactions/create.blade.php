@@ -6,7 +6,7 @@
 
         <form action="{{ route('cases.transactions.store', $case) }}" method="POST">
             @csrf
-
+          
             <div class="row">
                 <div class="col-md-3 mb-3">
                     <label>Amount <span class="text-danger">*</span></label>
@@ -48,7 +48,7 @@
                 <label>Status <span class="text-danger">*</span></label>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="status" id="paid" value="paid"
-                        {{ old('status') == 'paid' ? 'checked' : '' }} required>
+                        {{ old('status') == 'paid' ? 'checked' : '' }} required checked>
                     <label class="form-check-label" for="paid">
                         Paid
                     </label>

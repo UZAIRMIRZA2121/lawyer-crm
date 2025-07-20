@@ -22,6 +22,7 @@
                         <th>My Remarks</th>
                         <th>Next Hearing</th>
                         <th>Priority</th>
+                        <th>Nature</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -37,6 +38,8 @@
                                 @if ($hearing->priority === 'important') style="background-color: #f8d7da; font-weight: bold; color: #721c24;" @endif>
                                 {{ ucfirst($hearing->priority) }}
                             </td>
+                            <td>{{ $hearing->nature ?? 'N/A' }}</td>
+
                             <td>
                                 <a href="{{ route('hearings.edit', $hearing) }}?case_id={{ $case->id }}"
                                     class="btn btn-warning btn-sm">Edit</a>

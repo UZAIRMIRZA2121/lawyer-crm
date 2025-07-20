@@ -25,8 +25,12 @@ class User extends Authenticatable
         'role',
         'status',
         'profile_img',
+        'qualification',
+        'contact',
+        'facebook',
+        'twitter',
+        'linkedin',
     ];
-
     protected $hidden = [
         'password',
         'remember_token',

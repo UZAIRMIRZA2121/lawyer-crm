@@ -12,7 +12,7 @@
                 <div class="card border-primary mb-3">
                     <div class="card-body text-primary text-center">
                         <i class="bi bi-cash-stack" style="font-size: 2rem;"></i>
-                        <h3 class="card-title mt-2">Rs {{ number_format($totalAmount, 0) }}</h3>
+                        <h3 class="card-title mt-2">Rs {{ number_format($case->amount, 0) }}</h3>
                         <p class="card-text">Total Amount</p>
                     </div>
                 </div>
@@ -34,7 +34,7 @@
                 <div class="card border-warning mb-3">
                     <div class="card-body text-warning text-center">
                         <i class="bi bi-wallet-fill" style="font-size: 2rem;"></i>
-                        <h3 class="card-title mt-2">Rs {{ number_format($pendingAmount, 0) }}</h3>
+                        <h3 class="card-title mt-2">Rs {{ number_format($case->amount-$paidAmount, 0) }}</h3>
                         <p class="card-text">Remaining Amount</p>
                     </div>
                 </div>

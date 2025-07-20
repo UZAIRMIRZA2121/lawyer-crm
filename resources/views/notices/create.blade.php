@@ -125,17 +125,6 @@
 
 
             </div>
-
-
-
-
-
-
-
-
-
-
-
             <button type="submit" class="btn btn-success w-100">Create & Print</button>
         </form>
     </div>
@@ -153,6 +142,9 @@
 
     <script>
         $(document).ready(function() {
+            $('form').on('submit', function(e) {
+                console.log('Submitting form...');
+            });
             // Initialize Select2
             $('#case_id').select2({
                 placeholder: '-- Select Case --'
@@ -165,48 +157,82 @@
             $('#notice').summernote({
                 height: 200
             });
+            let loadedAgainstClients = [];
 
-            // AJAX Load Clients on Case change
             $('#case_id').on('change', function() {
-                var caseId = $(this).val();
-                var clientSelect = $('#against_client_id');
-
-                clientSelect.empty().append('<option value="">Loading...</option>');
+                const caseId = $(this).val();
 
                 if (caseId) {
                     $.ajax({
                         url: '/notices/clients-by-case/' + caseId,
                         type: 'GET',
                         success: function(data) {
-                            clientSelect.empty();
+                            const caseData = data.case;
+                            const mainClient = caseData.client;
+                            loadedAgainstClients = data.against_clients;
 
-                            if (data.length === 0) {
-                                clientSelect.append(
+                            // Fill case & plaintiff fields
+                            $('input[name="case_number"]').val(caseData.case_number ?? '');
+                            $('input[name="judge_name"]').val(caseData.judge_name ?? '');
+                            $('input[name="hearing_date"]').val(caseData.hearing_date?.split(
+                                ' ')[0] ?? '');
+                            $('input[name="hearing_time"]').val(caseData.hearing_date?.split(
+                                ' ')[1]?.substring(0, 5) ?? '');
+                            $('input[name="month_year"]').val(formatMonthYear(caseData
+                                .hearing_date));
+                            $('input[name="plaintiff_name"]').val(mainClient?.name ?? '');
+                            $('input[name="plaintiff_address"]').val(mainClient?.address ?? '');
+
+                            // Populate against clients dropdown
+                            const $clientSelect = $('#against_client_id');
+                            $clientSelect.empty();
+
+                            if (loadedAgainstClients.length === 0) {
+                                $clientSelect.append(
                                     '<option value="">No clients found</option>');
-                            } else if (data.length === 1) {
-                                clientSelect.append('<option value="' + data[0].id +
-                                    '" selected>' + data[0].name + '</option>');
                             } else {
-                                clientSelect.append(
+                                $clientSelect.append(
                                     '<option value="">-- Select Client --</option>');
-                                $.each(data, function(index, client) {
-                                    clientSelect.append('<option value="' + client.id +
-                                        '">' + client.name + '</option>');
+                                loadedAgainstClients.forEach(client => {
+                                    $clientSelect.append(
+                                        `<option value="${client.id}">${client.name}</option>`
+                                    );
                                 });
                             }
 
-                            // Refresh Select2
-                            clientSelect.trigger('change');
-                        },
-                        error: function() {
-                            clientSelect.empty().append(
-                                '<option value="">Error loading clients</option>');
+                            $clientSelect.trigger('change');
                         }
                     });
-                } else {
-                    clientSelect.empty().append('<option value="">-- Select Client --</option>');
                 }
             });
+
+            // When against client is selected
+            $('#against_client_id').on('change', function() {
+                const selectedId = $(this).val();
+                const selectedClient = loadedAgainstClients.find(client => client.id == selectedId);
+
+                if (selectedClient) {
+                    $('input[name="defendant_name"]').val(selectedClient.name ?? '');
+                    $('input[name="defendant_father_address"]').val(selectedClient.address ?? '');
+                    $('input[name="defendant_role"]').val('مدعا علیہ');
+                } else {
+                    $('input[name="defendant_name"]').val('');
+                    $('input[name="defendant_father_address"]').val('');
+                    $('input[name="defendant_role"]').val('');
+                }
+            });
+
+            // Helper
+            function formatMonthYear(dateStr) {
+                if (!dateStr) return '';
+                const date = new Date(dateStr);
+                return date.toLocaleString('default', {
+                    month: 'long',
+                    year: 'numeric'
+                });
+            }
+
+
         });
     </script>
 @endsection

@@ -24,13 +24,11 @@
                 </div>
             </div>
         </form>
-
-
         <div class="table-responsive">
             <table class="table table-bordered table-striped align-middle">
                 <thead class="table-light">
                     <tr>
-                        <th>Case</th>
+                        <th>Case Title</th>
                         <th>Name</th>
                         <th>CNIC</th>
                         <th>Address</th>

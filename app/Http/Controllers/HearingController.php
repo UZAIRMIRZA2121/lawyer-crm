@@ -35,6 +35,7 @@ class HearingController extends Controller
             'next_hearing' => 'nullable|date',
             'priority' => 'required|in:important,normal',
             'case_id' => 'required|exists:case_models,id',  // Validate case_id from query/form
+                'nature' => 'nullable|string|max:255', // <- new line
         ]);
 
         // No route-model binding, so fetch CaseModel manually if needed
@@ -62,6 +63,7 @@ class HearingController extends Controller
             'my_remarks' => 'nullable|string',
             'next_hearing' => 'nullable|date',
             'priority' => 'required|in:important,normal',
+                'nature' => 'nullable|string|max:255', // <- new line
         ]);
 
         $hearing->update($request->all());

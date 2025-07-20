@@ -16,7 +16,7 @@ public function index()
     $casesCount = CaseModel::count();
     $hearingsCount = Hearing::count();
     $teamMembersCount = User::where('role', 'team')->count();
-
+   
     $todayHearings = Hearing::whereDate('next_hearing', today())->with('case')->get();
     $tomorrowHearings = Hearing::whereDate('next_hearing', today()->addDay())->with('case')->get();
 

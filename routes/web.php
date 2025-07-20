@@ -10,6 +10,7 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\NoticeController;
+use App\Http\Controllers\UserController;
 
 // Home (public landing page)
 Route::get('/', function () {
@@ -35,6 +36,8 @@ Auth::routes();
 // Protected routes (only authenticated users can access)
 Route::middleware(['auth'])->group(function () {
     
+    Route::resource('users', UserController::class);
+
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -60,7 +63,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('notices', NoticeController::class);
     Route::get('notices/clients-by-case/{caseId}', [NoticeController::class, 'getClientsByCase']);
 
-Route::post('/summon-print', [NoticeController::class, 'print'])->name('summon.print');
+    Route::post('/summon-print', [NoticeController::class, 'print'])->name('summon.print');
 
 
 

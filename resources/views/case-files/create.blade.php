@@ -18,12 +18,16 @@
     <h4 class="mt-4">Uploaded Files Gallery</h4>
     <div class="row">
         @foreach($all_case_files as $file)
+
+
+
             <div class="col-md-3 mb-3">
                 <div class="card">
                     @php
                         $fileUrl = asset( 'storage/storage/' . $file->file_path);
                         $ext = pathinfo($file->file_path, PATHINFO_EXTENSION);
                     @endphp
+
 
                     @if(in_array(strtolower($ext), ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp']))
                         <img src="{{ $fileUrl }}" class="card-img-top" style="height: 180px; object-fit: cover;">
@@ -33,21 +37,31 @@
                             <p>{{ strtoupper($ext) }} file</p>
                         </div>
                     @endif
+<div class="card-body p-2 text-center d-flex flex-column align-items-center gap-2">
+    <div>
+             <a href="{{ $fileUrl }}" target="_blank" class="btn btn-sm btn-outline-primary">
+        {{ preg_replace('/^\d+_/', '', pathinfo(basename($file->file_path), PATHINFO_FILENAME)) }}
+ </a>
+    </div>
 
-                    <div class="card-body p-2 text-center d-flex justify-content-center gap-2">
-                        <a href="{{ $fileUrl }}" target="_blank" class="btn btn-sm btn-outline-primary">
-                            View
-                        </a>
+    <div class="d-flex gap-2 justify-content-center">
+        <a href="{{ $fileUrl }}" class="btn btn-sm btn-outline-success" download>
+            Download
+        </a>
 
-                       <form action="{{ route('files.destroy', $file) }}" method="POST"
-                              onsubmit="return confirm('Are you sure you want to delete this file?')">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-sm btn-outline-danger" type="submit">
-                                Delete
-                            </button>
-                        </form>
-                    </div>
+        <form action="{{ route('files.destroy', $file) }}" method="POST"
+              onsubmit="return confirm('Are you sure you want to delete this file?')">
+            @csrf
+            @method('DELETE')
+            <button class="btn btn-sm btn-outline-danger" type="submit">
+                Delete
+            </button>
+        </form>
+    </div>
+</div>
+
+             
+
                 </div>
             </div>
         @endforeach

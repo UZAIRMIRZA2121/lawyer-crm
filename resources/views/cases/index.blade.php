@@ -32,6 +32,7 @@
                         <th>Status</th>
                         <th>Hearing Date</th>
                         <th>Judge</th>
+                        <th>Nature</th>
                         {{-- <th>Paid Amount</th> <!-- 👈 New Column --> --}}
 
                         <th class="text-nowrap">Actions</th>
@@ -55,6 +56,7 @@
 
 
                             <td>{{ $case->judge_name ?? 'N/A' }}</td>
+                            <td>{{ $case->case_nature ?? 'N/A' }}</td>
                             {{-- <td>{{ number_format($case->amount) ?? 'N/A' }} /{{ number_format($case->transactions->sum('amount'), 2) }}</td> <!-- 👈 New Data --> --}}
 
                             <td class="text-nowrap">

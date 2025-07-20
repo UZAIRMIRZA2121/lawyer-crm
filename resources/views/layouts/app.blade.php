@@ -122,16 +122,13 @@
 
 <body>
 
-    @php
-        $public = app()->environment('local') ? '' : 'public/';
-    @endphp
 
     <div id="app">
        
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container-fluid">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                <a class="navbar-brand  text-dark" href="{{ url('/') }}">
+                   <span class="text-dark">Lawyer CRM</span> 
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent">
