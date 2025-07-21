@@ -122,7 +122,7 @@ class CaseController extends Controller
             if (!$isAssigned) {
                 abort(403, 'You are not assigned to this client.');
             }
-
+            
             // Fetch only clients assigned to this team member
             $clients = Client::whereHas('assignedUsers', function ($query) use ($user) {
                 $query->where('user_id', $user->id);

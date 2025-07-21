@@ -46,12 +46,32 @@
                             <td>{{ $case->case_title }}</td>
                             <td>{{ ucfirst($case->status) }}</td>
                             <td>
-                                @if ($case->hearing_date)
-                                    {{ \Carbon\Carbon::parse($case->hearing_date)->format('l, d-m-Y h:i A') }}
-                                @else
-                                    N/A
-                                @endif
+                                @php
+                                    $hearings = $case->hearings->sortByDesc('next_hearing');
+                                @endphp
+
+                                @foreach ($hearings as $hearing)
+                                    @php
+                                        $hearingDate = \Carbon\Carbon::parse($hearing->next_hearing);
+                                        $now = \Carbon\Carbon::now();
+
+                                        if ($hearingDate->isToday()) {
+                                            $badge = ['text' => 'Today', 'class' => 'bg-danger'];
+                                        } elseif ($hearingDate->isPast()) {
+                                            $badge = ['text' => 'Old', 'class' => 'bg-success'];
+                                        } else {
+                                            $badge = ['text' => 'Upcoming', 'class' => 'bg-warning text-dark'];
+                                        }
+                                    @endphp
+
+                                    <div class="d-flex align-items-center justify-content-between mb-1">
+                                        <span>{{ $hearingDate->format('d M Y h:i A') }}</span>
+                                        <span class="badge {{ $badge['class'] }} ms-2">{{ $badge['text'] }}</span>
+                                    </div>
+                                    <hr>
+                                @endforeach
                             </td>
+
 
 
 
