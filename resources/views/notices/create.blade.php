@@ -7,7 +7,6 @@
         <form action="{{ route('notices.store') }}" method="POST" target="_blank">
             @csrf
 
-            {{-- === Notice Section === --}}
             <h3 class="mb-3">Add Notice</h3>
 
             <div class="row">
@@ -31,7 +30,7 @@
 
             <div class="mb-3">
                 <label class="form-label">Notice</label>
-                <textarea name="notice" id="notice" class="form-control" required>{{ old('notice') }}</textarea>
+                <textarea name="notice" id="notice" class="form-control summernote">{{ old('notice') }}</textarea>
             </div>
 
             <div class="mb-3">
@@ -43,193 +42,129 @@
             </div>
 
             <hr>
-
-            {{-- === عدالتی حاضری فارم Section === --}}
             <h3 class="mb-3 text-center">عدالتی حاضری فارم</h3>
+
             <div class="row">
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label class="form-label">جج کا نام</label>
-                        <input type="text" name="judge_name" class="form-control text-end"
-                            placeholder="مثلاً: سینئر سول جج، فیصل آباد" value="{{ old('judge_name') }}">
-                    </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">جج کا نام</label>
+                    <input type="text" name="judge_name" class="form-control text-end" value="{{ old('judge_name') }}">
                 </div>
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label class="form-label">مقدمہ نمبر / عدالت</label>
-                        <input type="text" name="case_number" class="form-control text-end"
-                            value="{{ old('case_number') }}">
-                    </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">مقدمہ نمبر / عدالت</label>
+                    <input type="text" name="case_number" class="form-control text-end" value="{{ old('case_number') }}">
                 </div>
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label class="form-label">مدعی کا نام</label>
-                        <input type="text" name="plaintiff_name" class="form-control text-end"
-                            value="{{ old('plaintiff_name') }}">
-                    </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">مدعی کا نام</label>
+                    <input type="text" name="plaintiff_name" class="form-control text-end" value="{{ old('plaintiff_name') }}">
                 </div>
             </div>
+
             <div class="row">
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label class="form-label">مدعی کا پتہ</label>
-                        <input type="text" name="plaintiff_address" class="form-control text-end"
-                            value="{{ old('plaintiff_address') }}">
-                    </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">مدعی کا پتہ</label>
+                    <input type="text" name="plaintiff_address" class="form-control text-end" value="{{ old('plaintiff_address') }}">
                 </div>
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label class="form-label">نام مدعا علیہ</label>
-                        <input type="text" name="defendant_name" class="form-control text-end"
-                            value="{{ old('defendant_name') }}">
-                    </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">نام مدعا علیہ</label>
+                    <input type="text" name="defendant_name" class="form-control text-end" value="{{ old('defendant_name') }}">
                 </div>
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label class="form-label">ولدیت / پتہ مدعا علیہ</label>
-                        <input type="text" name="defendant_father_address" class="form-control text-end"
-                            value="{{ old('defendant_father_address') }}">
-                    </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">ولدیت / پتہ مدعا علیہ</label>
+                    <input type="text" name="defendant_father_address" class="form-control text-end" value="{{ old('defendant_father_address') }}">
                 </div>
             </div>
+
             <div class="row">
-                <div class="col-md-3">
-                    <div class="mb-3">
-                        <label class="form-label">مدعا علیہ کی حیثیت</label>
-                        <input type="text" name="defendant_role" class="form-control text-end"
-                            placeholder="مثلاً: گواہ، مخالف" value="{{ old('defendant_role') }}">
-                    </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">مدعا علیہ کی حیثیت</label>
+                    <input type="text" name="defendant_role" class="form-control text-end" value="{{ old('defendant_role') }}">
                 </div>
-                <div class="col-md-3">
-                    <div class="mb-3">
-                        <label class="form-label">تاریخ پیشی</label>
-                        <input type="date" name="hearing_date" class="form-control text-end"
-                            value="{{ old('hearing_date') }}">
-                    </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">تاریخ پیشی</label>
+                    <input type="date" name="hearing_date" class="form-control text-end" value="{{ old('hearing_date') }}">
                 </div>
-                <div class="col-md-3">
-                    <div class="mb-3">
-                        <label class="form-label">وقت</label>
-                        <input type="time" name="hearing_time" class="form-control text-end"
-                            value="{{ old('hearing_time', '08:00') }}">
-                    </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">وقت</label>
+                    <input type="time" name="hearing_time" class="form-control text-end" value="{{ old('hearing_time', '08:00') }}">
                 </div>
-                <div class="col-md-3">
-                    <div class="mb-3">
-                        <label class="form-label">مہینہ / سال</label>
-                        <input type="text" name="month_year" class="form-control text-end"
-                            placeholder="مثلاً: جولائی 2025" value="{{ old('month_year') }}">
-                    </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">مہینہ / سال</label>
+                    <input type="text" name="month_year" class="form-control text-end" placeholder="مثلاً: جولائی 2025" value="{{ old('month_year') }}">
                 </div>
-
-
-
             </div>
+
             <button type="submit" class="btn btn-success w-100">Create & Print</button>
         </form>
     </div>
+@endsection
 
-    {{-- jQuery --}}
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    {{-- Select2 --}}
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-    {{-- Summernote --}}
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+
+
+@push('scripts')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
     <script>
-        $(document).ready(function() {
-            $('form').on('submit', function(e) {
-                console.log('Submitting form...');
-            });
-            // Initialize Select2
-            $('#case_id').select2({
-                placeholder: '-- Select Case --'
-            });
-            $('#against_client_id').select2({
-                placeholder: '-- Select Client --'
-            });
+        $(document).ready(function () {
+            $('#case_id, #against_client_id').select2();
+            $('.summernote').summernote();
 
-      
             let loadedAgainstClients = [];
 
-            $('#case_id').on('change', function() {
+            $('#case_id').on('change', function () {
                 const caseId = $(this).val();
+             
+                if (!caseId) return;
 
-                if (caseId) {
-                    $.ajax({
-                        url: '/notices/clients-by-case/' + caseId,
-                        type: 'GET',
-                        success: function(data) {
-                            const caseData = data.case;
-                            const mainClient = caseData.client;
-                            loadedAgainstClients = data.against_clients;
+                $.ajax({
+                    url: `/notices/clients-by-case/${caseId}`,
+                    method: 'GET',
+                    success: function (data) {
+                        const caseData = data.case;
+                        const mainClient = caseData.client;
+                        loadedAgainstClients = data.against_clients;
 
-                            // Fill case & plaintiff fields
-                            $('input[name="case_number"]').val(caseData.case_number ?? '');
-                            $('input[name="judge_name"]').val(caseData.judge_name ?? '');
-                            $('input[name="hearing_date"]').val(caseData.hearing_date?.split(
-                                ' ')[0] ?? '');
-                            $('input[name="hearing_time"]').val(caseData.hearing_date?.split(
-                                ' ')[1]?.substring(0, 5) ?? '');
-                            $('input[name="month_year"]').val(formatMonthYear(caseData
-                                .hearing_date));
-                            $('input[name="plaintiff_name"]').val(mainClient?.name ?? '');
-                            $('input[name="plaintiff_address"]').val(mainClient?.address ?? '');
+                        // Prefill form
+                        $('input[name="case_number"]').val(caseData.case_number ?? '');
+                        $('input[name="judge_name"]').val(caseData.judge_name ?? '');
+                        $('input[name="hearing_date"]').val(caseData.hearing_date?.split(' ')[0] ?? '');
+                        $('input[name="hearing_time"]').val(caseData.hearing_date?.split(' ')[1]?.slice(0, 5) ?? '');
+                        $('input[name="month_year"]').val(formatMonthYear(caseData.hearing_date));
+                        $('input[name="plaintiff_name"]').val(mainClient?.name ?? '');
+                        $('input[name="plaintiff_address"]').val(mainClient?.address ?? '');
 
-                            // Populate against clients dropdown
-                            const $clientSelect = $('#against_client_id');
-                            $clientSelect.empty();
+                        const $clientSelect = $('#against_client_id');
+                        $clientSelect.empty().append('<option value="">-- Select Client --</option>');
+                        loadedAgainstClients.forEach(client => {
+                            $clientSelect.append(`<option value="${client.id}">${client.name}</option>`);
+                        });
 
-                            if (loadedAgainstClients.length === 0) {
-                                $clientSelect.append(
-                                    '<option value="">No clients found</option>');
-                            } else {
-                                $clientSelect.append(
-                                    '<option value="">-- Select Client --</option>');
-                                loadedAgainstClients.forEach(client => {
-                                    $clientSelect.append(
-                                        `<option value="${client.id}">${client.name}</option>`
-                                    );
-                                });
-                            }
-
-                            $clientSelect.trigger('change');
-                        }
-                    });
-                }
+                        $clientSelect.trigger('change');
+                    },
+                    error: function (xhr) {
+                        console.error(xhr.responseText);
+                    }
+                });
             });
 
-            // When against client is selected
-            $('#against_client_id').on('change', function() {
+            $('#against_client_id').on('change', function () {
                 const selectedId = $(this).val();
-                const selectedClient = loadedAgainstClients.find(client => client.id == selectedId);
+                const selectedClient = loadedAgainstClients.find(c => c.id == selectedId);
 
-                if (selectedClient) {
-                    $('input[name="defendant_name"]').val(selectedClient.name ?? '');
-                    $('input[name="defendant_father_address"]').val(selectedClient.address ?? '');
-                    $('input[name="defendant_role"]').val('مدعا علیہ');
-                } else {
-                    $('input[name="defendant_name"]').val('');
-                    $('input[name="defendant_father_address"]').val('');
-                    $('input[name="defendant_role"]').val('');
-                }
+                $('input[name="defendant_name"]').val(selectedClient?.name ?? '');
+                $('input[name="defendant_father_address"]').val(selectedClient?.address ?? '');
+                $('input[name="defendant_role"]').val(selectedClient ? 'مدعا علیہ' : '');
             });
 
-            // Helper
             function formatMonthYear(dateStr) {
                 if (!dateStr) return '';
                 const date = new Date(dateStr);
-                return date.toLocaleString('default', {
-                    month: 'long',
-                    year: 'numeric'
-                });
+                return date.toLocaleString('ur-PK', { month: 'long', year: 'numeric' });
             }
-
-
         });
     </script>
-@endsection
+@endpush
