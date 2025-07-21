@@ -153,10 +153,7 @@
                 placeholder: '-- Select Client --'
             });
 
-            // Initialize Summernote
-            $('#notice').summernote({
-                height: 200
-            });
+      
             let loadedAgainstClients = [];
 
             $('#case_id').on('change', function() {

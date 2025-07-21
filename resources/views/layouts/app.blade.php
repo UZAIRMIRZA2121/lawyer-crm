@@ -17,103 +17,103 @@
     <!-- Bootstrap 5 CSS (Required) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-<style>
-    :root {
-        --primary: #1a4d2e;
-        --accent: #f4a261;
-        --text: #333;
-        --background: #f9f9f9;
-        --sidebar-bg: #ffffff;
-        --hover-bg: #eaf4ef;
-        --border: #e0e0e0;
-    }
+    <style>
+        :root {
+            --primary: #1a4d2e;
+            --accent: #f4a261;
+            --text: #333;
+            --background: #f9f9f9;
+            --sidebar-bg: #ffffff;
+            --hover-bg: #eaf4ef;
+            --border: #e0e0e0;
+        }
 
-    body {
-        background-color: var(--background);
-        color: var(--text);
-        font-family: 'Nunito', sans-serif;
-    }
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            font-family: 'Nunito', sans-serif;
+        }
 
-    .navbar {
-        background-color: var(--primary) !important;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
+        .navbar {
+            background-color: var(--primary) !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-    .navbar .navbar-brand,
-    .navbar .nav-link,
-    .navbar .dropdown-toggle {
-        color: #fff !important;
-    }
+        .navbar .navbar-brand,
+        .navbar .nav-link,
+        .navbar .dropdown-toggle {
+            color: #fff !important;
+        }
 
-    .navbar .nav-link:hover,
-    .navbar .dropdown-toggle:hover {
-        color: var(--accent) !important;
-    }
+        .navbar .nav-link:hover,
+        .navbar .dropdown-toggle:hover {
+            color: var(--accent) !important;
+        }
 
-    .sidebar {
-        min-height: 100vh;
-        background-color: var(--sidebar-bg);
-        padding: 1rem;
-        border-right: 1px solid var(--border);
-    }
+        .sidebar {
+            min-height: 100vh;
+            background-color: var(--sidebar-bg);
+            padding: 1rem;
+            border-right: 1px solid var(--border);
+        }
 
-    .sidebar-link {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 10px 15px;
-        color: var(--text);
-        text-decoration: none;
-        border-radius: 6px;
-        transition: background-color 0.2s, color 0.2s;
-        font-weight: 500;
-    }
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            color: var(--text);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background-color 0.2s, color 0.2s;
+            font-weight: 500;
+        }
 
-    .sidebar-link:hover,
-    .sidebar-link.active {
-        background-color: var(--hover-bg);
-        color: var(--primary);
-    }
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background-color: var(--hover-bg);
+            color: var(--primary);
+        }
 
-    main {
-        padding: 2rem;
-        background: #fff;
-        border-radius: 8px;
-        margin: 1rem;
-        box-shadow: 0 0 10px rgba(0,0,0,0.05);
-    }
+        main {
+            padding: 2rem;
+            background: #fff;
+            border-radius: 8px;
+            margin: 1rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
 
-    .form-label {
-        font-weight: 600;
-        color: var(--primary);
-    }
+        .form-label {
+            font-weight: 600;
+            color: var(--primary);
+        }
 
-    .btn-primary {
-        background-color: var(--primary);
-        border-color: var(--primary);
-    }
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
 
-    .btn-primary:hover {
-        background-color: #145137;
-        border-color: #145137;
-    }
+        .btn-primary:hover {
+            background-color: #145137;
+            border-color: #145137;
+        }
 
-    .btn-accent {
-        background-color: var(--accent);
-        border-color: var(--accent);
-        color: #fff;
-    }
+        .btn-accent {
+            background-color: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
 
-    .btn-accent:hover {
-        background-color: #e9974f;
-        border-color: #e9974f;
-    }
+        .btn-accent:hover {
+            background-color: #e9974f;
+            border-color: #e9974f;
+        }
 
-    .btn {
-        border-radius: 4px;
-        font-weight: 500;
-    }
-</style>
+        .btn {
+            border-radius: 4px;
+            font-weight: 500;
+        }
+    </style>
 
 
     <!-- Vite Scripts -->
@@ -124,11 +124,11 @@
 
 
     <div id="app">
-       
+
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container-fluid">
                 <a class="navbar-brand  text-dark" href="{{ url('/') }}">
-                  Lawyer CRM
+                    Lawyer CRM
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent">
@@ -181,6 +181,45 @@
         </div>
     </div>
 
+    
+    <!-- jQuery (required) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Summernote JS -->
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+    <!-- Popper.js (required for Bootstrap 4 dropdowns) -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+    <!-- Bootstrap 4 JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Summernote JS -->
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#summernote, #notice').summernote({
+                height: 200,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['fontname', 'fontsize', 'color']],
+                    ['font', ['bold', 'italic', 'underline', 'clear']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']], // ✅ Table support
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview']]
+                ],
+                fontNames: ['Arial', 'Courier New', 'Comic Sans MS', 'Nunito', 'Times New Roman'],
+                popover: {
+                    image: [],
+                    link: [],
+                    air: []
+                }
+            });
+        });
+    </script>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
