@@ -145,7 +145,7 @@ class CaseController extends Controller
             'case_title' => 'required|string',
             'description' => 'nullable|string',
             'status' => 'required|in:open,pending,closed',
-
+            'case_nature' => 'nullable|string',
             'judge_name' => 'nullable|string',
             'files.*' => 'nullable|file|max:10240', // 10 MB per file
         ]);
@@ -155,6 +155,7 @@ class CaseController extends Controller
             'case_number' => $request->case_number,
             'client_id' => $request->client_id,
             'case_title' => $request->case_title,
+            'case_nature' => $request->case_nature,
             'description' => $request->description,
             'status' => $request->status,
 

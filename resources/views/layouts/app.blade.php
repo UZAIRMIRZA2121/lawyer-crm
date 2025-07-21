@@ -200,7 +200,7 @@
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('#summernote, #notice').summernote({
+            $('#summernote, #notice , #summernoteEdit').summernote({
                 height: 200,
                 toolbar: [
                     ['style', ['style']],

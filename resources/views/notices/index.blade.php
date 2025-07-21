@@ -16,7 +16,7 @@
                     <th>Case</th>
                     <th>User</th>
                     <th>Against Client ID</th>
-                    <th>Notice</th>
+                    {{-- <th>Notice</th> --}}
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
@@ -27,10 +27,10 @@
                         <td>{{ $notice->case->case_title ?? 'N/A' }}</td>
                         <td>{{ $notice->user->name ?? 'N/A' }}</td>
                         <td>{{ $notice->against_client->name ?? 'N/A' }}</td>
-                        <td>{{ $notice->notice }}</td>
+                        {{-- <td>{{ $notice->notice }}</td> --}}
                         <td>{{ $notice->status ? 'Active' : 'Inactive' }}</td>
                         <td>
-                            <a href="{{ route('notices.edit', $notice) }}" class="btn btn-sm btn-warning">Edit</a>
+                            {{-- <a href="{{ route('notices.edit', $notice) }}" class="btn btn-sm btn-warning">Edit</a> --}}
 
                             <!-- View button triggers modal -->
                             <button type="button" class="btn btn-sm btn-info btn-view-notice" data-bs-toggle="modal"
