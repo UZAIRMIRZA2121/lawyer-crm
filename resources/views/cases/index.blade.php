@@ -4,16 +4,13 @@
     <div class="container py-4">
         <h1 class="mb-4">Cases List</h1>
 
-        <a href="{{ route('cases.create') }}" class="btn btn-primary mb-3">Add New Case</a>
-
+        @if (auth()->user()->role === 'admin')
+            <a href="{{ route('cases.create') }}" class="btn btn-primary mb-3">Add New Case</a>
+        @endif
         @if (session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
-        @if (auth()->user()->role === 'admin')
-            {{-- <div class="alert alert-info">
-                <strong>Total Transactions Amount:</strong> {{ number_format($totalTransactionsAmount, 2) }}
-            </div> --}}
-        @endif
+
         <form method="GET" action="{{ route('cases.index') }}" class="mb-3">
             <div class="input-group">
                 <input type="text" name="search" class="form-control"
@@ -47,14 +44,18 @@
                             <td>{{ ucfirst($case->status) }}</td>
                             <td>
                                 @php
-                                    $hearings = $case->hearings->sortByDesc('next_hearing');
+                                    $nextHearing = $case->hearings
+                                        ->filter(function ($hearing) {
+                                            return \Carbon\Carbon::parse($hearing->next_hearing)->isFuture() ||
+                                                \Carbon\Carbon::parse($hearing->next_hearing)->isToday();
+                                        })
+                                        ->sortBy('next_hearing')
+                                        ->first();
                                 @endphp
 
-                                @foreach ($hearings as $hearing)
+                                @if ($nextHearing)
                                     @php
-                                        $hearingDate = \Carbon\Carbon::parse($hearing->next_hearing);
-                                        $now = \Carbon\Carbon::now();
-
+                                        $hearingDate = \Carbon\Carbon::parse($nextHearing->next_hearing);
                                         if ($hearingDate->isToday()) {
                                             $badge = ['text' => 'Today', 'class' => 'bg-danger'];
                                         } elseif ($hearingDate->isPast()) {
@@ -68,9 +69,11 @@
                                         <span>{{ $hearingDate->format('d M Y h:i A') }}</span>
                                         <span class="badge {{ $badge['class'] }} ms-2">{{ $badge['text'] }}</span>
                                     </div>
-                                    <hr>
-                                @endforeach
+                                @else
+                                    <span class="text-muted">No upcoming hearing</span>
+                                @endif
                             </td>
+
 
 
 

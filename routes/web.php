@@ -11,6 +11,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TaskController;
 
 // Home (public landing page)
 Route::get('/', function () {
@@ -33,9 +34,11 @@ Route::get('/contact', function () {
 // Laravel Auth routes (login, register, etc.)
 Auth::routes();
 
+
 // Protected routes (only authenticated users can access)
 Route::middleware(['auth'])->group(function () {
-    
+    Route::get('/profile', [UserController::class, 'show'])->name('profile.show');
+    Route::post('/profile', [UserController::class, 'profileupdate'])->name('profile.update');
     Route::resource('users', UserController::class);
 
     // Dashboard
@@ -66,5 +69,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/summon-print', [NoticeController::class, 'print'])->name('summon.print');
 
 
+    Route::resource('tasks', TaskController::class);
 
 });

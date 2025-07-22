@@ -45,8 +45,9 @@
                     <label class="form-label">CNIC Front Image</label>
                     <input type="file" name="cnic_front" class="form-control">
                     @if (!empty($client->cnic_front))
-                        <small class="d-block mt-1">Current: <a href="{{ asset( 'storage/storage/' . $client->cnic_front) }}"
-                                target="_blank">View Front</a></small>
+                        <small class="d-block mt-1">Current: <a href="{{ asset('storage/storage/' . $client->cnic_front) }}"
+                                target="_blank">View
+                                Front</a></small>
                     @endif
                 </div>
 
@@ -54,7 +55,7 @@
                     <label class="form-label">CNIC Back Image</label>
                     <input type="file" name="cnic_back" class="form-control">
                     @if (!empty($client->cnic_back))
-                        <small class="d-block mt-1">Current: <a href="{{ asset( 'storage/storage/' . $client->cnic_back) }}"
+                        <small class="d-block mt-1">Current: <a href="{{ asset('storage/storage/' . $client->cnic_back) }}"
                                 target="_blank">View Back</a></small>
                     @endif
                 </div>
@@ -64,7 +65,7 @@
                         @foreach ($users as $user)
                             @if ($user->role === 'team')
                                 <option value="{{ $user->id }}"
-                                    {{ isset($client) && $client->assignedUsers->contains($user->id) ? 'selected' : '' }}>
+                                    {{ (isset($client) ? $client->assignedUsers->contains($user->id) : true) ? 'selected' : '' }}>
                                     {{ $user->name }}
                                 </option>
                             @endif
@@ -81,22 +82,21 @@
         </form>
     </div>
 
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    @push('styles')
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    @endpush
 
-    <!-- Select2 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-    <!-- Select2 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
-    <script>
-        $(document).ready(function() {
-            $('#assigned_to_select').select2({
-                placeholder: "Select team members",
-                allowClear: true,
-                width: '100%'
+    @push('scripts')
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('#assigned_to_select').select2({
+                    placeholder: "Select team members",
+                    allowClear: true,
+                    width: '100%'
+                });
             });
-        });
-    </script>
+        </script>
+    @endpush
 @endsection

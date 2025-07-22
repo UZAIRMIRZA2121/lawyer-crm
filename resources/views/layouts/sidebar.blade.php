@@ -31,14 +31,25 @@
 
     <!-- Sidebar for larger screens -->
     <div class="d-none d-md-block col-md-1 sidebar bg-white">
-        <a href="{{ route('dashboard') }}"
-            class="sidebar-link d-block {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
-        <a href="{{ route('users.index') }}"
-            class="sidebar-link d-block {{ request()->routeIs('users') ? 'active' : '' }}">Team</a>
-        <a href="{{ route('clients.index') }}"
-            class="sidebar-link {{ request()->routeIs('clients.*') ? 'active' : '' }}">Clients</a>
-        <a href="{{ route('case-against-clients.index') }}"
-            class="sidebar-link {{ request()->routeIs('case-against-clients.*') ? 'active' : '' }}">Against Clients</a>
+        @if (Auth::user()->role == 'admin')
+            <a href="{{ route('dashboard') }}"
+                class="sidebar-link d-block {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
+
+            <a href="{{ route('users.index') }}"
+                class="sidebar-link d-block {{ request()->routeIs('users') ? 'active' : '' }}">Team</a>
+            <a href="{{ route('clients.index') }}"
+                class="sidebar-link {{ request()->routeIs('clients.*') ? 'active' : '' }}">Clients</a>
+
+            <a href="{{ route('case-against-clients.index') }}"
+                class="sidebar-link {{ request()->routeIs('case-against-clients.*') ? 'active' : '' }}">Against
+                Clients</a>
+        @endif
+        <a href="{{ route('profile.show') }}"
+            class="sidebar-link d-block {{ request()->routeIs('profile') ? 'active' : '' }}">My Profile</a>
+
+        <a href="{{ route('tasks.index') }}"
+            class="sidebar-link d-block {{ request()->routeIs('tasks') ? 'active' : '' }}">Tasks</a>
+
 
         <a href="{{ route('cases.index') }}"
             class="sidebar-link {{ request()->routeIs('cases.*') ? 'active' : '' }}">Cases</a>

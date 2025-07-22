@@ -1,21 +1,26 @@
 @extends('layouts.frontend.master')
 
 @section('main')
-  
-
     <section class="team-section">
         <h2>Our Team</h2>
         @php
-            $groups = include resource_path('views/team-data.php');
+            use App\Models\User;
+
+            // Get all team members (role = 'team'), grouped by position
+            $groups = User::where('role', 'team')->get()->groupBy('position');
         @endphp
- 
-        @foreach ($groups as $groupTitle => $members)
-            <div class="team-grid">
+
+        @foreach ($groups as $position => $members)
+          
+            <div class="team-grid d-flex flex-wrap gap-3">
                 @foreach ($members as $member)
-                    <div class="team-card" onclick='openModal(@json($member))'>
-                        <img src="{{ $member['image'] }}" alt="{{ $member['name'] }}">
-                        <h4>{{ $member['name'] }}</h4>
-                        <p>{{ $member['role'] }}</p>
+                    <div class="team-card text-center" onclick='openModal(@json($member))'>
+                        <img src="{{ $member->profile_img ? asset('storage/' . $member->profile_img) : asset('default.png') }}"
+                            alt="{{ $member->name }}" class="rounded-circle mb-2"
+                            style="width: 100px; height: 100px; object-fit: cover;">
+
+                        <h4 class="font-semibold">{{ $member->name }}</h4>
+                        <p class="text-sm text-muted">{{ ucfirst($member->role) }}</p>
                     </div>
                 @endforeach
             </div>

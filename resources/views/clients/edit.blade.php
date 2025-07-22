@@ -48,8 +48,9 @@
 
                     @if (!empty($client->cnic_front))
                         <small class="d-block mt-1">Current:</small>
-                        <a href="{{ asset( 'storage/' . $client->cnic_front) }}" target="_blank" class="d-inline-block mb-2">
-                            <img src="{{ asset( 'storage/' . $client->cnic_front) }}" alt="CNIC Front"
+                        <a href="{{ asset('storage/' . $client->cnic_front) }}" target="_blank"
+                            class="d-inline-block mb-2">
+                            <img src="{{ asset('storage/' . $client->cnic_front) }}" alt="CNIC Front"
                                 style="max-width: 150px; max-height: 100px; object-fit: contain; border: 1px solid #ddd; border-radius: 4px;">
                         </a>
                     @endif
@@ -61,13 +62,13 @@
 
                     @if (!empty($client->cnic_back))
                         <small class="d-block mt-1">Current:</small>
-                        <a href="{{ asset( 'storage/' . $client->cnic_back) }}" target="_blank" class="d-inline-block mb-2">
-                            <img src="{{ asset( 'storage/' . $client->cnic_back) }}" alt="CNIC Back"
+                        <a href="{{ asset('storage/' . $client->cnic_back) }}" target="_blank" class="d-inline-block mb-2">
+                            <img src="{{ asset('storage/' . $client->cnic_back) }}" alt="CNIC Back"
                                 style="max-width: 150px; max-height: 100px; object-fit: contain; border: 1px solid #ddd; border-radius: 4px;">
                         </a>
                     @endif
                 </div>
-                       <div class="mb-3 col-md-6">
+                <div class="mb-3 col-md-6">
                     <label class="form-label">Assigned To</label>
                     <select id="assigned_to_select" name="assigned_to[]" multiple class="form-control">
                         @foreach ($users as $user)
@@ -82,29 +83,28 @@
                 </div>
 
             </div>
-        
+
 
             <button type="submit" class="btn btn-success">Update</button>
             <a href="{{ route('clients.index') }}" class="btn btn-secondary">Back</a>
         </form>
     </div>
-    
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- Select2 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    @push('styles')
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    @endpush
 
-    <!-- Select2 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
-    <script>
-        $(document).ready(function() {
-            $('#assigned_to_select').select2({
-                placeholder: "Select team members",
-                allowClear: true,
-                width: '100%'
+    @push('scripts')
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('#assigned_to_select').select2({
+                    placeholder: "Select team members",
+                    allowClear: true,
+                    width: '100%'
+                });
             });
-        });
-    </script>
+        </script>
+    @endpush
 @endsection

@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -66,9 +68,9 @@ class UserController extends Controller
     {
         try {
             $request->validate([
-                'username' => 'required|string|unique:users,username,' . $user->id,
-                'name' => 'required|string',
-                'email' => 'required|email|unique:users,email,' . $user->id,
+                'username' => 'nullable|string|unique:users,username,' . $user->id,
+                'name' => 'nullable|string',
+                'email' => 'nullable|email|unique:users,email,' . $user->id,
                 'password' => 'nullable|string|min:6',
                 'role' => 'nullable|string',
                 'qualification' => 'nullable|string',
@@ -88,11 +90,17 @@ class UserController extends Controller
             $data['role'] = $request->input('role', 'team');
 
             if ($request->hasFile('profile_img')) {
-                if ($user->profile_img && \Storage::disk('public')->exists($user->profile_img)) {
-                    \Storage::disk('public')->delete($user->profile_img);
+                $file = $request->file('profile_img');
+                if ($file->isValid()) {
+                    // file is valid, try to store
+                    $data['profile_img'] = $file->store('profile_imgs', 'public');
+                } else {
+                    Log::error('Uploaded profile_img is invalid');
                 }
-                $data['profile_img'] = $request->file('profile_img')->store('profile_imgs', 'public');
+            } else {
+                Log::info('No profile_img file uploaded');
             }
+
 
             $user->update($data);
 
@@ -109,5 +117,58 @@ class UserController extends Controller
     {
         $user->delete();
         return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+    }
+
+
+
+
+
+    public function show()
+    {
+        $user = Auth::user();
+        return view('profile.show', compact('user'));
+    }
+
+    public function profileupdate(Request $request)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'username' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
+            'password' => 'nullable|string|min:8|confirmed',
+            'profile_img' => 'nullable|image|max:2048',
+            'qualification' => 'nullable|string|max:255',
+            'contact' => 'nullable|string|max:50',
+            'facebook' => 'nullable|url|max:255',
+            'twitter' => 'nullable|url|max:255',
+            'linkedin' => 'nullable|url|max:255',
+        ]);
+
+        // Basic info
+        $user->name = $request->name;
+        $user->username = $request->username;
+        $user->email = $request->email;
+        $user->qualification = $request->qualification;
+        $user->contact = $request->contact;
+        $user->facebook = $request->facebook;
+        $user->twitter = $request->twitter;
+        $user->linkedin = $request->linkedin;
+
+        // Update password if provided
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        // Profile image upload
+        if ($request->hasFile('profile_img')) {
+            $path = $request->file('profile_img')->store('profile_images', 'public');
+            $user->profile_img = $path;
+        }
+
+        $user->save();
+
+        return back()->with('success', 'Profile updated successfully!');
     }
 }

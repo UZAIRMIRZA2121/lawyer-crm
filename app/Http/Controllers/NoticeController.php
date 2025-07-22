@@ -20,12 +20,28 @@ class NoticeController extends Controller
 
     public function create()
     {
-        $cases = CaseModel::all();
+        $user = auth()->user();
+
+        // === Get cases based on role ===
+        if ($user->role === 'team') {
+            // Get assigned case IDs from client_user table
+            $assignedCaseIds = \DB::table('client_user')
+                ->where('user_id', $user->id)
+                ->pluck('case_id')
+                ->toArray();
+
+            $cases = CaseModel::whereIn('id', $assignedCaseIds)->get();
+        } else {
+            // Admin can see all cases
+            $cases = CaseModel::all();
+        }
+
         $users = User::all();
         $clients = CaseAgainstClient::all();
 
         return view('notices.create', compact('cases', 'users', 'clients'));
     }
+
 
     public function store(Request $request)
     {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CaseAgainstClient;
 use App\Models\CaseModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CaseAgainstClientController extends Controller
 {
@@ -12,15 +13,31 @@ class CaseAgainstClientController extends Controller
     {
         $query = CaseAgainstClient::with('case')->latest();
 
+        if (Auth::user()->role != 'admin') {
+            // Get assigned client IDs for this user
+            $assignedClientIds = \DB::table('client_user')
+                ->where('user_id', Auth::id())
+                ->pluck('case_id')
+                ->toArray();
+
+            // Filter query by assigned client IDs
+            if (!empty($assignedClientIds)) {
+                $query->whereIn('case_id', $assignedClientIds);
+            } else {
+                // If no assigned clients, return empty result immediately
+                $clients = collect();
+                return view('case_against_clients.index', compact('clients'));
+            }
+        }
+
         // Filter by case_id if present
-        if ($request->has('case_id') && $request->case_id != '') {
+        if ($request->filled('case_id')) {
             $query->where('case_id', $request->case_id);
         }
 
         // Search by name, cnic, or phone if search term is present
         if ($request->filled('search')) {
             $searchTerm = $request->search;
-
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('name', 'LIKE', "%{$searchTerm}%")
                     ->orWhere('cnic', 'LIKE', "%{$searchTerm}%")
@@ -37,7 +54,21 @@ class CaseAgainstClientController extends Controller
 
     public function create()
     {
-        $cases = CaseModel::all(); // dropdown for case selection
+        if (Auth::user()->role == 'admin') {
+            $cases = CaseModel::all(); // dropdown for case selection
+
+        } else {
+            $userId = Auth::id();
+
+            // Get all client IDs assigned to this user
+            $clientIds = \DB::table('client_user')
+                ->where('user_id', $userId)
+                ->pluck('client_id');
+
+            // Get only cases that belong to those clients
+            $cases = CaseModel::whereIn('client_id', $clientIds)->get();
+
+        }
         return view('case_against_clients.create', compact('cases'));
     }
 
@@ -63,7 +94,21 @@ class CaseAgainstClientController extends Controller
 
     public function edit(CaseAgainstClient $caseAgainstClient)
     {
-        $cases = CaseModel::all();
+        if (Auth::user()->role == 'admin') {
+            $cases = CaseModel::all(); // dropdown for case selection
+
+        } else {
+            $userId = Auth::id();
+
+            // Get all client IDs assigned to this user
+            $clientIds = \DB::table('client_user')
+                ->where('user_id', $userId)
+                ->pluck('client_id');
+
+            // Get only cases that belong to those clients
+            $cases = CaseModel::whereIn('client_id', $clientIds)->get();
+
+        }
         return view('case_against_clients.create', compact('caseAgainstClient', 'cases'));
     }
 
