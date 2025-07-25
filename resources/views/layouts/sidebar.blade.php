@@ -31,7 +31,7 @@
     </nav>
 
     <!-- Sidebar for larger screens -->
-    <div class="d-none d-md-block col-md-1 sidebar bg-white">
+    <div class="d-none d-md-block col-md-2 sidebar bg-white">
         @if (Auth::user()->role == 'admin')
             <a href="{{ route('dashboard') }}"
                 class="sidebar-link d-block {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
