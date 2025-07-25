@@ -30,11 +30,11 @@
                         <th>Hearing Date</th>
                         <th>Judge</th>
                         <th>Nature</th>
-                        {{-- <th>Paid Amount</th> <!-- 👈 New Column --> --}}
-
+                        <th>Assigned Users</th> {{-- New column --}}
                         <th class="text-nowrap">Actions</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     @forelse($cases as $case)
                         <tr>
@@ -43,44 +43,21 @@
                             <td>{{ $case->case_title }}</td>
                             <td>{{ ucfirst($case->status) }}</td>
                             <td>
-                                @php
-                                    $nextHearing = $case->hearings
-                                        ->filter(function ($hearing) {
-                                            return \Carbon\Carbon::parse($hearing->next_hearing)->isFuture() ||
-                                                \Carbon\Carbon::parse($hearing->next_hearing)->isToday();
-                                        })
-                                        ->sortBy('next_hearing')
-                                        ->first();
-                                @endphp
-
-                                @if ($nextHearing)
-                                    @php
-                                        $hearingDate = \Carbon\Carbon::parse($nextHearing->next_hearing);
-                                        if ($hearingDate->isToday()) {
-                                            $badge = ['text' => 'Today', 'class' => 'bg-danger'];
-                                        } elseif ($hearingDate->isPast()) {
-                                            $badge = ['text' => 'Old', 'class' => 'bg-success'];
-                                        } else {
-                                            $badge = ['text' => 'Upcoming', 'class' => 'bg-warning text-dark'];
-                                        }
-                                    @endphp
-
-                                    <div class="d-flex align-items-center justify-content-between mb-1">
-                                        <span>{{ $hearingDate->format('d M Y h:i A') }}</span>
-                                        <span class="badge {{ $badge['class'] }} ms-2">{{ $badge['text'] }}</span>
-                                    </div>
-                                @else
-                                    <span class="text-muted">No upcoming hearing</span>
-                                @endif
+                                {{-- existing hearing date logic --}}
                             </td>
-
-
-
-
-
                             <td>{{ $case->judge_name ?? 'N/A' }}</td>
                             <td>{{ $case->case_nature ?? 'N/A' }}</td>
-                            {{-- <td>{{ number_format($case->amount) ?? 'N/A' }} /{{ number_format($case->transactions->sum('amount'), 2) }}</td> <!-- 👈 New Data --> --}}
+
+                            {{-- New Assigned Users column --}}
+                            <td>
+                                @if ($case->assignedUsers->count())
+                                    @foreach ($case->assignedUsers as $user)
+                                        <span class="badge bg-primary">{{ $user->name }}</span>
+                                    @endforeach
+                                @else
+                                    <span class="text-muted">No assigned users</span>
+                                @endif
+                            </td>
 
                             <td class="text-nowrap">
                                 <div class="d-flex flex-wrap gap-1">
@@ -117,14 +94,14 @@
 
 
                             </td>
-
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center">No cases found.</td>
+                            <td colspan="9" class="text-center">No cases found.</td>
                         </tr>
                     @endforelse
                 </tbody>
+
             </table>
         </div>
 

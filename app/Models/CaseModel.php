@@ -37,5 +37,12 @@ class CaseModel extends Model
     {
         return $this->hasMany(Transaction::class, 'case_id');
     }
+    public function assignedUsers()
+    {
+        // Assuming the pivot is on client_user table and the relation is through the client
+        // This will get users assigned to this case through client pivot
+
+        return $this->client->assignedUsers()->wherePivot('case_id', $this->id);
+    }
 
 }

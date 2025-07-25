@@ -77,6 +77,8 @@ class CaseController extends Controller
             'amount' => 'nullable|numeric',
             'judge_name' => 'nullable|string',
             'hearing_date' => 'nullable|date',
+            'assigned_to' => 'nullable|array',
+            'assigned_to.*' => 'exists:users,id',
         ]);
 
         $data = $request->all();
@@ -85,7 +87,22 @@ class CaseController extends Controller
             $data['hearing_date'] = \Carbon\Carbon::parse($request->hearing_date);
         }
 
-        CaseModel::create($data);
+        // Create the case
+        $case = CaseModel::create($data);
+
+        // Assign users to the client through pivot with case_id
+        $client = $case->client;
+
+        if ($client && $request->has('assigned_to')) {
+            $assignedUserIds = $request->input('assigned_to', []);
+
+            $syncData = [];
+            foreach ($assignedUserIds as $userId) {
+                $syncData[$userId] = ['case_id' => $case->id];
+            }
+
+            $client->assignedUsers()->sync($syncData);
+        }
 
         return redirect()->route('cases.index')->with('success', 'Case created successfully.');
     }
@@ -133,7 +150,7 @@ class CaseController extends Controller
             ->pluck('user_id')
             ->toArray();
 
-        return view('cases.edit', compact('case', 'clients', 'users','assignedUserIds'));
+        return view('cases.edit', compact('case', 'clients', 'users', 'assignedUserIds'));
     }
 
 
