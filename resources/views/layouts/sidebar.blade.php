@@ -9,8 +9,9 @@
 
         .sidebar-link:hover,
         .sidebar-link.active {
-            background-color: #e9ecef;
+            background-color: #145137;
             font-weight: bold;
+            color: aliceblue;
             border-left: 4px solid #0d6efd;
         }
 
@@ -36,7 +37,7 @@
                 class="sidebar-link d-block {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
 
             <a href="{{ route('users.index') }}"
-                class="sidebar-link d-block {{ request()->routeIs('users') ? 'active' : '' }}">Team</a>
+                class="sidebar-link d-block {{ request()->routeIs('users.*') ? 'active' : '' }}">Team</a>
             <a href="{{ route('clients.index') }}"
                 class="sidebar-link {{ request()->routeIs('clients.*') ? 'active' : '' }}">Clients</a>
 
@@ -45,10 +46,12 @@
                 Clients</a>
         @endif
         <a href="{{ route('profile.show') }}"
-            class="sidebar-link d-block {{ request()->routeIs('profile') ? 'active' : '' }}">My Profile</a>
+            class="sidebar-link d-block {{ request()->routeIs('profile.*') ? 'active' : '' }}">My Profile</a>
 
         <a href="{{ route('tasks.index') }}"
-            class="sidebar-link d-block {{ request()->routeIs('tasks') ? 'active' : '' }}">Tasks</a>
+            class="sidebar-link d-block {{ request()->routeIs('tasks.*') ? 'active' : '' }}">
+            Tasks
+        </a>
 
 
         <a href="{{ route('cases.index') }}"

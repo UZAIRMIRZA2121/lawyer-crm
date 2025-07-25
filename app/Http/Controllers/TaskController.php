@@ -34,27 +34,38 @@ class TaskController extends Controller
         return view('tasks.create', compact('users'));
     }
 
-    public function store(Request $request)
-    {
-        $user = auth()->user();
+public function store(Request $request)
+{
+    $authUser = auth()->user();
 
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'task' => 'required|string',
-            'priority' => 'required|in:normal,urgent',
-            'submit_date' => 'required|date',
-            'status' => 'required|in:pending,working,completed',
-        ]);
+    $request->validate([
+        'user_ids'   => 'required|array',
+        'user_ids.*' => 'exists:users,id',
+        'task'       => 'required|string',
+        'priority'   => 'required|in:normal,urgent',
+        'submit_date'=> 'required|date',
+        'status'     => 'required|in:pending,working,completed',
+    ]);
 
+    foreach ($request->user_ids as $userId) {
         // Prevent team users from assigning tasks to others
-        if ($user->role !== 'admin' && $user->id != $request->user_id) {
-            abort(403, 'Unauthorized.');
+        if ($authUser->role !== 'admin' && $authUser->id != $userId) {
+            continue; // skip unauthorized assignment
         }
 
-        Task::create($request->all());
-
-        return redirect()->route('tasks.index')->with('success', 'Task created successfully.');
+        Task::create([
+            'user_id'     => $userId,
+            'task'        => $request->task,
+            'priority'    => $request->priority,
+            'submit_date' => $request->submit_date,
+            'status'      => $request->status,
+        ]);
     }
+
+    return redirect()->route('tasks.index')->with('success', 'Tasks created successfully.');
+}
+
+
 
     public function edit(Task $task)
     {

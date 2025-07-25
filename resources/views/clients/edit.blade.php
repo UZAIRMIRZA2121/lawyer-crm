@@ -68,7 +68,7 @@
                         </a>
                     @endif
                 </div>
-                <div class="mb-3 col-md-6">
+                {{-- <div class="mb-3 col-md-6">
                     <label class="form-label">Assigned To</label>
                     <select id="assigned_to_select" name="assigned_to[]" multiple class="form-control">
                         @foreach ($users as $user)
@@ -80,7 +80,7 @@
                             @endif
                         @endforeach
                     </select>
-                </div>
+                </div> --}}
 
             </div>
 

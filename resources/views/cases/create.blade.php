@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-  
     <div class="container py-4">
         <h1 class="mb-4">Add New Case</h1>
 
@@ -84,6 +83,22 @@
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
+                    @php
+                        // If there's no old input and $assignedUserIds is not set, select all user IDs
+$selectedUsers = old('assigned_to', $assignedUserIds ?? $users->pluck('id')->toArray());
+                    @endphp
+
+                    <div class="mb-3 col-md-12">
+                        <label class="form-label">Assigned To</label>
+                        <select id="assigned_to_select" name="assigned_to[]" multiple class="form-control">
+                            @foreach ($users as $user)
+                                <option value="{{ $user->id }}"
+                                    {{ in_array($user->id, $selectedUsers) ? 'selected' : '' }}>
+                                    {{ $user->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                 @endif
             </div>
             {{-- Summernote CSS --}}
@@ -103,7 +118,7 @@
             <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
             {{-- Initialize Summernote --}}
-      
+
 
 
             <button class="btn btn-success" type="submit">Save Case</button>
@@ -123,4 +138,22 @@
             });
         });
     </script>
+
+
+    @push('styles')
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    @endpush
+
+    @push('scripts')
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('#assigned_to_select').select2({
+                    placeholder: "Select team members",
+                    allowClear: true,
+                    width: '100%'
+                });
+            });
+        </script>
+    @endpush
 @endsection

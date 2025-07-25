@@ -107,12 +107,17 @@
                         @enderror
                     </div>
 
+                    @php
+                        // If there's no old input and $assignedUserIds is not set, select all user IDs
+$selectedUsers = old('assigned_to', $assignedUserIds ?? $users->pluck('id')->toArray());
+                    @endphp
+
                     <div class="mb-3 col-md-3">
                         <label class="form-label">Assigned To</label>
                         <select id="assigned_to_select" name="assigned_to[]" multiple class="form-control">
                             @foreach ($users as $user)
                                 <option value="{{ $user->id }}"
-                                    {{ in_array($user->id, old('assigned_to', $assignedUserIds ?? [])) ? 'selected' : '' }}>
+                                    {{ in_array($user->id, $selectedUsers) ? 'selected' : '' }}>
                                     {{ $user->name }}
                                 </option>
                             @endforeach

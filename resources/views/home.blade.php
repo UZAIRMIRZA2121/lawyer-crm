@@ -7,7 +7,7 @@
         <div class="hero-text">
             <h1>WE ARE VOICE OF JUSTICE</h1>
             <p>Lawyer / Law Firm / Attorney</p>
-            <a href="#" class="btn-primary">Contact Us</a>
+            <a href="{{ route('contact')}}" class="btn-primary">Contact Us</a>
         </div>
     </section>
 <section class="services-nav container my-5 d-flex flex-column flex-sm-row justify-content-center gap-3">
