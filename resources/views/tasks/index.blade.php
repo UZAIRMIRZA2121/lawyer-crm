@@ -35,21 +35,22 @@
                         <td>{!! Str::limit(strip_tags($task->task), 30) !!}</td>
                         <td>{{ ucfirst($task->priority) }}</td>
                         <td>{{ $task->submit_date }}</td>
-                        <td>
-                            @php
-                                $status = strtolower($task->status);
-                                $badgeClass = match ($status) {
-                                    'pending' => 'badge-warning',
-                                    'working' => 'badge-primary',
-                                    'completed' => 'badge-success',
-                                    default => 'badge-secondary',
-                                };
-                            @endphp
+                     <td>
+    @php
+        $status = strtolower($task->status);
+        $badgeClass = match ($status) {
+            'pending' => 'bg-warning text-dark',
+            'working' => 'bg-primary',
+            'completed' => 'bg-success',
+            default => 'bg-secondary',
+        };
+    @endphp
 
-                            <span class="badge {{ $badgeClass }}">
-                                {{ ucfirst($status) }}
-                            </span>
-                        </td>
+    <span class="badge {{ $badgeClass }}">
+        {{ ucfirst($status) }}
+    </span>
+</td>
+
 
                         <td>
                             <button class="btn btn-sm btn-info view-task-btn " id="view-task-btn"
