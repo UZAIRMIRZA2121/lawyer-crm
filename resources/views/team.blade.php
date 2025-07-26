@@ -5,24 +5,44 @@
         <h2>Our Team</h2>
         @php
             use App\Models\User;
+            use Illuminate\Support\Collection;
 
-            // Get all team members (role = 'team'), grouped by position
-            $groups = User::where('role', 'team')->get()->groupBy('position');
+            $users = User::where('role', 'team')->get();
+
+            // Group by position (null or empty becomes 'No Position')
+            $grouped = $users->groupBy(function ($user) {
+                return $user->position ?: 'No Position';
+            });
+
+            // Move 'No Position' group to the end manually
+            $ordered = collect();
+
+            foreach ($grouped as $key => $group) {
+                if ($key !== 'No Position') {
+                    $ordered->put($key, $group);
+                }
+            }
+
+            // Add 'No Position' at the end
+            if ($grouped->has('No Position')) {
+                $ordered->put('No Position', $grouped->get('No Position'));
+            }
         @endphp
 
-        @foreach ($groups as $position => $members)
-          
-            <div class="team-grid d-flex flex-wrap gap-3">
-                @foreach ($members as $member)
-                    <div class="team-card text-center" onclick='openModal(@json($member))'>
-                        <img src="{{ $member->profile_img ? asset('storage/' . $member->profile_img) : asset('default.png') }}"
-                            alt="{{ $member->name }}" class="rounded-circle mb-2"
-                            style="width: 100px; height: 100px; object-fit: cover;">
-
-                        <h4 class="font-semibold">{{ $member->name }}</h4>
-                        <p class="text-sm text-muted">{{ ucfirst($member->role) }}</p>
-                    </div>
-                @endforeach
+        @foreach ($ordered as $position => $members)
+            <div class="mb-4">
+              
+                <div class="team-grid d-flex flex-wrap gap-3">
+                    @foreach ($members as $member)
+                        <div class="team-card text-center" onclick='openModal(@json($member))'>
+                            <img src="{{ $member->profile_img ? asset('storage/' . $member->profile_img) : asset('default.png') }}"
+                                alt="{{ $member->name }}" class="rounded-circle mb-2"
+                                style="width: 100px; height: 100px; object-fit: cover;">
+                            <h4 class="font-semibold mb-0">{{ $member->name }}</h4>
+                            <p class="text-sm text-muted">{{ ucfirst($member->role) }}</p>
+                        </div>
+                    @endforeach
+                </div>
             </div>
         @endforeach
 

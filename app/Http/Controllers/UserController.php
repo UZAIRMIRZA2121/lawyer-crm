@@ -35,6 +35,8 @@ class UserController extends Controller
             'facebook' => 'nullable|url',
             'twitter' => 'nullable|url',
             'linkedin' => 'nullable|url',
+            'position' => 'nullable|string',
+            'position_title' => 'nullable|string',
             'profile_img' => 'nullable|image|max:2048',
         ]);
 
@@ -79,6 +81,8 @@ class UserController extends Controller
                 'twitter' => 'nullable|url',
                 'linkedin' => 'nullable|url',
                 'profile_img' => 'nullable|image|max:2048',
+                  'position' => 'nullable|string',
+            'position_title' => 'nullable|string',
             ]);
 
             $data = $request->except(['profile_img', 'password']);

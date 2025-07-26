@@ -8,7 +8,7 @@ class Notice extends Model
 {
 
     protected $fillable = [
-       'case_id',
+    'case_id',
     'user_id',
     'against_client_id',
     'notice',

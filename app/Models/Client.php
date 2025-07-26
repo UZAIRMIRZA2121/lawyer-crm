@@ -22,5 +22,9 @@ class Client extends Model
     {
         return $this->belongsToMany(User::class, 'client_user');
     }
-  
+    public function cases()
+    {
+        return $this->hasMany(CaseModel::class, 'client_id');
+    }
+
 }

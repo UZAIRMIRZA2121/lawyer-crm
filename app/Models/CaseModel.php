@@ -39,10 +39,15 @@ class CaseModel extends Model
     }
     public function assignedUsers()
     {
-        // Assuming the pivot is on client_user table and the relation is through the client
-        // This will get users assigned to this case through client pivot
 
         return $this->client->assignedUsers()->wherePivot('case_id', $this->id);
     }
-
+    public function againstClients()
+    {
+        return $this->hasMany(CaseAgainstClient::class, 'case_id'); // 👈 specify correct foreign key
+    }
+    public function notices()
+    {
+        return $this->hasMany(Notice::class, 'case_id');
+    }
 }

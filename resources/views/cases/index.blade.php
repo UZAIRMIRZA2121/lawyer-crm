@@ -43,8 +43,18 @@
                             <td>{{ $case->case_title }}</td>
                             <td>{{ ucfirst($case->status) }}</td>
                             <td>
-                                {{-- existing hearing date logic --}}
+                                @php
+                                    $nextHearing = $case->hearings->first();
+                                @endphp
+
+                                @if ($nextHearing)
+                                    {{ \Carbon\Carbon::parse($nextHearing->next_hearing)->format('d M Y, h:i A') }}
+                                @else
+                                    <span class="text-muted">No upcoming hearing</span>
+                                @endif
                             </td>
+
+
                             <td>{{ $case->judge_name ?? 'N/A' }}</td>
                             <td>{{ $case->case_nature ?? 'N/A' }}</td>
 
@@ -87,7 +97,10 @@
                                             Payment
                                         </a>
                                     @endif
-
+                                    <a href="{{ route('cases.printReport', $case->id) }}" target="_blank"
+                                        class="btn btn-dark btn-sm">
+                                        Print Report
+                                    </a>
 
 
                                 </div>

@@ -70,5 +70,6 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::resource('tasks', TaskController::class);
+    Route::get('/cases/{id}/print-report', [CaseController::class, 'printReport'])->name('cases.printReport');
 
 });

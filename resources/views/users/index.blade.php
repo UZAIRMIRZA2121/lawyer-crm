@@ -9,7 +9,7 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <table class="table table-bordered">
+    <table class="table table-bordered table-responsive">
         <thead>
             <tr>
                 <th>Name</th><th>Email</th><th>Role</th><th>Contact</th><th>Image</th><th>Actions</th>

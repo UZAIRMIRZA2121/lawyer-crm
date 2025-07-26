@@ -21,14 +21,20 @@
         }
     </style>
 
-    <!-- Toggle Button for mobile -->
-    <nav class="navbar navbar-light bg-white d-md-none">
-        <div class="container-fluid">
-            <button class="btn btn-outline-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
-                ☰ Menu
-            </button>
-        </div>
-    </nav>
+
+<!-- Toggle Button for mobile -->
+<nav class="navbar navbar-light bg-white d-md-none">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <a class="navbar-brand text-dark" href="{{ Auth::check() ? route('dashboard') : route('home') }}">
+            Lawyer CRM
+        </a>
+        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
+            ☰ 
+        </button>
+    </div>
+</nav>
+
+
 
     <!-- Sidebar for larger screens -->
     <div class="d-none d-md-block col-md-2 sidebar bg-white">
@@ -76,21 +82,39 @@
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
         </div>
         <div class="offcanvas-body">
-            <a href="{{ route('dashboard') }}"
-                class="sidebar-link d-block {{ request()->routeIs('dashboard.*') ? 'active' : '' }}">Dashboard</a>
-            <a href="{{ route('clients.index') }}"
-                class="sidebar-link d-block {{ request()->routeIs('clients.*') ? 'active' : '' }}">Clients</a>
+            @if (Auth::user()->role == 'admin')
+                <a href="{{ route('dashboard') }}"
+                    class="sidebar-link d-block {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
+
+                <a href="{{ route('users.index') }}"
+                    class="sidebar-link d-block {{ request()->routeIs('users.*') ? 'active' : '' }}">Team</a>
+
+                <a href="{{ route('clients.index') }}"
+                    class="sidebar-link d-block {{ request()->routeIs('clients.*') ? 'active' : '' }}">Clients</a>
+
+                <a href="{{ route('case-against-clients.index') }}"
+                    class="sidebar-link d-block {{ request()->routeIs('case-against-clients.*') ? 'active' : '' }}">Against
+                    Clients</a>
+            @endif
+
+            <a href="{{ route('profile.show') }}"
+                class="sidebar-link d-block {{ request()->routeIs('profile.*') ? 'active' : '' }}">My Profile</a>
+
+            <a href="{{ route('tasks.index') }}"
+                class="sidebar-link d-block {{ request()->routeIs('tasks.*') ? 'active' : '' }}">Tasks</a>
+
             <a href="{{ route('cases.index') }}"
                 class="sidebar-link d-block {{ request()->routeIs('cases.*') ? 'active' : '' }}">Cases</a>
 
+            <a href="{{ route('notices.index') }}"
+                class="sidebar-link d-block {{ request()->routeIs('notices.*') ? 'active' : '' }}">Notices</a>
 
-            <a class="sidebar-link d-block btn btn-danger" href="{{ route('logout') }}"
+            <a class="sidebar-link text-danger text-bold" href="{{ route('logout') }}"
                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                {{ __('Logout') }}
+                <b>Logout</b>
             </a>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                @csrf
-            </form>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
+
         </div>
     </div>
 @endif

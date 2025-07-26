@@ -169,6 +169,7 @@ class CaseController extends Controller
             'files.*' => 'nullable|file|max:10240', // 10 MB per file
             'assigned_to' => 'nullable|array',
             'assigned_to.*' => 'exists:users,id',
+              'amount' => 'nullable|numeric',
         ]);
 
         // Update case fields
@@ -180,6 +181,8 @@ class CaseController extends Controller
             'description' => $request->description,
             'status' => $request->status,
             'judge_name' => $request->judge_name,
+            'amount' => $request->amount,
+
         ]);
 
         // Sync assigned users for the client related to this case
@@ -220,9 +223,31 @@ class CaseController extends Controller
     }
 
 
-    public function destroy(CaseModel $case)
-    {
-        $case->delete();
-        return redirect()->route('cases.index')->with('success', 'Case deleted successfully.');
-    }
+public function destroy(CaseModel $case)
+{
+    // Delete related notices
+    $case->notices()->delete();
+
+    // Delete related against clients
+    $case->againstClients()->delete();
+
+    // Delete related hearings
+    $case->hearings()->delete();
+
+    // Now delete the case itself
+    $case->delete();
+
+    return redirect()->route('cases.index')->with('success', 'Case and all related records deleted successfully.');
+}
+
+
+
+
+
+    public function printReport($id)
+{
+    $case = CaseModel::with(['client', 'againstClients', 'hearings'])->findOrFail($id);
+
+    return view('cases.print_report', compact('case'));
+}
 }

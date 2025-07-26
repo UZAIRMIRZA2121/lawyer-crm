@@ -18,6 +18,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- In <head> -->
     @stack('styles')
@@ -128,40 +129,18 @@
 
 
     <div id="app">
-
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <div class="">
+              <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm d-none d-sm-block text-white p-2">
             <div class="container-fluid">
-                <a class="navbar-brand  text-dark" href="{{ url('dashboard') }}">
+                <a class="navbar-brand text-dark" href="{{ Auth::check() ? route('dashboard') : route('home') }}">
                     Lawyer CRM
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ms-auto">
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('dashboard') }}"> {{ Auth::user()->name }}</a>
-                            </li>
-
-                        @endguest
-                    </ul>
-                </div>
             </div>
         </nav>
+        </div>
+
+    
+
 
         <div class="container-fluid">
             <div class="row">

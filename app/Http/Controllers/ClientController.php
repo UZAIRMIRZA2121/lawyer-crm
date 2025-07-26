@@ -169,9 +169,25 @@ class ClientController extends Controller
     // Delete a client
     public function destroy(Client $client)
     {
+        foreach ($client->cases as $case) {
+            // Delete related notices
+            $case->notices()->delete();
+
+            // Delete related against clients
+            $case->againstClients()->delete();
+
+            // Delete related hearings
+            $case->hearings()->delete();
+
+            // Delete the case itself
+            $case->delete();
+        }
+
+        // Finally, delete the client
         $client->delete();
 
         return redirect()->route('clients.index')
-            ->with('success', 'Client deleted successfully.');
+            ->with('success', 'Client and all related cases and data deleted successfully.');
     }
+
 }

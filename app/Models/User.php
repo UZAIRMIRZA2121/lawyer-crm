@@ -30,6 +30,8 @@ class User extends Authenticatable
         'facebook',
         'twitter',
         'linkedin',
+        'position',
+        'position_title',
     ];
     protected $hidden = [
         'password',
