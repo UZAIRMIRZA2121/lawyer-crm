@@ -63,6 +63,29 @@
                     @endforeach
                 </div>
             </div>
+            <div class="col-md-3">
+                <label class="form-label">Sub Status</label>
+                <div class="d-flex flex-wrap gap-1">
+                    <a href="{{ route('tasks.index', array_merge(request()->except('page', 'sub_status'), ['sub_status' => null])) }}"
+                        class="btn btn-sm {{ request('sub_status') === null ? 'btn-primary' : '' }}">
+                        All
+                    </a>
+                    @php
+                        $subStatusFilters = [
+                            'drafting' => 'Drafting',
+                            'research' => 'Research',
+                            'note' => 'Note',
+                        ];
+                    @endphp
+                    @foreach ($subStatusFilters as $key => $label)
+                        <a href="{{ route('tasks.index', array_merge(request()->except('page'), ['sub_status' => $key])) }}"
+                            class="btn btn-sm {{ request('sub_status') === $key ? 'btn-primary' : '' }}">
+                            {{ $label }}
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+
         </div>
 
 
@@ -75,6 +98,7 @@
                     <th>Priority</th>
                     <th>Submit Date</th>
                     <th>Status</th>
+                    <th>Sub Status</th> <!-- New column -->
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -101,9 +125,24 @@
                             </span>
                         </td>
 
+                        <td>
+                            @php
+                                $subStatus = strtolower($task->sub_status);
+                                $subStatusClass = match ($subStatus) {
+                                    'drafting' => 'bg-info text-white',
+                                    'research' => 'bg-success text-white',
+                                    'note' => 'bg-danger text-white',
+                                    default => 'bg-light text-dark',
+                                };
+                            @endphp
+
+                            <span class="badge {{ $subStatusClass }}">
+                                {{ ucfirst($subStatus) }}
+                            </span>
+                        </td>
 
                         <td>
-                            <button class="btn btn-sm btn-info view-task-btn " id="view-task-btn"
+                            <button class="btn btn-sm btn-info view-task-btn" id="view-task-btn"
                                 data-task="{{ htmlspecialchars($task->task) }}" data-user="{{ $task->user->name }}"
                                 data-priority="{{ ucfirst($task->priority) }}" data-date="{{ $task->submit_date }}"
                                 data-status="{{ ucfirst($task->status) }}">
@@ -123,7 +162,6 @@
                                 });
                             </script>
 
-
                             @if (auth()->user()->id === $task->user_id || auth()->user()->role === 'admin')
                                 <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-sm btn-warning">Edit</a>
 
@@ -140,12 +178,12 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6">No tasks found.</td>
+                        <td colspan="7">No tasks found.</td> <!-- updated colspan -->
                     </tr>
                 @endforelse
-
             </tbody>
         </table>
+
     </div>
 
 

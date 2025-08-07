@@ -93,13 +93,22 @@
 
 
             <div class="row mb-3">
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <label class="form-label">Judge Name</label>
                     <input type="text" name="judge_name" class="form-control" value="{{ old('judge_name') }}">
                     @error('judge_name')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
+                <div class="col-md-3">
+                    <label for="created_at" class="form-label">Created At</label>
+                    <input type="datetime-local" name="created_at" id="created_at" class="form-control"
+                        value="{{ old('created_at') }}">
+                    @error('created_at')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+
                 @if (Auth::user()->role == 'admin')
                     <div class="col-md-3">
                         <label class="form-label">Total Amount</label>
@@ -109,9 +118,10 @@
                         @enderror
                     </div>
 
-                       <div class="col-md-3">
+                    <div class="col-md-3">
                         <label class="form-label">Total Commission </label>
-                        <input type="text" name="commission_amount" class="form-control" value="{{ old('commission_amount') }}" required>
+                        <input type="text" name="commission_amount" class="form-control"
+                            value="{{ old('commission_amount') }}" required>
                         @error('amount')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror

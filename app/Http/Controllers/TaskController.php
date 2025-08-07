@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use App\Models\HasFactory;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -35,6 +36,9 @@ class TaskController extends Controller
                 $query->where('status', $request->status);
             }
         }
+        if ($request->filled('sub_status')) {
+            $query->where('sub_status', $request->sub_status);
+        }
 
         // Get filtered tasks
         $tasks = $query->get();
@@ -61,37 +65,47 @@ class TaskController extends Controller
         $authUser = auth()->user();
 
         $request->validate([
-            'user_ids' => 'required|array',
+            'user_ids' => 'nullable|array',
             'user_ids.*' => 'exists:users,id',
             'task' => 'required|string',
             'priority' => 'required|in:normal,urgent,important',
             'submit_date' => 'required|date',
             'status' => 'required|in:pending,done',
+            'sub_status' => 'required|in:drafting,research,note',
         ]);
 
-        $createdCount = 0;
+        try {
+            $createdCount = 0;
 
-        foreach ($request->user_ids as $userId) {
-            if ($authUser->role !== 'admin' && $authUser->id != $userId) {
-                continue;
+            // Use user_ids from request or default to authenticated user ID in an array
+            $userIds = $request->input('user_ids', [$authUser->id]);
+
+            foreach ($userIds as $userId) {
+                if ($authUser->role !== 'admin' && $authUser->id != $userId) {
+                    continue;
+                }
+
+                Task::create([
+                    'user_id' => $userId,
+                    'task' => $request->task,
+                    'priority' => $request->priority,
+                    'submit_date' => $request->submit_date,
+                    'status' => $request->status,
+                    'sub_status' => $request->sub_status,
+                ]);
+
+                $createdCount++;
             }
 
-            Task::create([
-                'user_id' => $userId,
-                'task' => $request->task,
-                'priority' => $request->priority,
-                'submit_date' => $request->submit_date,
-                'status' => $request->status,
-            ]);
-            $createdCount++;
+            if ($createdCount === 0) {
+                return back()->withErrors('No tasks created. You may only assign tasks to yourself.');
+            }
+
+            return redirect()->route('tasks.index')->with('success', 'Tasks created successfully.');
+        } catch (\Exception $e) {
+            \Log::error('Task creation failed: ' . $e->getMessage());
+            return back()->withErrors('An error occurred while creating the tasks. Please try again.');
         }
-
-        if ($createdCount === 0) {
-            return back()->withErrors('No tasks created. You may only assign tasks to yourself.');
-        }
-
-        return redirect()->route('tasks.index')->with('success', 'Tasks created successfully.');
-
     }
 
 
@@ -114,22 +128,34 @@ class TaskController extends Controller
     {
         $user = auth()->user();
 
+        // Only allow admin or the task owner
         if ($user->role !== 'admin' && $task->user_id !== $user->id) {
             abort(403, 'Unauthorized.');
         }
 
+        // Validate incoming data
         $request->validate([
             'user_id' => 'nullable|exists:users,id',
             'task' => 'nullable|string',
-            'priority' => 'nullable|in:normal,urgent',
+            'priority' => 'nullable|in:normal,urgent,important',
             'submit_date' => 'nullable|date',
-            'status' => 'required|in:pending,working,completed',
+            'status' => 'required|in:pending,done',
+            'sub_status' => 'nullable|in:drafting,research,note',
         ]);
 
-        $task->update($request->all());
+        // Only update allowed fields explicitly
+        $task->update([
+            'user_id' => $request->user_id ?? $task->user_id,
+            'task' => $request->task ?? $task->task,
+            'priority' => $request->priority ?? $task->priority,
+            'submit_date' => $request->submit_date ?? $task->submit_date,
+            'status' => $request->status,
+            'sub_status' => $request->sub_status ?? $task->sub_status,
+        ]);
 
         return redirect()->route('tasks.index')->with('success', 'Task updated successfully.');
     }
+
 
     public function destroy(Task $task)
     {

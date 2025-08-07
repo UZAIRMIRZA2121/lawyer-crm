@@ -6,13 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
-    
+
     protected $fillable = [
         'user_id',
         'task',
         'priority',
         'submit_date',
         'status',
+        'sub_status', // newly added
     ];
 
     public function user()

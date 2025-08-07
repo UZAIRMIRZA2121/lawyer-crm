@@ -41,8 +41,10 @@ class HearingController extends Controller
 
 
     // Show form to create hearing
-    public function create(CaseModel $case)
+    public function create(Request $request,CaseModel $case)
     {
+          $caseId = $request->query('case_id');
+               $case = CaseModel::find($caseId);
         return view('hearings.create', compact('case'));
     }
 

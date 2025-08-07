@@ -21,6 +21,7 @@ class CaseModel extends Model
         'case_nature',
         'amount', // ✅ add this line
         'commission_amount', // ✅ add this line
+        'created_at', // ✅ add this line
     ];
 
     public function client()

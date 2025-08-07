@@ -11,8 +11,8 @@
             <div class="row mb-3">
                 <div class="col-md-3">
                     <label for="judge_name" class="form-label">Judge Name <span class="text-danger">*</span></label>
-                    <input type="text" name="judge_name" id="judge_name"
-                        class="form-control @error('judge_name') is-invalid @enderror" value="{{ old('judge_name') }}"
+                    <input type="text" name="judge_name" id="judge_name" 
+                        class="form-control @error('judge_name') is-invalid @enderror" value="{{ $case->judge_name }}"
                         required>
                     @error('judge_name')
                         <div class="invalid-feedback">{{ $message }}</div>
