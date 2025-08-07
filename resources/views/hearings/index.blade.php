@@ -64,7 +64,7 @@
 
 
         @if ($hearings->count())
-            <table class="table table-bordered m-3">
+            <table  class="table table-bordered m-3">
                 <thead>
                     <tr>
                         <th>Judge Name</th>
