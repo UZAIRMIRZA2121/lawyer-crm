@@ -54,6 +54,7 @@ class ClientController extends Controller
             'cnic_back' => 'nullable|image|max:2048',
             'assigned_to' => 'array|nullable',
             'assigned_to.*' => 'exists:users,id',
+             'referral_by' => 'nullable|string|max:255',
         ]);
 
         // Step 1: Create client without image paths
@@ -63,6 +64,7 @@ class ClientController extends Controller
             'contact_no' => $request->contact_no,
             'email' => $request->email,
             'address' => $request->address,
+            'referral_by' => $request->referral_by,
         ]);
 
         // Step 2: Create folder for storing CNICs

@@ -27,12 +27,20 @@
                         class="form-control">
                 </div>
 
-                <div class="mb-3 col-md-6">
+                <div class="mb-3 col-md-3">
                     <label class="form-label">Email</label>
                     <input type="email" name="email" value="{{ old('email', $client->email ?? '') }}"
                         class="form-control">
                 </div>
+                <div class="mb-3 col-md-3">
+                    <label class="form-label" for="referral_by">Referral By</label>
+                    <input type="text" name="referral_by" id="referral_by" class="form-control"
+                        value="{{ old('referral_by', $client->referral_by ?? '') }}">
+                </div>
+
             </div>
+
+
 
             <div class="row">
                 <div class="mb-3 col-md-12">

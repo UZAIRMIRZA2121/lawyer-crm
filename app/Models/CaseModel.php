@@ -15,10 +15,12 @@ class CaseModel extends Model
         'case_title',
         'description',
         'status',
+         'priority', // ✅ added here after status
         'hearing_date',
         'judge_name',
         'case_nature',
         'amount', // ✅ add this line
+        'commission_amount', // ✅ add this line
     ];
 
     public function client()

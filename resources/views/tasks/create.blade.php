@@ -28,49 +28,67 @@
                             </option>
                         @endforeach
                     </select>
-
+                    @error('user_ids')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
-
 
                 <div class="col-md-3 mb-3">
                     <label for="priority" class="form-label">Priority</label>
-                    <select name="priority" class="form-select">
+                    <select name="priority" class="form-select" required>
                         <option value="normal" {{ old('priority', $task->priority ?? '') == 'normal' ? 'selected' : '' }}>
-                            Normal</option>
+                            Normal
+                        </option>
                         <option value="urgent" {{ old('priority', $task->priority ?? '') == 'urgent' ? 'selected' : '' }}>
-                            Urgent</option>
+                            Urgent
+                        </option>
+                        <option value="important"
+                            {{ old('priority', $task->priority ?? '') == 'important' ? 'selected' : '' }}>
+                            Important
+                        </option>
                     </select>
+                    @error('priority')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="col-md-3 mb-3">
                     <label for="submit_date" class="form-label">Submit Date</label>
                     <input type="date" name="submit_date" class="form-control"
                         value="{{ old('submit_date', $task->submit_date ?? '') }}" required>
+                    @error('submit_date')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="col-md-3 mb-3">
                     <label for="status" class="form-label">Status</label>
-                    <select name="status" class="form-select">
+                    <select name="status" class="form-select" required>
                         <option value="pending" {{ old('status', $task->status ?? '') == 'pending' ? 'selected' : '' }}>
-                            Pending</option>
-                        <option value="working" {{ old('status', $task->status ?? '') == 'working' ? 'selected' : '' }}>
-                            Working</option>
-                        <option value="completed"
-                            {{ old('status', $task->status ?? '') == 'completed' ? 'selected' : '' }}>Completed</option>
+                            Pending
+                        </option>
+                        <option value="done" {{ old('status', $task->status ?? '') == 'done' ? 'selected' : '' }}>
+                            Done
+                        </option>
                     </select>
+                    @error('status')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="col-md-12 mb-3">
                     <label for="task" class="form-label">Task Description</label>
-                    <textarea name="task" id="summernote" class="form-control" rows="4" required>
-                    {{ old('task', $task->task ?? '') }}
-                </textarea>
+                    <textarea name="task" id="summernote" class="form-control" rows="4" required>{{ old('task', $task->task ?? '') }}</textarea>
+                    @error('task')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
 
             <button type="submit" class="btn btn-success">Save Task</button>
             <a href="{{ route('tasks.index') }}" class="btn btn-secondary">Cancel</a>
         </form>
+
     </div>
 @endsection
 

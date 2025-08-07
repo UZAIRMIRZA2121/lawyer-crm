@@ -15,8 +15,9 @@ class Hearing extends Model
         'judge_remarks',
         'my_remarks',
         'next_hearing',
+        'status',       // ✅ Add status before priority
         'priority',
-         'nature',
+        'nature',
     ];
 
     // Relation to case

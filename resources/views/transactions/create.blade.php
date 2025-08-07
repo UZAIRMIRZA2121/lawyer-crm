@@ -54,10 +54,10 @@
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="status" id="pending" value="pending"
-                        {{ old('status') == 'pending' ? 'checked' : '' }}>
-                    <label class="form-check-label" for="pending">
-                        Pending
+                    <input class="form-check-input" type="radio" name="status" id="commission" value="commission"
+                        {{ old('status') == 'commission' ? 'checked' : '' }}>
+                    <label class="form-check-label" for="commission">
+                        Commission
                     </label>
                 </div>
             </div>

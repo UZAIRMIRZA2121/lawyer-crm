@@ -61,18 +61,43 @@
 
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <label class="form-label">Status</label>
-                    <select name="status" class="form-select" required>
-                        @php
-                            $statuses = ['open' => 'Open', 'pending' => 'Pending', 'closed' => 'Closed'];
-                        @endphp
-                        @foreach ($statuses as $key => $label)
-                            <option value="{{ $key }}"
-                                {{ old('status', $case->status) == $key ? 'selected' : '' }}>
-                                {{ $label }}</option>
-                        @endforeach
-                    </select>
+                    <label class="form-label d-block">Status</label>
+                    @php
+                        $statuses = ['done' => 'Done', 'pending' => 'Pending'];
+                    @endphp
+                    @foreach ($statuses as $key => $label)
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="status" id="status_{{ $key }}"
+                                value="{{ $key }}" {{ old('status', $case->status) == $key ? 'checked' : '' }}
+                                required>
+                            <label class="form-check-label" for="status_{{ $key }}">{{ $label }}</label>
+                        </div>
+                    @endforeach
                     @error('status')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label d-block">Priority</label>
+                    @php
+                        $priorities = [
+                            'urgent' => 'Urgent',
+                            'important' => 'Important',
+                            'normal' => 'Normal',
+                        ];
+                    @endphp
+
+                    @foreach ($priorities as $key => $label)
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="priority"
+                                id="priority_{{ $key }}" value="{{ $key }}"
+                                {{ old('priority', $case->priority) == $key ? 'checked' : '' }} required>
+                            <label class="form-check-label" for="priority_{{ $key }}">{{ $label }}</label>
+                        </div>
+                    @endforeach
+
+                    @error('priority')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
@@ -106,7 +131,14 @@
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
-
+                    <div class="col-md-3">
+                        <label class="form-label">Total Commission </label>
+                        <input type="text" name="commission_amount" class="form-control"
+                            value="{{ old('commission_amount', $case->commission_amount) }}" required>
+                        @error('amount')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
                     @php
                         // If there's no old input and $assignedUserIds is not set, select all user IDs
 $selectedUsers = old('assigned_to', $assignedUserIds ?? $users->pluck('id')->toArray());

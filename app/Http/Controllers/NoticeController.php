@@ -14,7 +14,24 @@ class NoticeController extends Controller
 {
     public function index()
     {
-        $notices = Notice::with(['case', 'user'])->latest()->get();
+        $query = Notice::with(['case', 'user', 'against_client'])->latest();
+
+        // Filter by priority if present and valid
+        if ($priority = request('priority')) {
+            if (in_array($priority, ['normal', 'urgent', 'important'])) {
+                $query->where('priority', $priority);
+            }
+        }
+
+        // Filter by status if present and valid
+        if ($status = request('status')) {
+            if (in_array($status, ['pending', 'done'])) {
+                $query->where('status', $status);
+            }
+        }
+
+        $notices = $query->get();
+
         return view('notices.index', compact('notices'));
     }
 
@@ -51,7 +68,8 @@ class NoticeController extends Controller
             'user_id' => 'nullable|exists:users,id',
             'against_client_id' => 'nullable|exists:case_against_clients,id',
             'notice' => 'required|string',
-            'status' => 'required|boolean',
+            'status' => 'required|in:pending,done',            // Updated
+            'priority' => 'required|in:normal,urgent,important', // Added
 
             'judge_name' => 'nullable|string|max:255',
             'case_number' => 'nullable|string|max:255',
@@ -73,10 +91,7 @@ class NoticeController extends Controller
         $html = view('notices.print-summon', ['data' => $data])->render();
 
         // Encode HTML as base64
-        $base64Html = base64_encode($html);
-
-        // Add base64 HTML to data
-        $data['notice_base64'] = $base64Html;
+        $data['notice_base64'] = base64_encode($html);
 
         // Save notice including base64 encoded HTML
         Notice::create($data);

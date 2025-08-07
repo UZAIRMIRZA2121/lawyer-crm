@@ -16,6 +16,56 @@
         @if (auth()->user()->role === 'admin' || auth()->user()->role === 'team')
             <a href="{{ route('tasks.create') }}" class="btn btn-primary mb-3">Create Task</a>
         @endif
+        <div class="row g-3 align-items-end mb-4">
+            <!-- Priority Filter for Tasks -->
+            <div class="col-md-3">
+                <label class="form-label">Priority</label>
+                <div class="d-flex flex-wrap gap-1">
+                    <a href="{{ route('tasks.index', array_merge(request()->except('page', 'priority'), ['priority' => null])) }}"
+                        class="btn btn-sm {{ request('priority') === null ? 'btn-primary' : '' }}">
+                        All
+                    </a>
+                    @php
+                        $priorityFilters = [
+                            'urgent' => 'Urgent',
+                            'important' => 'Important',
+                            'normal' => 'Normal',
+                        ];
+                    @endphp
+                    @foreach ($priorityFilters as $key => $label)
+                        <a href="{{ route('tasks.index', array_merge(request()->except('page'), ['priority' => $key])) }}"
+                            class="btn btn-sm {{ request('priority') === $key ? 'btn-primary' : '' }}">
+                            {{ $label }}
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+
+            <!-- Status Filter for Tasks -->
+            <div class="col-md-3">
+                <label class="form-label">Status</label>
+                <div class="d-flex flex-wrap gap-1">
+                    <a href="{{ route('tasks.index', array_merge(request()->except('page', 'status'), ['status' => null])) }}"
+                        class="btn btn-sm {{ request('status') === null ? 'btn-primary' : '' }}">
+                        All
+                    </a>
+                    @php
+                        $statusFilters = [
+                            'pending' => 'Pending',
+                            'done' => 'Done',
+                        ];
+                    @endphp
+                    @foreach ($statusFilters as $key => $label)
+                        <a href="{{ route('tasks.index', array_merge(request()->except('page'), ['status' => $key])) }}"
+                            class="btn btn-sm {{ request('status') === $key ? 'btn-primary' : '' }}">
+                            {{ $label }}
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
+
 
         <table class="table table-bordered">
             <thead>
@@ -35,21 +85,21 @@
                         <td>{!! Str::limit(strip_tags($task->task), 30) !!}</td>
                         <td>{{ ucfirst($task->priority) }}</td>
                         <td>{{ $task->submit_date }}</td>
-                     <td>
-    @php
-        $status = strtolower($task->status);
-        $badgeClass = match ($status) {
-            'pending' => 'bg-warning text-dark',
-            'working' => 'bg-primary',
-            'completed' => 'bg-success',
-            default => 'bg-secondary',
-        };
-    @endphp
+                        <td>
+                            @php
+                                $status = strtolower($task->status);
+                                $badgeClass = match ($status) {
+                                    'pending' => 'bg-warning text-dark',
+                                    'working' => 'bg-primary',
+                                    'completed' => 'bg-success',
+                                    default => 'bg-secondary',
+                                };
+                            @endphp
 
-    <span class="badge {{ $badgeClass }}">
-        {{ ucfirst($status) }}
-    </span>
-</td>
+                            <span class="badge {{ $badgeClass }}">
+                                {{ ucfirst($status) }}
+                            </span>
+                        </td>
 
 
                         <td>

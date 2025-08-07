@@ -31,20 +31,26 @@
                 </div>
                 <div class="mb-3 col-md-6">
                     <label>Role</label>
-                    <input type="text" name="role" class="form-control" value="{{ old('role', $user->role ?? '') }}" readonly>
+                    <input type="text" name="role" class="form-control" value="{{ old('role', $user->role ?? '') }}"
+                        readonly>
                 </div>
             </div>
 
             <div class="row">
-             <div class="mb-3 col-md-6">
-    <label>Qualification</label>
-    <textarea name="qualification" class="form-control" rows="4">{{ old('qualification', $user->qualification ?? '') }}</textarea>
-</div>
-
                 <div class="mb-3 col-md-6">
+                    <label>Qualification</label>
+                    <textarea name="qualification" class="form-control" rows="4">{{ old('qualification', $user->qualification ?? '') }}</textarea>
+                </div>
+
+                <div class="mb-3 col-md-3">
                     <label>Contact</label>
                     <input type="text" name="contact" class="form-control"
                         value="{{ old('contact', $user->contact ?? '') }}">
+                </div>
+                <div class="mb-3 col-md-3">
+                    <label>Row</label>
+                    <input type="text" name="position" class="form-control"
+                        value="{{ old('position', $user->position ?? '') }}">
                 </div>
             </div>
 
@@ -70,10 +76,10 @@
                 <div class="mb-3 col-md-6">
                     <label>Profile Image</label>
                     <input type="file" name="profile_img" class="form-control">
-                  
+
                 </div>
                 <div class="mb-3 col-md-6">
-                
+
                     @if (isset($user) && $user->profile_img)
                         <img src="{{ asset('storage/' . $user->profile_img) }}" width="200" class="mt-2 d-block">
                     @endif

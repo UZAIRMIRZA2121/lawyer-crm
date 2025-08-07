@@ -1,8 +1,28 @@
 @extends('layouts.app')
 
 @section('content')
+    <style>
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            .table-responsive,
+            .table-responsive * {
+                visibility: visible;
+            }
+
+            .table-responsive {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+        }
+    </style>
+
     <div class="container py-4">
-        <h1 class="mb-4">Cases List</h1>
+        <h1 class="mb-4">Cases List {{ $cases->count() }}</h1>
 
         @if (auth()->user()->role === 'admin')
             <a href="{{ route('cases.create') }}" class="btn btn-primary mb-3">Add New Case</a>
@@ -10,24 +30,106 @@
         @if (session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
-
-        <form method="GET" action="{{ route('cases.index') }}" class="mb-3">
-            <div class="input-group">
-                <input type="text" name="search" class="form-control"
-                    placeholder="Search by Case Number, Title, Client Name, or Status" value="{{ request('search') }}">
-                <button type="submit" class="btn btn-primary">Search</button>
+        <div class="row g-3 align-items-end mb-4">
+            <!-- Search -->
+            <div class="col-md-6">
+                <form method="GET" action="{{ route('cases.index') }}" id="filterForm">
+                    <label for="search" class="form-label">Search</label>
+                    <div class="input-group">
+                        <input type="text" name="search" class="form-control"
+                            placeholder="Search by Case Number, Title, etc." value="{{ request('search') }}">
+                        <button type="submit" class="btn btn-primary">🔍</button>
+                    </div>
+                </form>
             </div>
-        </form>
+            <!-- Start Date -->
+            <div class="col-md-2">
+                <label for="start_date" class="form-label">Start Date</label>
+                <input type="date" name="start_date" id="start_date" class="form-control"
+                    value="{{ request('start_date') }}">
+            </div>
 
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped align-middle">
+            <!-- End Date -->
+            <div class="col-md-2">
+                <label for="end_date" class="form-label">End Date</label>
+                <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
+            </div>
+
+            <!-- Filter Buttons -->
+            <div class="col-md-1">
+                <button type="submit" form="filterForm" class="btn btn-primary w-100">Filter</button>
+
+            </div>
+            <!-- Filter Buttons -->
+            <div class="col-md-1">
+                <a href="{{ route('cases.index') }}" class="btn btn-secondary w-100 mt-2">Reset</a>
+            </div>
+
+
+
+            <!-- Priority Filter -->
+            <div class="col-md-3">
+                <label class="form-label">Priority</label>
+                <div class="d-flex flex-wrap gap-1">
+                    <a href="{{ route('cases.index', array_merge(request()->except('page', 'priority'), ['priority' => null])) }}"
+                        class="btn  btn-sm {{ request('priority') == null ? 'btn-primary' : '' }}">
+                        All
+                    </a>
+                    @php
+                        $filters = [
+                            'urgent' => 'Urgent',
+                            'important' => 'Important',
+                            'normal' => 'Normal',
+                        ];
+                    @endphp
+                    @foreach ($filters as $key => $label)
+                        <a href="{{ route('cases.index', array_merge(request()->except('page'), ['priority' => $key])) }}"
+                            class="btn  btn-sm {{ request('priority') == $key ? 'btn-primary' : '' }}">
+                            {{ $label }}
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+
+            <!-- status Filter -->
+            <div class="col-md-3 mt-3">
+                <label class="form-label">Status</label>
+                <div class="d-flex flex-wrap gap-1">
+                    <a href="{{ route('cases.index', array_merge(request()->except('page', 'status'), ['status' => null])) }}""
+                        class="btn  btn-sm {{ request('status') == null ? 'btn-primary' : '' }}">
+                        All
+                    </a>
+                    @php
+                        $subFilters = [
+                            'pending' => 'Pending',
+                            'done' => 'Done',
+                        ];
+                    @endphp
+                    @foreach ($subFilters as $key => $label)
+                        <a href="{{ route('cases.index', array_merge(request()->except('page'), ['status' => $key])) }}"
+                            class="btn  btn-sm {{ request('status') == $key ? 'btn-primary' : '' }}">
+                            {{ $label }}
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+
+            <!-- Print Button -->
+            <div class="col-md-2 mt-3">
+                <button class="btn btn-outline-dark w-100" onclick="printTable()">🖨️ Print Table</button>
+            </div>
+
+        </div>
+<hr>
+        <div class="table-responsive" style="max-height: 70vh; overflow-y: auto;">
+            <table class="table table-bordered table-striped align-middle table-fixed-header">
                 <thead class="table-light">
                     <tr>
                         <th>Case Number</th>
                         <th>Client</th>
                         <th>Title</th>
                         <th>Status</th>
-                        <th>Hearing Date</th>
+                        <th>Next Hearing Date</th>
                         <th>Judge</th>
                         <th>Nature</th>
                         <th>Assigned Users</th> {{-- New column --}}
@@ -122,4 +224,42 @@
             {{ $cases->links() }}
         </div>
     </div>
+
+    <script>
+        function printTable() {
+            // Hide the Actions column before printing
+            const actionColIndexes = [];
+            const ths = document.querySelectorAll('table thead th');
+            ths.forEach((th, index) => {
+                if (th.innerText.trim().toLowerCase() === 'actions') {
+                    actionColIndexes.push(index);
+                }
+            });
+
+            // Hide Action column cells
+            const rows = document.querySelectorAll('table tr');
+            rows.forEach(row => {
+                actionColIndexes.forEach(i => {
+                    if (row.children[i]) {
+                        row.children[i].style.display = 'none';
+                    }
+                });
+            });
+
+            // Trigger print
+            window.print();
+
+            // Restore Action column after printing
+            setTimeout(() => {
+                rows.forEach(row => {
+                    actionColIndexes.forEach(i => {
+                        if (row.children[i]) {
+                            row.children[i].style.display = '';
+                        }
+                    });
+                });
+            }, 1000);
+        }
+    </script>
+
 @endsection

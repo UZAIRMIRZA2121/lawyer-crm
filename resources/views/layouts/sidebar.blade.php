@@ -22,17 +22,18 @@
     </style>
 
 
-<!-- Toggle Button for mobile -->
-<nav class="navbar navbar-light bg-white d-md-none">
-    <div class="container-fluid d-flex justify-content-between align-items-center">
-        <a class="navbar-brand text-dark" href="{{ Auth::check() ? route('dashboard') : route('home') }}">
-            Lawyer CRM
-        </a>
-        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
-            ☰ 
-        </button>
-    </div>
-</nav>
+
+    <!-- Toggle Button for mobile -->
+    <nav class="navbar navbar-light bg-white d-md-none">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <a class="navbar-brand text-dark" href="{{ Auth::check() ? route('dashboard') : route('home') }}">
+                Lawyer CRM
+            </a>
+            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
+                ☰
+            </button>
+        </div>
+    </nav>
 
 
 
@@ -50,6 +51,8 @@
             <a href="{{ route('case-against-clients.index') }}"
                 class="sidebar-link {{ request()->routeIs('case-against-clients.*') ? 'active' : '' }}">Against
                 Clients</a>
+            <a href="{{ route('hearings.index') }}"
+                class="sidebar-link {{ request()->routeIs('hearings.*') ? 'active' : '' }}">Hearnigs</a>
         @endif
         <a href="{{ route('profile.show') }}"
             class="sidebar-link d-block {{ request()->routeIs('profile.*') ? 'active' : '' }}">My Profile</a>

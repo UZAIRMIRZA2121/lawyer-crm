@@ -20,19 +20,55 @@
                     @enderror
                 </div>
 
-                <div class="col-md-6">
-                    <label for="priority" class="form-label">Priority <span class="text-danger">*</span></label>
-                    <select name="priority" id="priority" class="form-select @error('priority') is-invalid @enderror"
-                        required>
-                        <option value="normal" {{ old('priority', $hearing->priority) === 'normal' ? 'selected' : '' }}>
-                            Normal</option>
-                        <option value="important"
-                            {{ old('priority', $hearing->priority) === 'important' ? 'selected' : '' }}>Important</option>
-                    </select>
-                    @error('priority')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                <!-- Status Radio Buttons -->
+                <div class="col-md-3">
+                    <label class="form-label d-block">Status <span class="text-danger">*</span></label>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="status" id="statusPending" value="pending"
+                            {{ old('status', $hearing->status ?? '') === 'pending' ? 'checked' : '' }} required>
+                        <label class="form-check-label" for="statusPending">Pending</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="status" id="statusDone" value="done"
+                            {{ old('status', $hearing->status ?? '') === 'done' ? 'checked' : '' }}>
+                        <label class="form-check-label" for="statusDone">Done</label>
+                    </div>
+
+                    @error('status')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
                     @enderror
                 </div>
+
+                <!-- Priority Radio Buttons -->
+                <div class="col-md-3">
+                    <label class="form-label d-block">Priority <span class="text-danger">*</span></label>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="priority" id="priorityNormal" value="normal"
+                            {{ old('priority', $hearing->priority ?? '') === 'normal' ? 'checked' : '' }} required>
+                        <label class="form-check-label" for="priorityNormal">Normal</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="priority" id="priorityImportant"
+                            value="important"
+                            {{ old('priority', $hearing->priority ?? '') === 'important' ? 'checked' : '' }}>
+                        <label class="form-check-label" for="priorityImportant">Important</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="priority" id="priorityUrgent" value="urgent"
+                            {{ old('priority', $hearing->priority ?? '') === 'urgent' ? 'checked' : '' }}>
+                        <label class="form-check-label" for="priorityUrgent">Urgent</label>
+                    </div>
+
+                    @error('priority')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                    @enderror
+                </div>
+
             </div>
 
             <div class="row mb-3">
@@ -66,15 +102,14 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                 
-              <div class="col-md-6">
-                <label for="nature" class="form-label">Nature</label>
-                <textarea name="nature" id="nature" rows="3"
-                    class="form-control @error('nature') is-invalid @enderror">{{ old('nature') }}</textarea>
-                @error('nature')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
+
+                <div class="col-md-6">
+                    <label for="nature" class="form-label">Nature</label>
+                    <textarea name="nature" id="nature" rows="3" class="form-control @error('nature') is-invalid @enderror">{{ old('nature') }}</textarea>
+                    @error('nature')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
 
             <button type="submit" class="btn btn-primary">Update Hearing</button>
@@ -82,24 +117,24 @@
         </form>
     </div>
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('hearingForm');
-    const nextHearingInput = document.getElementById('next_hearing');
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('hearingForm');
+            const nextHearingInput = document.getElementById('next_hearing');
 
-    form.addEventListener('submit', function(e) {
-        const nextHearingValue = nextHearingInput.value;
+            form.addEventListener('submit', function(e) {
+                const nextHearingValue = nextHearingInput.value;
 
-        if (nextHearingValue) {
-            const selectedDate = new Date(nextHearingValue);
-            const now = new Date();
+                if (nextHearingValue) {
+                    const selectedDate = new Date(nextHearingValue);
+                    const now = new Date();
 
-            if (selectedDate <= now) {
-                e.preventDefault(); // Stop form submission
-                alert('Next Hearing Date & Time must be greater than the current date and time.');
-                nextHearingInput.focus();
-            }
-        }
-    });
-});
-</script>
+                    if (selectedDate <= now) {
+                        e.preventDefault(); // Stop form submission
+                        alert('Next Hearing Date & Time must be greater than the current date and time.');
+                        nextHearingInput.focus();
+                    }
+                }
+            });
+        });
+    </script>
 @endsection

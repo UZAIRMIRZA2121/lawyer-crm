@@ -6,6 +6,9 @@
 
         <a href="{{ route('cases.transactions.create', $case) }}" class="btn btn-primary mb-3">Add Transaction</a>
 
+        
+
+
         <div class="row">
             <!-- Total Amount -->
             <div class="col-md-4">
@@ -34,8 +37,43 @@
                 <div class="card border-warning mb-3">
                     <div class="card-body text-warning text-center">
                         <i class="bi bi-wallet-fill" style="font-size: 2rem;"></i>
-                        <h3 class="card-title mt-2">Rs {{ number_format($case->amount-$paidAmount, 0) }}</h3>
+                        <h3 class="card-title mt-2">Rs {{ number_format($case->amount - $paidAmount, 0) }}</h3>
                         <p class="card-text">Remaining Amount</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Total Amount -->
+            <div class="col-md-4">
+                <div class="card border-primary mb-3">
+                    <div class="card-body text-primary text-center">
+                        <i class="bi bi-cash-stack" style="font-size: 2rem;"></i>
+                        <h3 class="card-title mt-2">Rs {{ number_format($case->commission_amount, 0) }}</h3>
+                        <p class="card-text">Total Commission Amount</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Paid Amount -->
+            <div class="col-md-4">
+                <div class="card border-success mb-3">
+                    <div class="card-body text-success text-center">
+                        <i class="bi bi-cash-coin" style="font-size: 2rem;"></i>
+                        <h3 class="card-title mt-2">Rs {{ number_format($commissionPaidAmount, 0) }}</h3>
+                        <p class="card-text">Paid Commission Amount</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Remaining Amount -->
+            <div class="col-md-4">
+                <div class="card border-warning mb-3">
+                    <div class="card-body text-warning text-center">
+                        <i class="bi bi-wallet-fill" style="font-size: 2rem;"></i>
+                        <h3 class="card-title mt-2">Rs {{ number_format($case->commission_amount - $commissionPaidAmount, 0) }}</h3>
+                        <p class="card-text">Remaining Commission Amount</p>
                     </div>
                 </div>
             </div>
@@ -67,7 +105,7 @@
                                 @if ($transaction->status === 'paid')
                                     <span class="badge bg-success">Paid</span>
                                 @else
-                                    <span class="badge bg-warning text-dark">Pending</span>
+                                    <span class="badge bg-success">Commission Amount</span>
                                 @endif
                             </td>
                             <td>

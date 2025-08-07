@@ -22,13 +22,21 @@ class CaseController extends Controller
                 ->pluck('case_id')
                 ->toArray();
 
-            // Apply filter: show only those cases that match assigned case IDs
             $query->whereIn('id', $assignedCaseIds);
         }
 
         // === ADMIN ROLE: Optional filtering by client_id
         if ($user->role === 'admin' && $request->filled('client_id')) {
             $query->where('client_id', $request->client_id);
+        }
+
+        // === Date Range Filter ===
+        if ($request->filled('start_date')) {
+            $query->whereDate('created_at', '>=', $request->start_date);
+        }
+
+        if ($request->filled('end_date')) {
+            $query->whereDate('created_at', '<=', $request->end_date);
         }
 
         // === Search Filter ===
@@ -43,6 +51,15 @@ class CaseController extends Controller
                     });
             });
         }
+        // === Priority Filter ===
+        if ($request->filled('priority')) {
+            $query->where('priority', $request->priority);
+        }
+
+        // === Status Filter ===
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
 
         $cases = $query->latest()->paginate(15);
 
@@ -54,9 +71,6 @@ class CaseController extends Controller
 
         return view('cases.index', compact('cases', 'totalTransactionsAmount'));
     }
-
-
-
 
     public function create()
     {
@@ -74,7 +88,9 @@ class CaseController extends Controller
             'case_nature' => 'nullable|string',
             'description' => 'nullable|string',
             'status' => 'required|string',
+            'priority' => 'required|string',
             'amount' => 'nullable|numeric',
+            'commission_amount ' => 'nullable|numeric',
             'judge_name' => 'nullable|string',
             'hearing_date' => 'nullable|date',
             'assigned_to' => 'nullable|array',
@@ -163,13 +179,15 @@ class CaseController extends Controller
             'client_id' => 'required|exists:clients,id',
             'case_title' => 'required|string',
             'description' => 'nullable|string',
-            'status' => 'required|in:open,pending,closed',
+            'status' => 'required|in:open,pending,closed,done', // add any other statuses you use
             'case_nature' => 'nullable|string',
             'judge_name' => 'nullable|string',
+            'priority' => 'required|in:urgent,important,normal',
+            'commission_amount' => 'nullable|numeric|min:0',
             'files.*' => 'nullable|file|max:10240', // 10 MB per file
             'assigned_to' => 'nullable|array',
             'assigned_to.*' => 'exists:users,id',
-              'amount' => 'nullable|numeric',
+            'amount' => 'nullable|numeric',
         ]);
 
         // Update case fields
@@ -181,18 +199,17 @@ class CaseController extends Controller
             'description' => $request->description,
             'status' => $request->status,
             'judge_name' => $request->judge_name,
+            'priority' => $request->priority,
+            'commission_amount' => $request->commission_amount,
             'amount' => $request->amount,
-
         ]);
 
         // Sync assigned users for the client related to this case
-        // Assuming assigned users are stored on the Client model pivot table (client_user)
         $client = $case->client;
 
         if ($client) {
             $assignedUserIds = $request->input('assigned_to', []);
 
-            // Prepare sync data with pivot case_id
             $syncData = [];
             foreach ($assignedUserIds as $userId) {
                 $syncData[$userId] = ['case_id' => $case->id];
@@ -223,31 +240,31 @@ class CaseController extends Controller
     }
 
 
-public function destroy(CaseModel $case)
-{
-    // Delete related notices
-    $case->notices()->delete();
+    public function destroy(CaseModel $case)
+    {
+        // Delete related notices
+        $case->notices()->delete();
 
-    // Delete related against clients
-    $case->againstClients()->delete();
+        // Delete related against clients
+        $case->againstClients()->delete();
 
-    // Delete related hearings
-    $case->hearings()->delete();
+        // Delete related hearings
+        $case->hearings()->delete();
 
-    // Now delete the case itself
-    $case->delete();
+        // Now delete the case itself
+        $case->delete();
 
-    return redirect()->route('cases.index')->with('success', 'Case and all related records deleted successfully.');
-}
+        return redirect()->route('cases.index')->with('success', 'Case and all related records deleted successfully.');
+    }
 
 
 
 
 
     public function printReport($id)
-{
-    $case = CaseModel::with(['client', 'againstClients', 'hearings'])->findOrFail($id);
+    {
+        $case = CaseModel::with(['client', 'againstClients', 'hearings'])->findOrFail($id);
 
-    return view('cases.print_report', compact('case'));
-}
+        return view('cases.print_report', compact('case'));
+    }
 }

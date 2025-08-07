@@ -15,10 +15,13 @@ class TransactionController extends Controller
         
         $totalAmount = $case->transactions()->sum('amount');
         $paidAmount = $case->transactions()->where('status', 'paid')->sum('amount');
-        $pendingAmount = $case->transactions()->where('status', 'pending')->sum('amount');
+
+        $commissionPaidAmount = $case->transactions()->where('status', 'commission')->sum('amount');
        
 
-        return view('transactions.index', compact('case', 'transactions', 'totalAmount', 'paidAmount', 'pendingAmount'));
+
+
+        return view('transactions.index', compact('case', 'transactions', 'totalAmount', 'paidAmount', 'commissionPaidAmount'));
     }
 
 
@@ -36,7 +39,7 @@ class TransactionController extends Controller
             'payment_method' => 'required|in:cash,bank,online,other',
             'transaction_date' => 'nullable|date',
             'description' => 'nullable|string',
-            'status' => 'required|in:paid,pending',
+            'status' => 'required|in:paid,commission',
         ]);
 
         $validated['case_id'] = $case->id;

@@ -9,15 +9,16 @@ class Client extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'name',
-        'cnic',
-        'contact_no',
-        'email',
-        'address',
-        'cnic_front', // ✅ Add this
-        'cnic_back',  // ✅ And this
-    ];
+  protected $fillable = [
+    'name',
+    'cnic',
+    'contact_no',
+    'email',
+    'address',
+    'cnic_front',
+    'cnic_back',
+    'referral_by', // ✅ Updated to use referral_by
+];
     public function assignedUsers()
     {
         return $this->belongsToMany(User::class, 'client_user');

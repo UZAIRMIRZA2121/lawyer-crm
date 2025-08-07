@@ -18,7 +18,7 @@
 
                 <div class="col-md-6">
                     <label class="form-label">Client</label>
-                    <select name="client_id" id="client_id" class="form-select" required>
+                    <select name="client_id" id="client_id" class="form-select select2" required>
                         <option value="" disabled selected>Select a client</option>
                         @foreach ($clients as $client)
                             <option value="{{ $client->id }}" {{ old('client_id') == $client->id ? 'selected' : '' }}>
@@ -50,20 +50,45 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label class="form-label">Status</label>
-                    <select name="status" class="form-select" required>
-                        @php
-                            $statuses = ['open' => 'Open', 'pending' => 'Pending', 'closed' => 'Closed'];
-                        @endphp
-                        @foreach ($statuses as $key => $label)
-                            <option value="{{ $key }}" {{ old('status') == $key ? 'selected' : '' }}>
-                                {{ $label }}</option>
-                        @endforeach
-                    </select>
+                    <label class="form-label d-block">Status</label>
+                    @php
+                        $statuses = ['done' => 'Done', 'pending' => 'Pending'];
+                    @endphp
+                    @foreach ($statuses as $key => $label)
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="status" id="status_{{ $key }}"
+                                value="{{ $key }}" {{ old('status') == $key ? 'checked' : '' }} required>
+                            <label class="form-check-label" for="status_{{ $key }}">{{ $label }}</label>
+                        </div>
+                    @endforeach
                     @error('status')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
+                <div class="col-md-6">
+                    <label class="form-label d-block">Priority</label>
+                    @php
+                        $statuses = [
+                            'urgent' => 'Urgent',
+                            'important' => 'Important',
+                            'normal' => 'Normal',
+                        ];
+                    @endphp
+
+                    @foreach ($statuses as $key => $label)
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="priority" id="status_{{ $key }}"
+                                value="{{ $key }}" {{ old('status') == $key ? 'checked' : '' }} required>
+                            <label class="form-check-label" for="status_{{ $key }}">{{ $label }}</label>
+                        </div>
+                    @endforeach
+
+                    @error('status')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+
+
             </div>
 
 
@@ -76,9 +101,17 @@
                     @enderror
                 </div>
                 @if (Auth::user()->role == 'admin')
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                         <label class="form-label">Total Amount</label>
                         <input type="text" name="amount" class="form-control" value="{{ old('amount') }}" required>
+                        @error('amount')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                       <div class="col-md-3">
+                        <label class="form-label">Total Commission </label>
+                        <input type="text" name="commission_amount" class="form-control" value="{{ old('commission_amount') }}" required>
                         @error('amount')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -152,6 +185,14 @@ $selectedUsers = old('assigned_to', $assignedUserIds ?? $users->pluck('id')->toA
                     placeholder: "Select team members",
                     allowClear: true,
                     width: '100%'
+                });
+            });
+        </script>
+        <script>
+            $(document).ready(function() {
+                $('#client_id').select2({
+                    placeholder: "Select a client",
+                    allowClear: true
                 });
             });
         </script>

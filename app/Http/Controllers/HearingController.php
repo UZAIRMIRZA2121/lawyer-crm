@@ -11,12 +11,34 @@ class HearingController extends Controller
     // Show list of hearings for a case
     public function index(Request $request)
     {
-        $case = CaseModel::find($request->query('case_id'));
+        $caseId = $request->query('case_id');
+        $priority = $request->query('priority');
+        $status = $request->query('status');
 
-        $hearings = $case->hearings()->latest()->paginate(10);
+        $query = Hearing::query();
+
+        if ($caseId) {
+            $case = CaseModel::find($caseId);
+            if ($case) {
+                $query = $case->hearings(); // This returns a query builder already filtered by case
+            }
+        } else {
+            $case = null;
+        }
+
+        if ($priority) {
+            $query->where('priority', $priority);
+        }
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        $hearings = $query->latest()->paginate(10)->withQueryString();
 
         return view('hearings.index', compact('case', 'hearings'));
     }
+
 
     // Show form to create hearing
     public function create(CaseModel $case)
@@ -33,9 +55,10 @@ class HearingController extends Controller
             'judge_remarks' => 'nullable|string',
             'my_remarks' => 'nullable|string',
             'next_hearing' => 'nullable|date',
-            'priority' => 'required|in:important,normal',
+            'priority' => 'required|in:important,normal,urgent',
             'case_id' => 'required|exists:case_models,id',  // Validate case_id from query/form
-                'nature' => 'nullable|string|max:255', // <- new line
+            'nature' => 'nullable|string|max:255', // <- new line
+            'status' => 'required|in:pending,done', // ✅ New line
         ]);
 
         // No route-model binding, so fetch CaseModel manually if needed
@@ -62,8 +85,9 @@ class HearingController extends Controller
             'judge_remarks' => 'nullable|string',
             'my_remarks' => 'nullable|string',
             'next_hearing' => 'nullable|date',
-            'priority' => 'required|in:important,normal',
-                'nature' => 'nullable|string|max:255', // <- new line
+            'priority' => 'required|in:important,normal,urgent',
+            'nature' => 'nullable|string|max:255', // <- new line
+            'status' => 'required|in:pending,done', // ✅ New line
         ]);
 
         $hearing->update($request->all());
@@ -72,18 +96,18 @@ class HearingController extends Controller
     }
 
     // Delete hearing
-public function destroy(Request $request, Hearing $hearing)
-{
-    $caseId = $request->input('case_id') ?? $request->query('case_id');
+    public function destroy(Request $request, Hearing $hearing)
+    {
+        $caseId = $request->input('case_id') ?? $request->query('case_id');
 
-    if (!$caseId || $hearing->case_id != $caseId) {
-        abort(404);
+        if (!$caseId || $hearing->case_id != $caseId) {
+            abort(404);
+        }
+
+        $hearing->delete();
+
+        return redirect()->route('hearings.index', ['case_id' => $caseId])
+            ->with('success', 'Hearing deleted successfully.');
     }
-
-    $hearing->delete();
-
-    return redirect()->route('hearings.index', ['case_id' => $caseId])
-                     ->with('success', 'Hearing deleted successfully.');
-}
 
 }

@@ -8,18 +8,40 @@ use App\Models\HasFactory;
 
 class TaskController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
 
-        if ($user->role === 'admin') {
-            $tasks = Task::with('user')->latest()->get();
-        } else {
-            $tasks = Task::with('user')->where('user_id', $user->id)->latest()->get();
+        // Start query with eager loading user relation
+        $query = Task::with('user')->latest();
+
+        // If user is not admin, restrict tasks to their own only
+        if ($user->role !== 'admin') {
+            $query->where('user_id', $user->id);
         }
+
+        // Apply priority filter if present and valid
+        if ($request->filled('priority')) {
+            $allowedPriorities = ['normal', 'urgent', 'important'];
+            if (in_array($request->priority, $allowedPriorities)) {
+                $query->where('priority', $request->priority);
+            }
+        }
+
+        // Apply status filter if present and valid
+        if ($request->filled('status')) {
+            $allowedStatuses = ['pending', 'done'];
+            if (in_array($request->status, $allowedStatuses)) {
+                $query->where('status', $request->status);
+            }
+        }
+
+        // Get filtered tasks
+        $tasks = $query->get();
 
         return view('tasks.index', compact('tasks'));
     }
+
 
     public function create()
     {
@@ -34,36 +56,43 @@ class TaskController extends Controller
         return view('tasks.create', compact('users'));
     }
 
-public function store(Request $request)
-{
-    $authUser = auth()->user();
+    public function store(Request $request)
+    {
+        $authUser = auth()->user();
 
-    $request->validate([
-        'user_ids'   => 'required|array',
-        'user_ids.*' => 'exists:users,id',
-        'task'       => 'required|string',
-        'priority'   => 'required|in:normal,urgent',
-        'submit_date'=> 'required|date',
-        'status'     => 'required|in:pending,working,completed',
-    ]);
+        $request->validate([
+            'user_ids' => 'required|array',
+            'user_ids.*' => 'exists:users,id',
+            'task' => 'required|string',
+            'priority' => 'required|in:normal,urgent,important',
+            'submit_date' => 'required|date',
+            'status' => 'required|in:pending,done',
+        ]);
 
-    foreach ($request->user_ids as $userId) {
-        // Prevent team users from assigning tasks to others
-        if ($authUser->role !== 'admin' && $authUser->id != $userId) {
-            continue; // skip unauthorized assignment
+        $createdCount = 0;
+
+        foreach ($request->user_ids as $userId) {
+            if ($authUser->role !== 'admin' && $authUser->id != $userId) {
+                continue;
+            }
+
+            Task::create([
+                'user_id' => $userId,
+                'task' => $request->task,
+                'priority' => $request->priority,
+                'submit_date' => $request->submit_date,
+                'status' => $request->status,
+            ]);
+            $createdCount++;
         }
 
-        Task::create([
-            'user_id'     => $userId,
-            'task'        => $request->task,
-            'priority'    => $request->priority,
-            'submit_date' => $request->submit_date,
-            'status'      => $request->status,
-        ]);
-    }
+        if ($createdCount === 0) {
+            return back()->withErrors('No tasks created. You may only assign tasks to yourself.');
+        }
 
-    return redirect()->route('tasks.index')->with('success', 'Tasks created successfully.');
-}
+        return redirect()->route('tasks.index')->with('success', 'Tasks created successfully.');
+
+    }
 
 
 
