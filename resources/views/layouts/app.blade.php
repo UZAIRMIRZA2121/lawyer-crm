@@ -122,7 +122,9 @@
             border-radius: 4px;
             font-weight: 500;
         }
-
+        main{
+            margin: unset;
+        }
 
         
     </style>
@@ -149,7 +151,7 @@
             <div class="row">
                 @include('layouts.sidebar')
                 <!-- Main Content -->
-                <main class="col-md-9 py-4">
+                <main class="col-md-9 ">
                     @yield('content')
                 </main>
             </div>
