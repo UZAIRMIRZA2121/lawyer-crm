@@ -20,7 +20,7 @@ class HearingController extends Controller
         if ($caseId) {
             $case = CaseModel::find($caseId);
             if ($case) {
-                $query = $case->hearings(); // This returns a query builder already filtered by case
+                $query = $case->hearings(); // already filtered by case
             }
         } else {
             $case = null;
@@ -34,7 +34,7 @@ class HearingController extends Controller
             $query->where('status', $status);
         }
 
-        $hearings = $query->latest()->paginate(10)->withQueryString();
+        $hearings = $query->latest()->get(); // get all results without pagination
 
         return view('hearings.index', compact('case', 'hearings'));
     }

@@ -141,7 +141,7 @@
             flex: 1;
             overflow: hidden;
         }
-        
+
 
         @media (min-width: 768px) {
             .layout-row {
@@ -173,8 +173,6 @@
 </head>
 
 <body>
-
-
     <div id="app">
         <!-- Header -->
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm d-none d-sm-block text-white p-2">
@@ -198,8 +196,6 @@
             </div>
         </div>
     </div>
-
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @if (session('success'))
         <script>

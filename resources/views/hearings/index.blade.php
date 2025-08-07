@@ -140,7 +140,7 @@
                 </tbody>
             </table>
 
-            {{ $hearings->links() }}
+            {{-- {{ $hearings->links() }} --}}
         @else
             <p>No hearings found.</p>
         @endif
