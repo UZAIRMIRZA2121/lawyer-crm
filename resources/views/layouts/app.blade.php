@@ -141,12 +141,16 @@
             flex: 1;
             overflow: hidden;
         }
+        
 
-        .layout-row {
-            height: 100%;
-            display: flex;
-            flex-direction: row;
+        @media (min-width: 768px) {
+            .layout-row {
+                height: 100%;
+                display: flex;
+                flex-direction: row;
+            }
         }
+
 
         .sidebar {
             width: 250px;
