@@ -1,5 +1,5 @@
 <!-- Header -->
-<header class="site-header  py-3 shadow-sm">
+<header class="site-header fixed-top  py-3 shadow-sm">
     <div class="container d-flex justify-content-between align-items-center">
         <!-- Logo -->
         <div class="logo">

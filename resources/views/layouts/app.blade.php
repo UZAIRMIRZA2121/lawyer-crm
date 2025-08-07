@@ -122,11 +122,49 @@
             border-radius: 4px;
             font-weight: 500;
         }
-        main{
-            margin: unset;
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
         }
 
-        
+        #app {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .layout-row {
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100%;
+            overflow-y: auto;
+            border-right: 1px solid var(--border);
+        }
+
+        main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            background: #fff;
+            border-radius: 0;
+            margin: 0;
+            box-shadow: none;
+            height: 100%;
+        }
     </style>
 </head>
 
@@ -134,29 +172,29 @@
 
 
     <div id="app">
-        <div class="">
-              <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm d-none d-sm-block text-white p-2">
+        <!-- Header -->
+        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm d-none d-sm-block text-white p-2">
             <div class="container-fluid">
                 <a class="navbar-brand text-dark" href="{{ Auth::check() ? route('dashboard') : route('home') }}">
                     Lawyer CRM
                 </a>
             </div>
         </nav>
-        </div>
 
-    
-
-
-        <div class="container-fluid">
-            <div class="row">
+        <!-- Layout Content -->
+        <div class="content-wrapper">
+            <div class="layout-row">
+                <!-- Sidebar -->
                 @include('layouts.sidebar')
+
                 <!-- Main Content -->
-                <main class="col-md-9 ">
+                <main>
                     @yield('content')
                 </main>
             </div>
         </div>
     </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @if (session('success'))
