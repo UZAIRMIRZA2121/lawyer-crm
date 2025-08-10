@@ -61,6 +61,9 @@
             class="sidebar-link d-block {{ request()->routeIs('tasks.*') ? 'active' : '' }}">
             Tasks
         </a>
+<a href="{{ route('urgent.index') }}"   class="sidebar-link d-block {{ request()->routeIs('urgent.*') ? 'active' : '' }}">
+     Urgent 
+</a>
 
 
         <a href="{{ route('cases.index') }}"

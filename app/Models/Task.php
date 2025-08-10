@@ -9,11 +9,13 @@ class Task extends Model
 
     protected $fillable = [
         'user_id',
+        'title',          // Add this line
         'task',
         'priority',
         'submit_date',
         'status',
-        'sub_status', // newly added
+        'sub_status',
+        'group_id',
     ];
 
     public function user()

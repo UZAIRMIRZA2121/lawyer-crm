@@ -8,7 +8,8 @@
     <div class="container">
         <h2>{{ isset($task) ? 'Edit Task' : 'Create Task' }}</h2>
 
-        <form action="{{ isset($task) ? route('tasks.update', $task->id) : route('tasks.store') }}" method="POST">
+        <form action="{{ isset($task) ? route('tasks.update', $task->id) : route('tasks.store') }}" method="POST"
+            enctype="multipart/form-data">
             @csrf
             @if (isset($task))
                 @method('PUT')
@@ -18,10 +19,18 @@
                 @php
                     $selectedUsers = old('user_ids', isset($task) ? [$task->user_id] : []);
                 @endphp
+                <div class="col-md-12 mb-3">
+                    <label for="title" class="form-label">Task Title</label>
+                    <input type="text" name="title" id="title" class="form-control"
+                        value="{{ old('title', $task->title ?? '') }}" required>
+                    @error('title')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
 
                 <div class="col-md-6 mb-3">
                     <label for="user_id" class="form-label">Users</label>
-                    <select name="user_ids[]" class="form-select select2" multiple >
+                    <select name="user_ids[]" class="form-select select2" multiple>
                         @foreach ($users as $user)
                             <option value="{{ $user->id }}" {{ in_array($user->id, $selectedUsers) ? 'selected' : '' }}>
                                 {{ $user->name }}
@@ -120,6 +129,18 @@
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
+            </div>
+
+            <!-- Your existing form fields here -->
+
+            <div class="col-md-12 mb-3">
+                <label for="upload_files" class="form-label">Upload Files (Images, PDF, Docs)</label>
+                <input type="file" name="upload_files[]" id="upload_files" class="form-control" multiple
+                    accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.xls,.xlsx" />
+
+                @error('upload_files')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
             </div>
 
             <button type="submit" class="btn btn-success">Save Task</button>

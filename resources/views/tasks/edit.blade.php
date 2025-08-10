@@ -16,23 +16,23 @@
 
             <div class="row">
                 @if (Auth::user()->role == 'admin')
-                  
-                     @php
-                    $selectedUsers = old('user_ids', isset($task) ? [$task->user_id] : []);
-                @endphp
-                       <div class="col-md-6 mb-3">
-                    <label for="user_id" class="form-label">Users</label>
-                    <select name="user_ids[]" class="form-select select2" multiple >
-                        @foreach ($users as $user)
-                            <option value="{{ $user->id }}" {{ in_array($user->id, $selectedUsers) ? 'selected' : '' }}>
-                                {{ $user->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('user_ids')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
+                    @php
+                        $selectedUsers = old('user_ids', isset($task) ? [$task->user_id] : []);
+                    @endphp
+                    <div class="col-md-6 mb-3">
+                        <label for="user_id" class="form-label">Users</label>
+                        <select name="user_ids[]" class="form-select select2" multiple>
+                            @foreach ($users as $user)
+                                <option value="{{ $user->id }}"
+                                    {{ in_array($user->id, $selectedUsers) ? 'selected' : '' }}>
+                                    {{ $user->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('user_ids')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
 
 
 
@@ -127,7 +127,58 @@
             <button type="submit" class="btn btn-success">Save Task</button>
             <a href="{{ route('tasks.index') }}" class="btn btn-secondary">Cancel</a>
         </form>
+        @if ($uploads->count() > 0)
+            <div class="mb-3">
+                <label class="form-label">Uploaded Files</label>
+                <div class="d-flex flex-wrap gap-3">
+                    @foreach ($uploads as $upload)
+                        @php
+                            $fileUrl = asset('storage/' . $upload->upload_files);
+                            $ext = pathinfo($upload->upload_files, PATHINFO_EXTENSION);
+                            $filename = basename($upload->upload_files);
+                        @endphp
+
+                        <div class="card" style="width: 150px;">
+                            <a href="{{ $fileUrl }}" target="_blank"
+                                @if (!in_array(strtolower($ext), ['jpg', 'jpeg', 'png', 'gif'])) download="{{ $filename }}" @endif
+                                title="View or download {{ $filename }}">
+                                @if (in_array(strtolower($ext), ['jpg', 'jpeg', 'png', 'gif']))
+                                    <img src="{{ $fileUrl }}" alt="Uploaded Image" class="card-img-top"
+                                        style="max-height: 120px; object-fit: contain;">
+                                @else
+                                    <div class="d-flex align-items-center justify-content-center"
+                                        style="height: 120px; font-size: 2rem; color: #0d6efd;">
+                                        <i class="bi bi-file-earmark-text"></i>
+                                    </div>
+                                @endif
+                            </a>
+                            <div class="card-body p-2 text-center">
+                                <p class="card-text small text-truncate" style="max-width: 140px;">
+                                    {{ $filename }}
+                                </p>
+                            </div>
+                            <div class="card-footer d-flex justify-content-between p-2">
+                                <a href="{{ $fileUrl }}" download="{{ $filename }}"
+                                    class="btn btn-sm btn-primary" title="Download">
+                                    <i class="bi bi-download"></i>
+                                </a>
+                                <form action="{{ route('task_uploads.destroy', $upload->id) }}" method="POST"
+                                    onsubmit="return confirm('Are you sure you want to delete this file?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
     </div>
+
 @endsection
 
 @section('scripts')

@@ -131,6 +131,7 @@
                         <th>Title</th>
                         <th>Status</th>
                         <th>Next Hearing Date</th>
+                        <th>Procedure</th>
                         <th>Judge</th>
                         <th>Nature</th>
                         <th>Assigned Users</th> {{-- New column --}}
@@ -156,11 +157,19 @@
                                     <span class="text-muted">No upcoming hearing</span>
                                 @endif
                             </td>
+                             <td>
+                                @php
+                                    $nextHearing = $case->hearings->first();
+                                @endphp
 
-
+                                @if ($nextHearing)
+                                   {{$nextHearing->nature}}
+                                @else
+                                    <span class="text-muted">No upcoming hearing</span>
+                                @endif
+                            </td>
                             <td>{{ $case->judge_name ?? 'N/A' }}</td>
                             <td>{{ $case->case_nature ?? 'N/A' }}</td>
-
                             {{-- New Assigned Users column --}}
                             <td>
                                 @if ($case->assignedUsers->count())

@@ -14,13 +14,16 @@ class HearingController extends Controller
         $caseId = $request->query('case_id');
         $priority = $request->query('priority');
         $status = $request->query('status');
+        $search = $request->query('search');
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
 
         $query = Hearing::query();
 
         if ($caseId) {
             $case = CaseModel::find($caseId);
             if ($case) {
-                $query = $case->hearings(); // already filtered by case
+                $query = $case->hearings();
             }
         } else {
             $case = null;
@@ -34,18 +37,34 @@ class HearingController extends Controller
             $query->where('status', $status);
         }
 
-        $hearings = $query->latest()->get(); // get all results without pagination
+        if ($search) {
+            $query->whereHas('case', function ($q) use ($search) {
+                $q->where('case_title', 'like', "%{$search}%")
+                    ->orWhere('case_number', 'like', "%{$search}%");
+            });
+        }
+
+        if ($startDate) {
+            $query->whereDate('created_at', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $query->whereDate('created_at', '<=', $endDate);
+        }
+
+        $hearings = $query->latest()->get();
 
         return view('hearings.index', compact('case', 'hearings'));
     }
 
 
     // Show form to create hearing
-    public function create(Request $request,CaseModel $case)
+    public function create(Request $request, CaseModel $case)
     {
-          $caseId = $request->query('case_id');
-               $case = CaseModel::find($caseId);
-        return view('hearings.create', compact('case'));
+        $caseId = $request->query('case_id');
+        $case = CaseModel::find($caseId);
+
+        return view('hearings.create', compact('case', ));
     }
 
     // Store new hearing

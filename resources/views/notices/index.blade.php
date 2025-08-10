@@ -1,6 +1,25 @@
 @extends('layouts.app')
 
 @section('content')
+    <style>
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            .table-responsive,
+            .table-responsive * {
+                visibility: visible;
+            }
+
+            .table-responsive {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+        }
+    </style>
     <div class="container">
         <h1 class="mb-4">Notices</h1>
 
@@ -12,7 +31,8 @@
 
         <!-- Filters -->
         <div class="row mb-3">
-            <div class="col-md-6">
+            
+            <div class="col-md-4">
                 <label class="form-label">Priority</label>
                 <div class="d-flex flex-wrap gap-1">
                     @php
@@ -31,7 +51,7 @@
                 </div>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <label class="form-label">Status</label>
                 <div class="d-flex flex-wrap gap-1">
                     @php
@@ -49,73 +69,81 @@
                     @endforeach
                 </div>
             </div>
+             <!-- Print Button -->
+        <div class="col-md-4">
+            <button type="button" class="btn btn-outline-dark " onclick="printTable()">🖨️ Print
+                Table</button>
         </div>
 
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Case</th>
-                    <th>User</th>
-                    <th>Against Client</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($notices as $notice)
-                    <tr>
-                        <td>{{ $notice->case->case_title ?? 'N/A' }}</td>
-                        <td>{{ $notice->user->name ?? 'N/A' }}</td>
-                        <td>{{ $notice->against_client->name ?? 'N/A' }}</td>
-                        <td>
-                            @php
-                                $priorityColors = [
-                                    'urgent' => 'danger',
-                                    'important' => 'warning',
-                                    'normal' => 'success',
-                                ];
-                                $priority = strtolower($notice->priority ?? 'normal');
-                                $priorityClass = $priorityColors[$priority] ?? 'secondary';
-                            @endphp
-                            <span class="badge bg-{{ $priorityClass }}">{{ ucfirst($priority) }}</span>
-                        </td>
+        </div>
+       
+        <div class="table-responsive" style="max-height: 70vh; overflow-y: auto;">
+            <table class="table table-bordered table-striped align-middle table-fixed-header">
+                <thead class="table-light">
+                    <thead>
+                        <tr>
+                            <th>Case</th>
+                            <th>User</th>
+                            <th>Against Client</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                <tbody>
+                    @forelse ($notices as $notice)
+                        <tr>
+                            <td>{{ $notice->case->case_title ?? 'N/A' }}</td>
+                            <td>{{ $notice->user->name ?? 'N/A' }}</td>
+                            <td>{{ $notice->against_client->name ?? 'N/A' }}</td>
+                            <td>
+                                @php
+                                    $priorityColors = [
+                                        'urgent' => 'danger',
+                                        'important' => 'warning',
+                                        'normal' => 'success',
+                                    ];
+                                    $priority = strtolower($notice->priority ?? 'normal');
+                                    $priorityClass = $priorityColors[$priority] ?? 'secondary';
+                                @endphp
+                                <span class="badge bg-{{ $priorityClass }}">{{ ucfirst($priority) }}</span>
+                            </td>
 
-                        <td>
-                            @php
-                                $statusColors = [
-                                    'pending' => 'warning',
-                                    'done' => 'success',
-                                ];
-                                $status = strtolower($notice->status);
-                                $statusClass = $statusColors[$status] ?? 'secondary';
-                            @endphp
-                            <span class="badge bg-{{ $statusClass }}">{{ ucfirst($status) }}</span>
-                        </td>
+                            <td>
+                                @php
+                                    $statusColors = [
+                                        'pending' => 'warning',
+                                        'done' => 'success',
+                                    ];
+                                    $status = strtolower($notice->status);
+                                    $statusClass = $statusColors[$status] ?? 'secondary';
+                                @endphp
+                                <span class="badge bg-{{ $statusClass }}">{{ ucfirst($status) }}</span>
+                            </td>
 
-                        <td>
-                            <button type="button" class="btn btn-sm btn-info btn-view-notice" data-bs-toggle="modal"
-                                data-bs-target="#noticeModal" data-notice-base64="{{ $notice->notice_base64 }}">
-                                View
-                            </button>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-info btn-view-notice" data-bs-toggle="modal"
+                                    data-bs-target="#noticeModal" data-notice-base64="{{ $notice->notice_base64 }}">
+                                    View
+                                </button>
 
-                            <form action="{{ route('notices.destroy', $notice) }}" method="POST"
-                                style="display:inline-block;">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn btn-sm btn-danger"
-                                    onclick="return confirm('Delete this notice?')">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="6" class="text-center text-muted">No notices found.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-
+                                <form action="{{ route('notices.destroy', $notice) }}" method="POST"
+                                    style="display:inline-block;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-sm btn-danger"
+                                        onclick="return confirm('Delete this notice?')">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">No notices found.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
         <!-- Modal -->
         <div class="modal fade" id="noticeModal" tabindex="-1" aria-labelledby="noticeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-xl modal-dialog-scrollable">
@@ -164,5 +192,43 @@
                 modalBody.innerHTML = '<div class="text-center text-muted">Loading...</div>';
             });
         });
+    </script>
+
+
+    <script>
+        function printTable() {
+            // Hide the Actions column before printing
+            const actionColIndexes = [];
+            const ths = document.querySelectorAll('table thead th');
+            ths.forEach((th, index) => {
+                if (th.innerText.trim().toLowerCase() === 'actions') {
+                    actionColIndexes.push(index);
+                }
+            });
+
+            // Hide Action column cells
+            const rows = document.querySelectorAll('table tr');
+            rows.forEach(row => {
+                actionColIndexes.forEach(i => {
+                    if (row.children[i]) {
+                        row.children[i].style.display = 'none';
+                    }
+                });
+            });
+
+            // Trigger print
+            window.print();
+
+            // Restore Action column after printing
+            setTimeout(() => {
+                rows.forEach(row => {
+                    actionColIndexes.forEach(i => {
+                        if (row.children[i]) {
+                            row.children[i].style.display = '';
+                        }
+                    });
+                });
+            }, 1000);
+        }
     </script>
 @endsection

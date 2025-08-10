@@ -16,6 +16,45 @@
         @if (auth()->user()->role === 'admin' || auth()->user()->role === 'team')
             <a href="{{ route('tasks.create') }}" class="btn btn-primary mb-3">Create Task</a>
         @endif
+        <form method="GET" action="{{ route('tasks.index') }}" class="mb-3" id="filterFormTasks">
+    <div class="row g-3 align-items-end mb-4">
+
+        <!-- Search (full width on xs, half on md+) -->
+        <div class="col-12 col-md-6">
+            <label for="search" class="form-label">Search</label>
+            <div class="input-group">
+                <input type="text" name="search" class="form-control"
+                    placeholder="Search by Task Name, Description, etc." value="{{ request('search') }}">
+                <button type="submit" class="btn btn-primary">🔍</button>
+            </div>
+        </div>
+
+        <!-- Start Date -->
+        <div class="col-12 col-md-2">
+            <label for="start_date" class="form-label">Start Date</label>
+            <input type="date" name="start_date" id="start_date" class="form-control"
+                value="{{ request('start_date') }}">
+        </div>
+
+        <!-- End Date -->
+        <div class="col-12 col-md-2">
+            <label for="end_date" class="form-label">End Date</label>
+            <input type="date" name="end_date" id="end_date" class="form-control"
+                value="{{ request('end_date') }}">
+        </div>
+
+        <!-- Filter Button -->
+        <div class="col-6 col-md-1">
+            <button type="submit" form="filterFormTasks" class="btn btn-primary w-100">Filter</button>
+        </div>
+
+        <!-- Reset Button -->
+        <div class="col-6 col-md-1">
+            <a href="{{ route('tasks.index') }}" class="btn btn-secondary w-100">Reset</a>
+        </div>
+    </div>
+</form>
+
         <div class="row g-3 align-items-end mb-4">
             <!-- Priority Filter for Tasks -->
             <div class="col-md-3">
@@ -88,61 +127,71 @@
 
         </div>
 
+        @foreach ($tasks as $groupId => $groupTasks)
+            @php
+                // Get the title from the first task in the group (assuming all tasks in group share same title)
+                $groupTitle = $groupTasks->first()->title ?? 'No Title';
+            @endphp
 
+            <h4>
+                Title: {{ $groupTitle }}
+                <form action="{{ route('tasks.destroyGroup', $groupId) }}" method="POST" class="d-inline"
+                    onsubmit="return confirm('Are you sure you want to delete this entire group?');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-sm btn-danger ms-2">Delete Group</button>
+                </form>
+            </h4>
 
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>User</th>
-                    <th>Task</th>
-                    <th>Priority</th>
-                    <th>Submit Date</th>
-                    <th>Status</th>
-                    <th>Sub Status</th> <!-- New column -->
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($tasks as $task)
+            <table class="table table-bordered mb-4">
+                <thead>
                     <tr>
-                        <td>{{ $task->user->name ?? 'N/A' }}</td>
-                        <td>{!! Str::limit(strip_tags($task->task), 30) !!}</td>
-                        <td>{{ ucfirst($task->priority) }}</td>
-                        <td>{{ $task->submit_date }}</td>
-                        <td>
-                            @php
-                                $status = strtolower($task->status);
-                                $badgeClass = match ($status) {
-                                    'pending' => 'bg-warning text-dark',
-                                    'working' => 'bg-primary',
-                                    'completed' => 'bg-success',
-                                    default => 'bg-secondary',
-                                };
-                            @endphp
-
-                            <span class="badge {{ $badgeClass }}">
-                                {{ ucfirst($status) }}
-                            </span>
-                        </td>
-
-                        <td>
-                            @php
-                                $subStatus = strtolower($task->sub_status);
-                                $subStatusClass = match ($subStatus) {
-                                    'drafting' => 'bg-info text-white',
-                                    'research' => 'bg-success text-white',
-                                    'note' => 'bg-danger text-white',
-                                    default => 'bg-light text-dark',
-                                };
-                            @endphp
-
-                            <span class="badge {{ $subStatusClass }}">
-                                {{ ucfirst($subStatus) }}
-                            </span>
-                        </td>
-
-                        <td>
-                            <button class="btn btn-sm btn-info view-task-btn" id="view-task-btn"
+                        <th>User</th>
+                        <th>Task</th>
+                        <th>Priority</th>
+                        <th>Submit Date</th>
+                        <th>Status</th>
+                        <th>Sub Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($groupTasks as $task)
+                        <tr>
+                            <td>{{ $task->user->name ?? 'N/A' }}</td>
+                            <td>{!! \Illuminate\Support\Str::limit(strip_tags($task->task), 30) !!}</td>
+                            <td>{{ ucfirst($task->priority) }}</td>
+                            <td>{{ $task->submit_date }}</td>
+                            <td>
+                                @php
+                                    $status = strtolower($task->status);
+                                    $badgeClass = match ($status) {
+                                        'pending' => 'bg-warning text-dark',
+                                        'working' => 'bg-primary',
+                                        'completed' => 'bg-success',
+                                        default => 'bg-secondary',
+                                    };
+                                @endphp
+                                <span class="badge {{ $badgeClass }}">
+                                    {{ ucfirst($status) }}
+                                </span>
+                            </td>
+                            <td>
+                                @php
+                                    $subStatus = strtolower($task->sub_status);
+                                    $subStatusClass = match ($subStatus) {
+                                        'drafting' => 'bg-info text-white',
+                                        'research' => 'bg-success text-white',
+                                        'note' => 'bg-danger text-white',
+                                        default => 'bg-light text-dark',
+                                    };
+                                @endphp
+                                <span class="badge {{ $subStatusClass }}">
+                                    {{ ucfirst($subStatus) }}
+                                </span>
+                            </td>
+                            <td>
+                                      <button class="btn btn-sm btn-info view-task-btn" id="view-task-btn"
                                 data-task="{{ htmlspecialchars($task->task) }}" data-user="{{ $task->user->name }}"
                                 data-priority="{{ ucfirst($task->priority) }}" data-date="{{ $task->submit_date }}"
                                 data-status="{{ ucfirst($task->status) }}">
@@ -174,15 +223,12 @@
                             @else
                                 <span class="text-muted">No Access</span>
                             @endif
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="7">No tasks found.</td> <!-- updated colspan -->
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endforeach
 
     </div>
 

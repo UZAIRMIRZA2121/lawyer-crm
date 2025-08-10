@@ -12,6 +12,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\UrgentController;
 
 // Home (public landing page)
 Route::get('/', function () {
@@ -68,8 +69,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/summon-print', [NoticeController::class, 'print'])->name('summon.print');
 
+    Route::delete('/task-uploads/{upload}', [TaskController::class, 'taskuploadDestroy'])->name('task_uploads.destroy');
+    Route::delete('/tasks/group/{groupId}', [TaskController::class, 'destroyGroup'])->name('tasks.destroyGroup');
 
     Route::resource('tasks', TaskController::class);
     Route::get('/cases/{id}/print-report', [CaseController::class, 'printReport'])->name('cases.printReport');
+
+    Route::get('/urgent', [UrgentController::class, 'index'])->name('urgent.index');
 
 });
