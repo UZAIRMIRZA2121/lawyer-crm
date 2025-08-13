@@ -153,17 +153,13 @@ class TaskController extends Controller
                         ]);
                     }
                 }
-
-
-
-
                 $createdCount++;
             }
 
             if ($createdCount === 0) {
                 return back()->withErrors('No tasks created. You may only assign tasks to yourself.');
             }
-            dd(234);
+            
             return redirect()->route('tasks.index')->with('success', 'Tasks created successfully.');
         } catch (\Exception $e) {
             \Log::error('Task creation failed: ' . $e->getMessage());

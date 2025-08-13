@@ -47,6 +47,7 @@ class ClientController extends Controller
     // Store a new client
     public function store(Request $request)
     {
+     
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'nullable|email',
@@ -54,44 +55,72 @@ class ClientController extends Controller
             'cnic_back' => 'nullable|image|max:2048',
             'assigned_to' => 'array|nullable',
             'assigned_to.*' => 'exists:users,id',
-             'referral_by' => 'nullable|string|max:255',
+            'referral_by' => 'nullable|string|max:255',
+            'upload_files.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf,docx|max:5120',
+            'description' => 'nullable|string',
         ]);
 
-        // Step 1: Create client without image paths
-        $client = Client::create([
-            'name' => $request->name,
-            'cnic' => $request->cnic,
-            'contact_no' => $request->contact_no,
-            'email' => $request->email,
-            'address' => $request->address,
-            'referral_by' => $request->referral_by,
-        ]);
+        try {
+            // Step 1: Create client without image/upload_files paths
+            $client = Client::create([
+                'name' => $request->name,
+                'cnic' => $request->cnic,
+                'contact_no' => $request->contact_no,
+                'email' => $request->email,
+                'address' => $request->address,
+                'referral_by' => $request->referral_by,
+                'description' => $request->description,
+            ]);
 
-        // Step 2: Create folder for storing CNICs
-        $folder = 'clients/' . $client->id . '-' . \Str::slug($client->name);
-        $updateData = [];
+            // Step 2: Create folder for storing upload_files
+            $folder = 'clients/' . $client->id . '-' . \Str::slug($client->name);
+            $updateData = [];
 
-        // Step 3: Handle CNIC front upload
-        if ($request->hasFile('cnic_front')) {
-            $updateData['cnic_front'] = $request->file('cnic_front')->store($folder, 'public');
+            // Step 3: Handle CNIC front upload
+            if ($request->hasFile('cnic_front')) {
+                $file = $request->file('cnic_front');
+                $fileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)
+                    . '_' . rand(100000, 999999)
+                    . '.' . $file->getClientOriginalExtension();
+                $updateData['cnic_front'] = $file->storeAs($folder, $fileName, 'public');
+            }
+
+            // Step 4: Handle CNIC back upload
+            if ($request->hasFile('cnic_back')) {
+                $file = $request->file('cnic_back');
+                $fileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)
+                    . '_' . rand(100000, 999999)
+                    . '.' . $file->getClientOriginalExtension();
+                $updateData['cnic_back'] = $file->storeAs($folder, $fileName, 'public');
+            }
+            $upload_filesArray = [];
+            // Step 5: Handle multiple upload_files upload (store with random digits)
+            $upload_filesArray = $client->upload_files ?? []; // Keep existing upload_files if editing
+            if ($request->hasFile('upload_files')) {
+                foreach ($request->file('upload_files') as $file) {
+                    $fileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)
+                        . '_' . rand(100000, 999999)
+                        . '.' . $file->getClientOriginalExtension();
+
+                    $upload_filesArray[] = $file->storeAs($folder, $fileName, 'public');
+                }
+            }
+            $updateData['files'] = $upload_filesArray;
+            // Step 6: Update client with image/upload_files paths if any
+            if (!empty($updateData)) {
+                $client->update($updateData);
+            }
+
+            // Step 7: Assign multiple users to this client
+            if ($request->filled('assigned_to')) {
+                $client->assignedUsers()->sync($request->assigned_to);
+            }
+         
+            return redirect()->route('clients.index')->with('success', 'Client created successfully.');
+        } catch (\Exception $e) {
+            \Log::error('Client Store Error: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Failed to save client. Error: ' . $e->getMessage());
         }
-
-        // Step 4: Handle CNIC back upload
-        if ($request->hasFile('cnic_back')) {
-            $updateData['cnic_back'] = $request->file('cnic_back')->store($folder, 'public');
-        }
-
-        // Step 5: Update client with image paths if any
-        if (!empty($updateData)) {
-            $client->update($updateData);
-        }
-
-        // Step 6: Assign multiple users to this client
-        if ($request->filled('assigned_to')) {
-            $client->assignedUsers()->sync($request->assigned_to);
-        }
-
-        return redirect()->route('clients.index')->with('success', 'Client created successfully.');
     }
 
 
