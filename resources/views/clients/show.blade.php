@@ -47,7 +47,7 @@
                             <div class="row g-3">
                                 @foreach ($client->files as $file)
                                     @php
-                                        $fileUrl = asset('storage/' . $file);
+                                        $fileUrl = asset('public/storage/' . $file);
                                         $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
                                     @endphp
 
