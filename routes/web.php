@@ -56,6 +56,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Case Files (nested under cases)
     Route::resource('cases.files', CaseFileController::class)->shallow();
+    Route::delete('/clients/{client}/delete-file', [ClientController::class, 'deleteFile'])->name('clients.deleteFile');
 
     // Hearings nested under cases
     Route::resource('cases.hearings', HearingController::class);
@@ -76,5 +77,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/cases/{id}/print-report', [CaseController::class, 'printReport'])->name('cases.printReport');
 
     Route::get('/urgent', [UrgentController::class, 'index'])->name('urgent.index');
+
+
 
 });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ClientController extends Controller
 {
@@ -149,6 +150,8 @@ class ClientController extends Controller
             'cnic_back' => 'nullable|image|max:2048',
             'assigned_to' => 'array|nullable',
             'assigned_to.*' => 'exists:users,id',
+            'upload_files.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf,docx|max:5120',
+            'description' => 'nullable|string',
         ]);
 
         // Step 1: Update text fields
@@ -158,6 +161,7 @@ class ClientController extends Controller
             'contact_no' => $request->contact_no,
             'email' => $request->email,
             'address' => $request->address,
+            'description' => $request->description,
         ]);
 
         // Step 2: Define folder path
@@ -169,7 +173,11 @@ class ClientController extends Controller
             if ($client->cnic_front && \Storage::disk('public')->exists($client->cnic_front)) {
                 \Storage::disk('public')->delete($client->cnic_front);
             }
-            $updateData['cnic_front'] = $request->file('cnic_front')->store($folder, 'public');
+            $file = $request->file('cnic_front');
+            $fileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)
+                . '_' . rand(100000, 999999)
+                . '.' . $file->getClientOriginalExtension();
+            $updateData['cnic_front'] = $file->storeAs($folder, $fileName, 'public');
         }
 
         // Step 4: Update CNIC back image
@@ -177,24 +185,41 @@ class ClientController extends Controller
             if ($client->cnic_back && \Storage::disk('public')->exists($client->cnic_back)) {
                 \Storage::disk('public')->delete($client->cnic_back);
             }
-            $updateData['cnic_back'] = $request->file('cnic_back')->store($folder, 'public');
+            $file = $request->file('cnic_back');
+            $fileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)
+                . '_' . rand(100000, 999999)
+                . '.' . $file->getClientOriginalExtension();
+            $updateData['cnic_back'] = $file->storeAs($folder, $fileName, 'public');
         }
 
-        // Step 5: Update image paths
+        // Step 5: Handle multiple upload_files (append to existing)
+        $upload_filesArray = $client->files ?? []; // Keep existing files
+        if ($request->hasFile('upload_files')) {
+            foreach ($request->file('upload_files') as $file) {
+                $fileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)
+                    . '_' . rand(100000, 999999)
+                    . '.' . $file->getClientOriginalExtension();
+
+                $upload_filesArray[] = $file->storeAs($folder, $fileName, 'public');
+            }
+        }
+        $updateData['files'] = $upload_filesArray;
+
+        // Step 6: Update client with any new file paths
         if (!empty($updateData)) {
             $client->update($updateData);
         }
 
-        // Step 6: Sync assigned users (Many-to-Many)
+        // Step 7: Sync assigned users
         if ($request->filled('assigned_to')) {
             $client->assignedUsers()->sync($request->assigned_to);
         } else {
-            // If no user selected, detach all
             $client->assignedUsers()->detach();
         }
 
         return redirect()->route('clients.index')->with('success', 'Client updated successfully.');
     }
+
 
 
     // Delete a client
@@ -219,6 +244,33 @@ class ClientController extends Controller
 
         return redirect()->route('clients.index')
             ->with('success', 'Client and all related cases and data deleted successfully.');
+    }
+    public function deleteFile(Request $request, Client $client)
+    {
+        Log::info('ClientController@deleteFile called', [
+            'client_id' => $client->id,
+            'file_path' => $request->file_path
+        ]);
+        $request->validate([
+            'file_path' => 'required|string'
+        ]);
+
+        $files = $client->files ?? [];
+
+        if (($key = array_search($request->file_path, $files)) !== false) {
+            // Delete from storage
+            if (\Storage::disk('public')->exists($request->file_path)) {
+                \Storage::disk('public')->delete($request->file_path);
+            }
+
+            // Remove from array
+            unset($files[$key]);
+            $client->update(['files' => array_values($files)]);
+
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'File not found.'], 404);
     }
 
 }
