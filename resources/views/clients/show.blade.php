@@ -39,22 +39,36 @@
                         <div class="col-md-9">{!! $client->description !!}</div>
                     </div>
                 @endif
-                {{-- ✅ Additional Files --}}
                 @if (!empty($client->files) && is_array($client->files))
                     <div class="row mb-4">
                         <div class="col-md-3 fw-semibold text-muted">Additional Files:</div>
                         <div class="col-md-9">
                             <div class="row g-3">
-                                @foreach ($client->files as $file)
+                                @foreach ($client->files as $index => $file)
                                     @php
                                         $fileUrl = asset('public/storage/' . $file);
                                         $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
                                     @endphp
 
-                                    <div class="col-md-4 text-center">
+                                    <div class="col-md-4 text-center file-wrapper" data-file="{{ $file }}">
                                         <strong class="d-block mb-1">{{ basename($file) }}</strong>
 
-                                        {{-- Image Preview --}}
+                                        {{-- Buttons --}}
+                                        <div class="mb-1">
+                                            {{-- Download --}}
+                                            <a href="{{ $fileUrl }}" download class="btn btn-sm btn-success"
+                                                title="Download">
+                                                <i class="bi bi-download"></i> {{-- Bootstrap icon --}}
+                                            </a>
+
+                                            {{-- Delete --}}
+                                            <button type="button" class="btn btn-sm btn-danger delete-file-btn"
+                                                data-file="{{ $file }}" title="Delete">
+                                                <i class="bi bi-trash"></i> {{-- Bootstrap icon --}}
+                                            </button>
+                                        </div>
+
+                                        {{-- Preview --}}
                                         @if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
                                             <a href="{{ $fileUrl }}" target="_blank"
                                                 class="d-inline-block border rounded shadow-sm overflow-hidden"
@@ -62,8 +76,6 @@
                                                 <img src="{{ $fileUrl }}" alt="File Preview" class="img-fluid"
                                                     style="max-height: 200px; object-fit: contain;">
                                             </a>
-
-                                            {{-- Non-image file --}}
                                         @else
                                             <a href="{{ $fileUrl }}" target="_blank"
                                                 class="d-inline-block border rounded shadow-sm p-2">
@@ -115,4 +127,38 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll(".delete-file-btn").forEach(button => {
+                button.addEventListener("click", function() {
+                    let filePath = this.getAttribute("data-file");
+                    let wrapper = this.closest(".file-wrapper");
+
+                    if (confirm("Are you sure you want to delete this file?")) {
+                        fetch("{{ route('clients.deleteFile', $client->id) }}", {
+                                method: "DELETE",
+                                headers: {
+                                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                    file_path: filePath
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    wrapper.remove(); // Remove from DOM
+                                } else {
+                                    alert(data.message || "Failed to delete file.");
+                                }
+                            })
+                            .catch(() => alert("Something went wrong!"));
+                    }
+                });
+            });
+        });
+    </script>
+
 @endsection
