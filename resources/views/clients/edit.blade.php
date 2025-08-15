@@ -94,9 +94,10 @@
                         <div class="row g-3">
                             @foreach ($client->files as $index => $file)
                                 @php
-                                    $fileUrl = asset('storage/' . $file);
+                                    $fileUrl = asset('public/storage/' . $file);
                                     $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
                                 @endphp
+
 
                                 <div class="col-md-2 text-center file-wrapper" data-file="{{ $file }}">
                                     <div class="position-relative border rounded shadow-sm p-2 mx-auto"
@@ -108,7 +109,6 @@
                                             data-file="{{ $file }}">
                                             &times;
                                         </button>
-
                                         {{-- File Preview --}}
                                         @if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
                                             <a href="{{ $fileUrl }}" target="_blank">
