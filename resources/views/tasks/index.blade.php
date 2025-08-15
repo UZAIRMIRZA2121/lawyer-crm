@@ -161,6 +161,7 @@
                     data-group-id="{{ $groupId }}">
                     Print Group
                 </button>
+              
             </h4>
 
             <table class="table table-bordered mb-4 group-table" id="group-table-{{ $groupId }}">

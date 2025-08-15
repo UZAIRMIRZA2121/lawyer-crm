@@ -6,10 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
-
     protected $fillable = [
         'user_id',
-        'title',          // Add this line
+        'title',      // Task title
         'task',
         'priority',
         'submit_date',
@@ -18,8 +17,15 @@ class Task extends Model
         'group_id',
     ];
 
+    // Task belongs to a user
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    // Task has many uploads
+    public function uploads()
+    {
+        return $this->hasMany(TaskUpload::class, 'task_id', 'id');
     }
 }

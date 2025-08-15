@@ -8,7 +8,7 @@
     <div class="container">
         <h2>{{ isset($task) ? 'Edit Task' : 'Create Task' }}</h2>
 
-        <form action="{{ isset($task) ? route('tasks.update', $task->id) : route('tasks.store') }}" method="POST">
+        <form action="{{ isset($task) ? route('tasks.update', $task->id) : route('tasks.store') }}"        method="POST" enctype="multipart/form-data">
             @csrf
             @if (isset($task))
                 @method('PUT')
@@ -122,6 +122,18 @@
                     {{ old('task', $task->task ?? '') }}
                 </textarea>
                 </div>
+            </div>
+
+            <!-- Your existing form fields here -->
+
+            <div class="col-md-12 mb-3">
+                <label for="upload_files" class="form-label">Upload Files (Images, PDF, Docs)</label>
+                <input type="file" name="upload_files[]" id="upload_files" class="form-control" multiple
+             />
+
+                @error('upload_files')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
             </div>
 
             <button type="submit" class="btn btn-success">Save Task</button>

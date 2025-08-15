@@ -159,7 +159,7 @@ class TaskController extends Controller
             if ($createdCount === 0) {
                 return back()->withErrors('No tasks created. You may only assign tasks to yourself.');
             }
-            
+
             return redirect()->route('tasks.index')->with('success', 'Tasks created successfully.');
         } catch (\Exception $e) {
             \Log::error('Task creation failed: ' . $e->getMessage());
@@ -189,12 +189,10 @@ class TaskController extends Controller
     {
         $user = auth()->user();
 
-        // Only allow admin or the task owner
         if ($user->role !== 'admin' && $task->user_id !== $user->id) {
             abort(403, 'Unauthorized.');
         }
-
-        // Validate incoming data
+    
         $request->validate([
             'user_id' => 'nullable|exists:users,id',
             'task' => 'nullable|string',
@@ -202,20 +200,55 @@ class TaskController extends Controller
             'submit_date' => 'nullable|date',
             'status' => 'nullable|in:pending,done',
             'sub_status' => 'nullable|in:drafting,research,note',
+            'upload_files' => 'nullable|array',
+            'upload_files.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,pdf,doc,docx,xls,xlsx|max:5120',
         ]);
+   
+        try {
+            $task->update([
+                'user_id' => $request->user_id ?? $task->user_id,
+                'task' => $request->task ?? $task->task,
+                'priority' => $request->priority ?? $task->priority,
+                'submit_date' => $request->submit_date ?? $task->submit_date,
+                'status' => $request->status ?? $task->status,
+                'sub_status' => $request->sub_status ?? $task->sub_status,
+            ]);
 
-        // Only update allowed fields explicitly
-        $task->update([
-            'user_id' => $request->user_id ?? $task->user_id,
-            'task' => $request->task ?? $task->task,
-            'priority' => $request->priority ?? $task->priority,
-            'submit_date' => $request->submit_date ?? $task->submit_date,
-            'status' => $request->status,
-            'sub_status' => $request->sub_status ?? $task->sub_status,
-        ]);
+            if ($request->hasFile('upload_files')) {
+                foreach ($request->file('upload_files') as $file) {
+                    if ($file && $file->isValid()) {
+                        $originalName = $file->getClientOriginalName();
+                        $extension = $file->getClientOriginalExtension();
+                        $filenameWithoutExt = pathinfo($originalName, PATHINFO_FILENAME);
+                        $fileName = $filenameWithoutExt . '-' . time() . '.' . $extension;
 
-        return redirect()->route('tasks.index')->with('success', 'Task updated successfully.');
+                        $filePath = $file->storeAs('task_uploads', $fileName, 'public');
+
+                        TaskUpload::create([
+                            'task_id' => $task->id,
+                            'user_id' => $user->id,
+                            'upload_files' => $filePath,
+                        ]);
+                    }
+                }
+            }
+
+            return redirect()->route('tasks.index')->with('success', 'Task updated successfully.');
+        } catch (\Exception $e) {
+            // Dump the full exception details
+            dd([
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            \Log::error('Task update failed: ' . $e->getMessage());
+            return back()->withErrors('An error occurred while updating the task. Please try again.');
+        }
+
     }
+
 
 
     public function destroy(Task $task)
@@ -233,14 +266,22 @@ class TaskController extends Controller
 
     public function taskuploadDestroy(TaskUpload $upload)
     {
-        // Delete file from storage
-        Storage::disk('public')->delete($upload->upload_files);
+        // Check if any other uploads reference the same file
+        $otherReferences = TaskUpload::where('upload_files', $upload->upload_files)
+            ->where('id', '!=', $upload->id)
+            ->exists();
 
-        // Delete db record
+        // Delete file from storage only if no other reference exists
+        if (!$otherReferences && Storage::disk('public')->exists($upload->upload_files)) {
+            Storage::disk('public')->delete($upload->upload_files);
+        }
+
+        // Delete DB record
         $upload->delete();
 
         return back()->with('success', 'File deleted successfully.');
     }
+
 
     public function destroyGroup($groupId)
     {
@@ -257,6 +298,52 @@ class TaskController extends Controller
         return redirect()->route('tasks.index')->with('success', 'Task group deleted successfully.');
     }
 
+    public function showUploads(Task $task)
+    {
+
+        $user = auth()->user();
+
+        // Only allow admin or task owner
+        if ($user->role !== 'admin' && $task->user_id !== $user->id) {
+            abort(403, 'Unauthorized.');
+        }
+
+        // Get all uploads for this task
+        $uploads = $task->uploads()->get(); // assuming Task model has uploads relationship
+
+        return view('tasks.uploads', compact('task', 'uploads'));
+    }
+    public function task_uploads_store(Request $request, Task $task)
+    {
+        $request->validate([
+            'upload_files.*' => 'required|file|mimes:jpg,jpeg,png,gif,pdf,doc,docx,xls,xlsx|max:5120',
+        ]);
+
+        foreach ($request->file('upload_files') as $file) {
+            $fileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)
+                . '-' . time() . '.' . $file->getClientOriginalExtension();
+
+            $filePath = $file->storeAs('task_uploads', $fileName, 'public');
+
+            $task->uploads()->create([
+                'user_id' => auth()->id(),
+                'upload_files' => $filePath,
+            ]);
+        }
+
+        return back()->with('success', 'Files uploaded successfully.');
+    }
+
+    public function task_uploads_destroy(TaskUpload $upload)
+    {
+        if (file_exists(storage_path('app/public/' . $upload->upload_files))) {
+            unlink(storage_path('app/public/' . $upload->upload_files));
+        }
+
+        $upload->delete();
+
+        return back()->with('success', 'File deleted successfully.');
+    }
 
 
 }
