@@ -158,10 +158,10 @@
                 </form>
                 <!-- Print Group Button -->
                 <button type="button" class="btn btn-sm btn-primary ms-2 print-group-btn"
-                    data-group-id="{{ $groupId }}">
+                    data-group-id="{{ $groupId }}" data-group-title="{{ $groupTitle }}">
                     Print Group
                 </button>
-              
+
             </h4>
 
             <table class="table table-bordered mb-4 group-table" id="group-table-{{ $groupId }}">
@@ -220,28 +220,15 @@
                                 </button>
 
                                 <!-- Print Button -->
-                                <button class="btn btn-sm btn-secondary print-task-btn"
+                                <button class="btn btn-sm btn-secondary print-task-btn" data-title="{{ $task->title }}"
                                     data-task="{{ htmlspecialchars($task->task) }}" data-user="{{ $task->user->name }}"
                                     data-priority="{{ ucfirst($task->priority) }}" data-date="{{ $task->submit_date }}"
                                     data-status="{{ ucfirst($task->status) }}">
                                     Print
                                 </button>
 
-                                <!-- Hidden full task HTML -->
-                                <div class="d-none task-html">{!! $task->task !!}</div>
                                 <!-- Hidden element with full HTML task -->
                                 <div class="d-none task-html">{!! $task->task !!}</div>
-                                <script>
-                                    $(document).on('click', '.view-task-btn', function() {
-                                        const row = $(this).closest('tr');
-                                        $('#modalUser').text($(this).data('user'));
-                                        $('#modalPriority').text($(this).data('priority'));
-                                        $('#modalDate').text($(this).data('date'));
-                                        $('#modalStatus').text($(this).data('status'));
-                                        $('#modalTaskContent').html(row.find('.task-html').html());
-                                        $('#taskDetailModal').modal('show');
-                                    });
-                                </script>
 
                                 @if (auth()->user()->id === $task->user_id || auth()->user()->role === 'admin')
                                     <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-sm btn-warning">Edit</a>
@@ -323,45 +310,90 @@
     </script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Print single task
-            document.querySelectorAll(".print-task-btn").forEach(function(btn) {
+            // Print Group
+            document.querySelectorAll(".print-group-btn").forEach(function(btn) {
                 btn.addEventListener("click", function() {
-                    const row = btn.closest('tr');
-                    const taskContent = row.querySelector('.task-html').innerHTML;
-                    const user = btn.getAttribute('data-user');
-                    const priority = btn.getAttribute('data-priority');
-                    const date = btn.getAttribute('data-date');
-                    const status = btn.getAttribute('data-status');
+                    const groupTitle = btn.getAttribute('data-group-title');
+                    const groupId = btn.getAttribute('data-group-id');
+
+                    // Collect all tasks under this group
+                    const tasks = document.querySelectorAll(
+                        `.task-row[data-group-id="${groupId}"]`);
+                    let taskHtml = '';
+                    tasks.forEach(function(task) {
+                        taskHtml += task.querySelector('.task-html').innerHTML + '<hr>';
+                    });
 
                     const printWindow = window.open('', '', 'width=800,height=600');
                     printWindow.document.write(`
-                    <html>
-                        <head>
-                            <title>Print Task</title>
-                            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-                            <style>
-                                body { font-family: Arial, sans-serif; padding: 20px; }
-                                h2 { text-align: center; margin-bottom: 20px; }
-                                .task-info { margin-bottom: 15px; }
-                                .task-info strong { width: 120px; display: inline-block; }
-                            </style>
-                        </head>
-                        <body>
-                            <h2>Task Details</h2>
-                            <div class="task-info"><strong>User:</strong> ${user}</div>
-                            <div class="task-info"><strong>Priority:</strong> ${priority}</div>
-                            <div class="task-info"><strong>Date:</strong> ${date}</div>
-                            <div class="task-info"><strong>Status:</strong> ${status}</div>
-                            <hr>
-                            <div>${taskContent}</div>
-                        </body>
-                    </html>
-                `);
+                <html>
+                    <head>
+                        <title>Print Group: ${groupTitle}</title>
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+                        <style>
+                            body { font-family: Arial, sans-serif; padding: 20px; }
+                            h2 { text-align: center; margin-bottom: 20px; }
+                            .task-info { margin-bottom: 15px; }
+                        </style>
+                    </head>
+                    <body>
+                        <h2>Group: ${groupTitle}</h2>
+                        ${taskHtml}
+                    </body>
+                </html>
+            `);
                     printWindow.document.close();
                     printWindow.focus();
                     printWindow.print();
                 });
             });
         });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+    // Print single task
+    document.querySelectorAll(".print-task-btn").forEach(function(btn) {
+        btn.addEventListener("click", function() {
+            const row = btn.closest('tr');
+            const taskContent = row.querySelector('.task-html').innerHTML;
+
+            // Fetch data from attributes
+            const title = btn.getAttribute('data-title') || 'Task Details';
+            const user = btn.getAttribute('data-user');
+            const priority = btn.getAttribute('data-priority');
+            const date = btn.getAttribute('data-date');
+            const status = btn.getAttribute('data-status');
+
+            const printWindow = window.open('', '', 'width=800,height=600');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Print Task: ${title}</title>
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+                        <style>
+                            body { font-family: Arial, sans-serif; padding: 20px; }
+                            h2 { text-align: center; margin-bottom: 20px; }
+                            .task-info { margin-bottom: 15px; }
+                            .task-info strong { width: 120px; display: inline-block; }
+                        </style>
+                    </head>
+                    <body>
+                        <h2>${title}</h2>
+                        <div class="task-info"><strong>User:</strong> ${user}</div>
+                        <div class="task-info"><strong>Priority:</strong> ${priority}</div>
+                        <div class="task-info"><strong>Date:</strong> ${date}</div>
+                        <div class="task-info"><strong>Status:</strong> ${status}</div>
+                        <hr>
+                        <div>${taskContent}</div>
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+        });
+    });
+});
+
     </script>
 @endsection
