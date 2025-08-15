@@ -30,7 +30,7 @@ class ClientController extends Controller
             });
         }
 
-        $clients = $query->paginate(10);
+        $clients = $query->get();
 
         return view('clients.index', compact('clients'));
     }
@@ -47,7 +47,7 @@ class ClientController extends Controller
     // Store a new client
     public function store(Request $request)
     {
-     
+
         $request->validate([
             'name' => 'nullable|string|max:255',
             'email' => 'nullable|email',
@@ -115,7 +115,7 @@ class ClientController extends Controller
             if ($request->filled('assigned_to')) {
                 $client->assignedUsers()->sync($request->assigned_to);
             }
-         
+
             return redirect()->route('clients.index')->with('success', 'Client created successfully.');
         } catch (\Exception $e) {
             \Log::error('Client Store Error: ' . $e->getMessage());
