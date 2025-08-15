@@ -34,12 +34,12 @@ class TransactionController extends Controller
     public function store(Request $request, CaseModel $case)
     {
         $validated = $request->validate([
-            'amount' => 'required|numeric',
-            'type' => 'required|in:credit,debit',
-            'payment_method' => 'required|in:cash,bank,online,other',
+            'amount' => 'nullable|numeric',
+            'type' => 'nullable|in:credit,debit',
+            'payment_method' => 'nullable|in:cash,bank,online,other',
             'transaction_date' => 'nullable|date',
             'description' => 'nullable|string',
-            'status' => 'required|in:paid,commission',
+            'status' => 'nullable|in:paid,commission',
         ]);
 
         $validated['case_id'] = $case->id;
@@ -69,12 +69,12 @@ class TransactionController extends Controller
     public function update(Request $request, CaseModel $case, Transaction $transaction)
     {
         $validated = $request->validate([
-            'amount' => 'required|numeric',
-            'type' => 'required|in:credit,debit',
-            'payment_method' => 'required|in:cash,bank,online,other',
-            'transaction_date' => 'required|date',
+            'amount' => 'nullable|numeric',
+            'type' => 'nullable|in:credit,debit',
+            'payment_method' => 'nullable|in:cash,bank,online,other',
+            'transaction_date' => 'nullable|date',
             'description' => 'nullable|string',
-            'status' => 'required|in:paid,pending',
+            'status' => 'nullable|in:paid,pending',
         ]);
 
         $transaction->update($validated);

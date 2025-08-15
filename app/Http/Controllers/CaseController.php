@@ -82,13 +82,13 @@ class CaseController extends Controller
 public function store(Request $request)
 {
     $request->validate([
-        'case_number' => 'required|unique:case_models,case_number',
-        'client_id' => 'required|exists:clients,id',
-        'case_title' => 'required|string',
+        'case_number' => 'nullable|unique:case_models,case_number',
+        'client_id' => 'nullable|exists:clients,id',
+        'case_title' => 'nullable|string',
         'case_nature' => 'nullable|string',
         'description' => 'nullable|string',
-        'status' => 'required|string',
-        'priority' => 'required|string',
+        'status' => 'nullable|string',
+        'priority' => 'nullable|string',
         'amount' => 'nullable|numeric',
         'commission_amount' => 'nullable|numeric',
         'judge_name' => 'nullable|string',
@@ -180,14 +180,14 @@ public function store(Request $request)
     public function update(Request $request, CaseModel $case)
     {
         $request->validate([
-            'case_number' => 'required|string',
-            'client_id' => 'required|exists:clients,id',
-            'case_title' => 'required|string',
+            'case_number' => 'nullable|string',
+            'client_id' => 'nullable|exists:clients,id',
+            'case_title' => 'nullable|string',
             'description' => 'nullable|string',
-            'status' => 'required|in:open,pending,closed,done', // add any other statuses you use
+            'status' => 'nullable|in:open,pending,closed,done', // add any other statuses you use
             'case_nature' => 'nullable|string',
             'judge_name' => 'nullable|string',
-            'priority' => 'required|in:urgent,important,normal',
+            'priority' => 'nullable|in:urgent,important,normal',
             'commission_amount' => 'nullable|numeric|min:0',
             'files.*' => 'nullable|file|max:10240', // 10 MB per file
             'assigned_to' => 'nullable|array',

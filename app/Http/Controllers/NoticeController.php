@@ -67,9 +67,9 @@ class NoticeController extends Controller
             'case_id' => 'nullable|exists:case_models,id',
             'user_id' => 'nullable|exists:users,id',
             'against_client_id' => 'nullable|exists:case_against_clients,id',
-            'notice' => 'required|string',
-            'status' => 'required|in:pending,done',            // Updated
-            'priority' => 'required|in:normal,urgent,important', // Added
+            'notice' => 'nullable|string',
+            'status' => 'nullable|in:pending,done',            // Updated
+            'priority' => 'nullable|in:normal,urgent,important', // Added
 
             'judge_name' => 'nullable|string|max:255',
             'case_number' => 'nullable|string|max:255',
@@ -115,8 +115,8 @@ class NoticeController extends Controller
         $request->validate([
             'case_id' => 'nullable|exists:case_models,id',
             'against_client_id' => 'nullable|exists:case_against_clients,id',
-            'notice' => 'required|string',
-            'status' => 'required|boolean',
+            'notice' => 'nullable|string',
+            'status' => 'nullable|boolean',
         ]);
 
         $data = $request->all();

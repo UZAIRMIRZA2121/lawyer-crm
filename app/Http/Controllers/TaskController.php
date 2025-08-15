@@ -98,12 +98,12 @@ class TaskController extends Controller
         $request->validate([
             'user_ids' => 'nullable|array',
             'user_ids.*' => 'exists:users,id',
-            'title' => 'required|string|max:255',
-            'task' => 'required|string',
-            'priority' => 'required|in:normal,urgent,important',
-            'submit_date' => 'required|date',
-            'status' => 'required|in:pending,done',
-            'sub_status' => 'required|in:drafting,research,note',
+            'title' => 'nullable|string|max:255',
+            'task' => 'nullable|string',
+            'priority' => 'nullable|in:normal,urgent,important',
+            'submit_date' => 'nullable|date',
+            'status' => 'nullable|in:pending,done',
+            'sub_status' => 'nullable|in:drafting,research,note',
             'upload_files.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,pdf,doc,docx,xls,xlsx|max:5120',
         ]);
 
@@ -200,7 +200,7 @@ class TaskController extends Controller
             'task' => 'nullable|string',
             'priority' => 'nullable|in:normal,urgent,important',
             'submit_date' => 'nullable|date',
-            'status' => 'required|in:pending,done',
+            'status' => 'nullable|in:pending,done',
             'sub_status' => 'nullable|in:drafting,research,note',
         ]);
 

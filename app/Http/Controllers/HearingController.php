@@ -72,14 +72,14 @@ class HearingController extends Controller
     {
 
         $validated = $request->validate([
-            'judge_name' => 'required|string|max:255',
+            'judge_name' => 'nullable|string|max:255',
             'judge_remarks' => 'nullable|string',
             'my_remarks' => 'nullable|string',
             'next_hearing' => 'nullable|date',
-            'priority' => 'required|in:important,normal,urgent',
-            'case_id' => 'required|exists:case_models,id',  // Validate case_id from query/form
+            'priority' => 'nullable|in:important,normal,urgent',
+            'case_id' => 'nullable|exists:case_models,id',  // Validate case_id from query/form
             'nature' => 'nullable|string|max:255', // <- new line
-            'status' => 'required|in:pending,done', // ✅ New line
+            'status' => 'nullable|in:pending,done', // ✅ New line
         ]);
 
         // No route-model binding, so fetch CaseModel manually if needed
@@ -102,13 +102,13 @@ class HearingController extends Controller
     public function update(Request $request, CaseModel $case, Hearing $hearing)
     {
         $request->validate([
-            'judge_name' => 'required|string|max:255',
+            'judge_name' => 'nullable|string|max:255',
             'judge_remarks' => 'nullable|string',
             'my_remarks' => 'nullable|string',
             'next_hearing' => 'nullable|date',
-            'priority' => 'required|in:important,normal,urgent',
+            'priority' => 'nullable|in:important,normal,urgent',
             'nature' => 'nullable|string|max:255', // <- new line
-            'status' => 'required|in:pending,done', // ✅ New line
+            'status' => 'nullable|in:pending,done', // ✅ New line
         ]);
 
         $hearing->update($request->all());

@@ -49,7 +49,7 @@ class ClientController extends Controller
     {
      
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'nullable|string|max:255',
             'email' => 'nullable|email',
             'cnic_front' => 'nullable|image|max:2048',
             'cnic_back' => 'nullable|image|max:2048',
@@ -143,7 +143,7 @@ class ClientController extends Controller
     public function update(Request $request, Client $client)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'nullable|string|max:255',
             'email' => 'nullable|email',
             'cnic_front' => 'nullable|image|max:2048',
             'cnic_back' => 'nullable|image|max:2048',
