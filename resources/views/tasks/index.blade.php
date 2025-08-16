@@ -212,12 +212,12 @@
                                 </span>
                             </td>
                             <td class="actions-column">
-                                <button class="btn btn-sm btn-info view-task-btn" id="view-task-btn"
+                                {{-- <button class="btn btn-sm btn-info view-task-btn" id="view-task-btn"
                                     data-task="{{ htmlspecialchars($task->task) }}" data-user="{{ $task->user->name }}"
                                     data-priority="{{ ucfirst($task->priority) }}" data-date="{{ $task->submit_date }}"
                                     data-status="{{ ucfirst($task->status) }}">
                                     View
-                                </button>
+                                </button> --}}
 
                                 <!-- Print Button -->
                                 <button class="btn btn-sm btn-secondary print-task-btn" data-title="{{ $task->title }}"
@@ -271,43 +271,7 @@
             </div>
         </div>
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            document.querySelectorAll(".print-group-btn").forEach(function(btn) {
-                btn.addEventListener("click", function() {
-                    let groupId = btn.getAttribute("data-group-id");
-                    let groupTitle = btn.closest("h4").innerText.trim().split("\n")[0];
-                    let table = document.getElementById("group-table-" + groupId);
 
-                    // Hide the Actions column before printing
-                    table.querySelectorAll("th.actions-column, td.actions-column").forEach(function(
-                        el) {
-                        el.style.display = "none";
-                    });
-
-                    // Save original page content
-                    let originalContent = document.body.innerHTML;
-
-                    // Prepare only the group content for printing
-                    document.body.innerHTML = `
-                <div style="font-family: Arial; padding: 20px;">
-                    <h2 style="text-align: center;">${groupTitle}</h2>
-                    ${table.outerHTML}
-                </div>
-            `;
-
-                    // Trigger print
-                    window.print();
-
-                    // Restore original content after printing
-                    document.body.innerHTML = originalContent;
-
-                    // Optional: reload to re-bind events
-                    location.reload();
-                });
-            });
-        });
-    </script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             // Print Group
