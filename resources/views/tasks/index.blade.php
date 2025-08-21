@@ -20,6 +20,11 @@
                 display: none !important;
             }
         }
+        #modalTask {
+    word-wrap: break-word;    /* break long words */
+    overflow-wrap: break-word; /* fallback */
+    white-space: normal;       /* prevent preformatted white-space */
+}
     </style>
     <div class="container">
         <h2>Tasks</h2>
@@ -212,12 +217,17 @@
                                 </span>
                             </td>
                             <td class="actions-column">
-                                {{-- <button class="btn btn-sm btn-info view-task-btn" id="view-task-btn"
-                                    data-task="{{ htmlspecialchars($task->task) }}" data-user="{{ $task->user->name }}"
-                                    data-priority="{{ ucfirst($task->priority) }}" data-date="{{ $task->submit_date }}"
-                                    data-status="{{ ucfirst($task->status) }}">
+                                <!-- Button -->
+                                <button class="btn btn-sm btn-info view-task-btn" data-task-id="{{ $task->id }}"
+                                    data-user="{{ $task->user->name }}" data-priority="{{ ucfirst($task->priority) }}"
+                                    data-date="{{ $task->submit_date }}" data-status="{{ ucfirst($task->status) }}">
                                     View
-                                </button> --}}
+                                </button>
+
+                                <!-- Hidden HTML container -->
+                                <div id="task-content-{{ $task->id }}" class="d-none">
+                                    {!! $task->task !!}
+                                </div>
 
                                 <!-- Print Button -->
                                 <button class="btn btn-sm btn-secondary print-task-btn" data-title="{{ $task->title }}"
@@ -252,25 +262,47 @@
     </div>
 
 
-    <!-- Modal -->
-    <div class="modal fade" id="taskDetailModal" tabindex="-1" role="dialog" aria-labelledby="taskDetailModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header bg-dark text-white">
-                    <h5 class="modal-title" id="taskDetailModalLabel">Task Details</h5>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
+<div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header bg-info text-white">
+        <h5 class="modal-title" id="taskModalLabel">Task Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Task:</strong></p>
+        <div id="modalTask" class="border p-2 rounded bg-light"></div>
 
-                    <div><strong>Task:</strong></div>
-                    <div id="modalTaskContent" class="mt-2"></div>
-                </div>
-            </div>
-        </div>
+        <hr>
+        <p><strong>User:</strong> <span id="modalUser"></span></p>
+        <p><strong>Priority:</strong> <span id="modalPriority"></span></p>
+        <p><strong>Submit Date:</strong> <span id="modalDate"></span></p>
+        <p><strong>Status:</strong> <span id="modalStatus"></span></p>
+      </div>
     </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".view-task-btn").forEach(function(button) {
+        button.addEventListener("click", function() {
+            let taskId = this.getAttribute("data-task-id");
+            let taskHtml = document.getElementById("task-content-" + taskId).innerHTML;
+
+            document.getElementById("modalTask").innerHTML = taskHtml;
+            document.getElementById("modalUser").textContent = this.getAttribute("data-user");
+            document.getElementById("modalPriority").textContent = this.getAttribute("data-priority");
+            document.getElementById("modalDate").textContent = this.getAttribute("data-date");
+            document.getElementById("modalStatus").textContent = this.getAttribute("data-status");
+
+            let modal = new bootstrap.Modal(document.getElementById("taskModal"));
+            modal.show();
+        });
+    });
+});
+</script>
+
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -315,21 +347,21 @@
     </script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-    // Print single task
-    document.querySelectorAll(".print-task-btn").forEach(function(btn) {
-        btn.addEventListener("click", function() {
-            const row = btn.closest('tr');
-            const taskContent = row.querySelector('.task-html').innerHTML;
+            // Print single task
+            document.querySelectorAll(".print-task-btn").forEach(function(btn) {
+                btn.addEventListener("click", function() {
+                    const row = btn.closest('tr');
+                    const taskContent = row.querySelector('.task-html').innerHTML;
 
-            // Fetch data from attributes
-            const title = btn.getAttribute('data-title') || 'Task Details';
-            const user = btn.getAttribute('data-user');
-            const priority = btn.getAttribute('data-priority');
-            const date = btn.getAttribute('data-date');
-            const status = btn.getAttribute('data-status');
+                    // Fetch data from attributes
+                    const title = btn.getAttribute('data-title') || 'Task Details';
+                    const user = btn.getAttribute('data-user');
+                    const priority = btn.getAttribute('data-priority');
+                    const date = btn.getAttribute('data-date');
+                    const status = btn.getAttribute('data-status');
 
-            const printWindow = window.open('', '', 'width=800,height=600');
-            printWindow.document.write(`
+                    const printWindow = window.open('', '', 'width=800,height=600');
+                    printWindow.document.write(`
                 <html>
                     <head>
                         <title>Print Task: ${title}</title>
@@ -352,12 +384,11 @@
                     </body>
                 </html>
             `);
-            printWindow.document.close();
-            printWindow.focus();
-            printWindow.print();
+                    printWindow.document.close();
+                    printWindow.focus();
+                    printWindow.print();
+                });
+            });
         });
-    });
-});
-
     </script>
 @endsection
