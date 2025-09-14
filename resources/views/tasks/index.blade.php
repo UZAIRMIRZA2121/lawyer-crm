@@ -20,11 +20,15 @@
                 display: none !important;
             }
         }
+
         #modalTask {
-    word-wrap: break-word;    /* break long words */
-    overflow-wrap: break-word; /* fallback */
-    white-space: normal;       /* prevent preformatted white-space */
-}
+            word-wrap: break-word;
+            /* break long words */
+            overflow-wrap: break-word;
+            /* fallback */
+            white-space: normal;
+            /* prevent preformatted white-space */
+        }
     </style>
     <div class="container">
         <h2>Tasks</h2>
@@ -122,7 +126,7 @@
                     @endforeach
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <label class="form-label">Sub Status</label>
                 <div class="d-flex flex-wrap gap-1">
                     <a href="{{ route('tasks.index', array_merge(request()->except('page', 'sub_status'), ['sub_status' => null])) }}"
@@ -134,6 +138,7 @@
                             'drafting' => 'Drafting',
                             'research' => 'Research',
                             'note' => 'Note',
+                            'preparation' => 'Preparation',
                         ];
                     @endphp
                     @foreach ($subStatusFilters as $key => $label)
@@ -144,6 +149,18 @@
                     @endforeach
                 </div>
             </div>
+            <div class="col-md-2">
+                <label class="form-label">Print All Tasks</label>
+                <div class="d-flex flex-wrap gap-1">
+                    <!-- Print All Tasks Button -->
+                    <button type="button" class="btn btn-sm btn-primary " id="print-all-tasks-btn">
+                        Print All Tasks
+                    </button>
+
+
+                </div>
+            </div>
+
 
         </div>
 
@@ -241,7 +258,8 @@
                                 <div class="d-none task-html">{!! $task->task !!}</div>
 
                                 @if (auth()->user()->id === $task->user_id || auth()->user()->role === 'admin')
-                                    <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                    <a href="{{ route('tasks.edit', $task->id) }}"
+                                        class="btn btn-sm btn-warning">Edit</a>
 
                                     <form action="{{ route('tasks.destroy', $task->id) }}" method="POST"
                                         class="d-inline-block" onsubmit="return confirm('Are you sure?');">
@@ -262,89 +280,143 @@
     </div>
 
 
-<div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header bg-info text-white">
-        <h5 class="modal-title" id="taskModalLabel">Task Details</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <p><strong>Task:</strong></p>
-        <div id="modalTask" class="border p-2 rounded bg-light"></div>
+    <div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title" id="taskModalLabel">Task Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Task:</strong></p>
+                    <div id="modalTask" class="border p-2 rounded bg-light"></div>
 
-        <hr>
-        <p><strong>User:</strong> <span id="modalUser"></span></p>
-        <p><strong>Priority:</strong> <span id="modalPriority"></span></p>
-        <p><strong>Submit Date:</strong> <span id="modalDate"></span></p>
-        <p><strong>Status:</strong> <span id="modalStatus"></span></p>
-      </div>
+                    <hr>
+                    <p><strong>User:</strong> <span id="modalUser"></span></p>
+                    <p><strong>Priority:</strong> <span id="modalPriority"></span></p>
+                    <p><strong>Submit Date:</strong> <span id="modalDate"></span></p>
+                    <p><strong>Status:</strong> <span id="modalStatus"></span></p>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("print-all-tasks-btn").addEventListener("click", function() {
+                // Get all tables with class group-table
+                let tables = document.querySelectorAll(".group-table");
+                if (!tables.length) {
+                    alert("No tables found!");
+                    return;
+                }
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".view-task-btn").forEach(function(button) {
-        button.addEventListener("click", function() {
-            let taskId = this.getAttribute("data-task-id");
-            let taskHtml = document.getElementById("task-content-" + taskId).innerHTML;
+                let combinedHtml = '<h2 style="text-align:center;">All Tasks</h2>';
 
-            document.getElementById("modalTask").innerHTML = taskHtml;
-            document.getElementById("modalUser").textContent = this.getAttribute("data-user");
-            document.getElementById("modalPriority").textContent = this.getAttribute("data-priority");
-            document.getElementById("modalDate").textContent = this.getAttribute("data-date");
-            document.getElementById("modalStatus").textContent = this.getAttribute("data-status");
+                tables.forEach(table => {
+                    // Clone each table
+                    combinedHtml +=
+                        '<table border="1" cellspacing="0" cellpadding="8" style="width:100%; border-collapse:collapse; margin-bottom:20px; font-family: Arial, sans-serif; font-size:14px;">';
+                    combinedHtml += table.querySelector('thead').outerHTML;
+                    combinedHtml += table.querySelector('tbody').outerHTML;
+                    combinedHtml += '</table>';
+                });
 
-            let modal = new bootstrap.Modal(document.getElementById("taskModal"));
-            modal.show();
+                // Open new window for printing
+                let printWindow = window.open("", "_blank");
+                printWindow.document.write(`
+            <html>
+                <head>
+                    <title>Print All Tasks</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; }
+                        table { width: 100%; border-collapse: collapse; }
+                        th, td { border: 1px solid #333; padding: 8px; text-align: left; }
+                        th { background: #f2f2f2; }
+                        .actions-column { display: none; } /* Hide action buttons */
+                    </style>
+                </head>
+                <body>
+                    ${combinedHtml}
+                    <script>window.print(); window.close();<\/script>
+                </body>
+            </html>
+        `);
+                printWindow.document.close();
+            });
         });
-    });
-});
-</script>
-
+    </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Print Group
-            document.querySelectorAll(".print-group-btn").forEach(function(btn) {
-                btn.addEventListener("click", function() {
-                    const groupTitle = btn.getAttribute('data-group-title');
-                    const groupId = btn.getAttribute('data-group-id');
+            document.querySelectorAll(".view-task-btn").forEach(function(button) {
+                button.addEventListener("click", function() {
+                    let taskId = this.getAttribute("data-task-id");
+                    let taskHtml = document.getElementById("task-content-" + taskId).innerHTML;
 
-                    // Collect all tasks under this group
-                    const tasks = document.querySelectorAll(
-                        `.task-row[data-group-id="${groupId}"]`);
-                    let taskHtml = '';
-                    tasks.forEach(function(task) {
-                        taskHtml += task.querySelector('.task-html').innerHTML + '<hr>';
-                    });
+                    document.getElementById("modalTask").innerHTML = taskHtml;
+                    document.getElementById("modalUser").textContent = this.getAttribute(
+                        "data-user");
+                    document.getElementById("modalPriority").textContent = this.getAttribute(
+                        "data-priority");
+                    document.getElementById("modalDate").textContent = this.getAttribute(
+                        "data-date");
+                    document.getElementById("modalStatus").textContent = this.getAttribute(
+                        "data-status");
 
-                    const printWindow = window.open('', '', 'width=800,height=600');
-                    printWindow.document.write(`
-                <html>
-                    <head>
-                        <title>Print Group: ${groupTitle}</title>
-                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-                        <style>
-                            body { font-family: Arial, sans-serif; padding: 20px; }
-                            h2 { text-align: center; margin-bottom: 20px; }
-                            .task-info { margin-bottom: 15px; }
-                        </style>
-                    </head>
-                    <body>
-                        <h2>Group: ${groupTitle}</h2>
-                        ${taskHtml}
-                    </body>
-                </html>
-            `);
-                    printWindow.document.close();
-                    printWindow.focus();
-                    printWindow.print();
+                    let modal = new bootstrap.Modal(document.getElementById("taskModal"));
+                    modal.show();
                 });
             });
         });
     </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Handle Print Group Button
+            document.querySelectorAll(".print-group-btn").forEach(button => {
+                button.addEventListener("click", function() {
+                    let groupId = this.getAttribute("data-group-id");
+                    let groupTitle = this.getAttribute("data-group-title");
+                    let table = document.getElementById("group-table-" + groupId);
+
+                    if (!table) {
+                        alert("Table not found for this group!");
+                        return;
+                    }
+
+                    // Clone the table for printing
+                    let printContent = `
+                <h2 style="text-align:center;">Group: ${groupTitle}</h2>
+                <table border="1" cellspacing="0" cellpadding="8" style="width:100%; border-collapse:collapse; font-family: Arial, sans-serif; font-size: 14px;">
+                    ${table.innerHTML}
+                </table>
+            `;
+
+                    let printWindow = window.open("", "_blank");
+                    printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Print Group - ${groupTitle}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; padding: 20px; }
+                            table { width: 100%; border-collapse: collapse; }
+                            th, td { border: 1px solid #333; padding: 8px; text-align: left; }
+                            th { background: #f2f2f2; }
+                            .actions-column { display: none; } /* Hide action buttons */
+                        </style>
+                    </head>
+                    <body>
+                        ${printContent}
+                        <script>window.print(); window.close();<\/script>
+                    </body>
+                </html>
+            `);
+                    printWindow.document.close();
+                });
+            });
+        });
+    </script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             // Print single task

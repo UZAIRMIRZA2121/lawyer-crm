@@ -118,10 +118,18 @@
                         <label class="form-check-label" for="note">Note</label>
                     </div>
 
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="sub_status" id="preparation"
+                            value="preparation"
+                            {{ old('sub_status', $task->sub_status ?? '') == 'preparation' ? 'checked' : '' }}>
+                        <label class="form-check-label" for="preparation">Preparation</label>
+                    </div>
+
                     @error('sub_status')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
+
                 <div class="col-md-12 mb-3">
                     <label for="task" class="form-label">Task Description</label>
                     <textarea name="task" id="summernote" class="form-control" rows="4" required>{{ old('task', $task->task ?? '') }}</textarea>

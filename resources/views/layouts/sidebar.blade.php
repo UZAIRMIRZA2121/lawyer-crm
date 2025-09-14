@@ -51,34 +51,36 @@
             <a href="{{ route('case-against-clients.index') }}"
                 class="sidebar-link {{ request()->routeIs('case-against-clients.*') ? 'active' : '' }}">Against
                 Clients</a>
-            <a href="{{ route('hearings.index') }}"
-                class="sidebar-link {{ request()->routeIs('hearings.*') ? 'active' : '' }}">Hearnigs</a>
+
+            <a href="{{ route('urgent.index') }}"
+                class="sidebar-link d-block {{ request()->routeIs('urgent.*') ? 'active' : '' }}">
+                Urgent
+            </a>
+            <a href="{{ route('draft.index') }}"
+                class="sidebar-link d-block {{ request()->routeIs('draft.*') ? 'active' : '' }}">
+                Draft
+            </a>
+            <a href="{{ route('tasks.index') }}"
+                class="sidebar-link d-block {{ request()->routeIs('tasks.*') ? 'active' : '' }}">
+                Tasks
+            </a>
+            <a href="{{ route('remaining.amount') }}"
+                class="sidebar-link {{ request()->routeIs('remaining.*') ? 'active' : '' }}">Remaining Amount</a>
         @endif
         <a href="{{ route('profile.show') }}"
             class="sidebar-link d-block {{ request()->routeIs('profile.*') ? 'active' : '' }}">My Profile</a>
 
-        <a href="{{ route('tasks.index') }}"
-            class="sidebar-link d-block {{ request()->routeIs('tasks.*') ? 'active' : '' }}">
-            Tasks
-        </a>
-        <a href="{{ route('urgent.index') }}"
-            class="sidebar-link d-block {{ request()->routeIs('urgent.*') ? 'active' : '' }}">
-            Urgent
-        </a>
-        <a href="{{ route('draft.index') }}"
-            class="sidebar-link d-block {{ request()->routeIs('draft.*') ? 'active' : '' }}">
-            Draft
-        </a>
+
 
 
         <a href="{{ route('cases.index') }}"
             class="sidebar-link {{ request()->routeIs('cases.*') ? 'active' : '' }}">Cases</a>
+        <a href="{{ route('hearings.index') }}"
+            class="sidebar-link {{ request()->routeIs('hearings.*') ? 'active' : '' }}">Hearnigs</a>
 
         <a href="{{ route('notices.index') }}"
             class="sidebar-link {{ request()->routeIs('notices.*') ? 'active' : '' }}">Notices</a>
 
-        <a href="{{ route('remaining.amount') }}"
-            class="sidebar-link {{ request()->routeIs('remaining.*') ? 'active' : '' }}">Remaining Amount</a>
 
         <a class="sidebar-link text-danger text-bold" href="{{ route('logout') }}"
             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

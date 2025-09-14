@@ -103,7 +103,7 @@ class TaskController extends Controller
             'priority' => 'nullable|in:normal,urgent,important',
             'submit_date' => 'nullable|date',
             'status' => 'nullable|in:pending,done',
-            'sub_status' => 'nullable|in:drafting,research,note',
+            'sub_status' => 'nullable|in:drafting,research,note,preparation',
             'upload_files.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,pdf,doc,docx,xls,xlsx|max:5120',
         ]);
 
