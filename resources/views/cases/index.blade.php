@@ -24,9 +24,9 @@
     <div class="container py-4">
         <h1 class="mb-4">Cases List {{ $cases->count() }}</h1>
 
-        @if (auth()->user()->role === 'admin')
+     
             <a href="{{ route('cases.create') }}" class="btn btn-primary mb-3">Add New Case</a>
-        @endif
+      
         @if (session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif

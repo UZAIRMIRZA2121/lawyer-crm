@@ -10,6 +10,9 @@ class TransactionController extends Controller
 {
     public function index(CaseModel $case)
     {
+        if (auth()->user()->role === 'team') {
+            return redirect()->back()->with('error', 'You do not have access to this case.');
+        }
         $transactions = $case->transactions()->latest()->paginate(10);
 
 
@@ -152,6 +155,9 @@ class TransactionController extends Controller
 
     public function remaining_amount(Request $request)
     {
+        if(auth()->user()->role === 'team') {
+            return redirect()->back()->with('error', 'You do not have access to this page.');
+        }
         $query = CaseModel::with(['client', 'transactions']);
 
         // 🔍 Search by case number or client name
