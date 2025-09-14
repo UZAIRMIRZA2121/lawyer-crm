@@ -61,9 +61,14 @@
             class="sidebar-link d-block {{ request()->routeIs('tasks.*') ? 'active' : '' }}">
             Tasks
         </a>
-<a href="{{ route('urgent.index') }}"   class="sidebar-link d-block {{ request()->routeIs('urgent.*') ? 'active' : '' }}">
-     Urgent 
-</a>
+        <a href="{{ route('urgent.index') }}"
+            class="sidebar-link d-block {{ request()->routeIs('urgent.*') ? 'active' : '' }}">
+            Urgent
+        </a>
+        <a href="{{ route('draft.index') }}"
+            class="sidebar-link d-block {{ request()->routeIs('draft.*') ? 'active' : '' }}">
+            Draft
+        </a>
 
 
         <a href="{{ route('cases.index') }}"
@@ -71,6 +76,9 @@
 
         <a href="{{ route('notices.index') }}"
             class="sidebar-link {{ request()->routeIs('notices.*') ? 'active' : '' }}">Notices</a>
+
+        <a href="{{ route('remaining.amount') }}"
+            class="sidebar-link {{ request()->routeIs('remaining.*') ? 'active' : '' }}">Remaining Amount</a>
 
         <a class="sidebar-link text-danger text-bold" href="{{ route('logout') }}"
             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

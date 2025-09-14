@@ -2,17 +2,25 @@
 
 @section('content')
     <div class="container">
-        <h2>Transactions for Case: {{ $case->case_number }}</h2>
+        <h2>Transactions for Case: {{ $case->case_number ?? '' }}</h2>
 
-        <a href="{{ route('cases.transactions.create', $case) }}" class="btn btn-primary mb-3">Add Transaction</a>
+        <div class="d-flex justify-content-between mb-3">
+            <a href="{{ route('cases.transactions.create', $case) }}" class="btn btn-primary">
+                Add Transaction
+            </a>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editAmountModal">
+                Edit Case Amounts
+            </button>
+        </div>
 
-        
 
 
         <div class="row">
             <!-- Total Amount -->
+            <!-- Total Amount Card -->
             <div class="col-md-4">
-                <div class="card border-primary mb-3">
+                <div class="card border-primary mb-3" data-bs-toggle="modal" data-bs-target="#editAmountModal"
+                    style="cursor:pointer;">
                     <div class="card-body text-primary text-center">
                         <i class="bi bi-cash-stack" style="font-size: 2rem;"></i>
                         <h3 class="card-title mt-2">Rs {{ number_format($case->amount, 0) }}</h3>
@@ -20,7 +28,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Paid Amount -->
             <div class="col-md-4">
                 <div class="card border-success mb-3">
@@ -46,8 +53,12 @@
 
         <div class="row">
             <!-- Total Amount -->
+
+
+            <!-- Total Commission Amount Card -->
             <div class="col-md-4">
-                <div class="card border-primary mb-3">
+                <div class="card border-primary mb-3" data-bs-toggle="modal" data-bs-target="#editCommissionModal"
+                    style="cursor:pointer;">
                     <div class="card-body text-primary text-center">
                         <i class="bi bi-cash-stack" style="font-size: 2rem;"></i>
                         <h3 class="card-title mt-2">Rs {{ number_format($case->commission_amount, 0) }}</h3>
@@ -55,6 +66,7 @@
                     </div>
                 </div>
             </div>
+
 
             <!-- Paid Amount -->
             <div class="col-md-4">
@@ -72,7 +84,8 @@
                 <div class="card border-warning mb-3">
                     <div class="card-body text-warning text-center">
                         <i class="bi bi-wallet-fill" style="font-size: 2rem;"></i>
-                        <h3 class="card-title mt-2">Rs {{ number_format($case->commission_amount - $commissionPaidAmount, 0) }}</h3>
+                        <h3 class="card-title mt-2">Rs
+                            {{ number_format($case->commission_amount - $commissionPaidAmount, 0) }}</h3>
                         <p class="card-text">Remaining Commission Amount</p>
                     </div>
                 </div>
@@ -131,4 +144,42 @@
         @endif
 
     </div>
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="editAmountModal" tabindex="-1" aria-labelledby="editAmountModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="{{ route('cases.updateAmounts', $case->id) }}">
+                @csrf
+                @method('PUT')
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editAmountModalLabel">Edit Amounts</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Case Amount -->
+                        <div class="mb-3">
+                            <label for="amount" class="form-label">Total Amount</label>
+                            <input type="number" class="form-control" id="amount" name="amount"
+                                value="{{ $case->amount }}" required>
+                        </div>
+                        <!-- Commission Amount -->
+                        <div class="mb-3">
+                            <label for="commission_amount" class="form-label">Commission Amount</label>
+                            <input type="number" class="form-control" id="commission_amount" name="commission_amount"
+                                value="{{ $case->commission_amount }}" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
 @endsection

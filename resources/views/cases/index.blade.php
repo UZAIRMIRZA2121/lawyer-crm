@@ -108,6 +108,7 @@
                             @php
                                 $subFilters = [
                                     'pending' => 'Pending',
+                                    'draft' => 'Draft',
                                     'done' => 'Done',
                                 ];
                             @endphp

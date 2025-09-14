@@ -30,7 +30,8 @@
                         <option value="bank" {{ $transaction->payment_method == 'bank' ? 'selected' : '' }}>Bank</option>
                         <option value="online" {{ $transaction->payment_method == 'online' ? 'selected' : '' }}>Online
                         </option>
-                        <option value="other" {{ $transaction->payment_method == 'other' ? 'selected' : '' }}>Other</option>
+                        <option value="other" {{ $transaction->payment_method == 'other' ? 'selected' : '' }}>Other
+                        </option>
                     </select>
                 </div>
             </div>
@@ -59,10 +60,10 @@
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="status" id="status_pending" value="pending"
-                            {{ old('status', $transaction->status) == 'pending' ? 'checked' : '' }}>
-                        <label class="form-check-label" for="status_pending">
-                            Pending
+                        <input class="form-check-input" type="radio" name="status" id="commission" value="commission"
+                            {{ old('status') == 'commission' ? 'checked' : '' }}>
+                        <label class="form-check-label" for="commission">
+                            Commission
                         </label>
                     </div>
                 </div>

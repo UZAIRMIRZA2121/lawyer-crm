@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DraftController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CaseAgainstClientController;
@@ -77,7 +78,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/cases/{id}/print-report', [CaseController::class, 'printReport'])->name('cases.printReport');
 
     Route::get('/urgent', [UrgentController::class, 'index'])->name('urgent.index');
+    Route::get('/draft', [DraftController::class, 'index'])->name('draft.index');
 
+    Route::get('/remaining-amount', [TransactionController::class, 'remaining_amount'])->name('remaining.amount');
+
+    Route::put('/cases/{case}/update-amounts', [CaseController::class, 'updateAmounts'])->name('cases.updateAmounts');
 
 
 });

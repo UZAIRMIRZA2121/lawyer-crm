@@ -14,6 +14,7 @@ class Transaction extends Model
         'transaction_date',
         'description',
         'status',
+        'sub_status',
     ];
        public function case()
     {

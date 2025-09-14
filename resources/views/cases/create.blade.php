@@ -6,7 +6,6 @@
 
         <form action="{{ route('cases.store') }}" method="POST">
             @csrf
-
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label class="form-label">Case Number</label>
@@ -15,7 +14,6 @@
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-
                 <div class="col-md-6">
                     <label class="form-label">Client</label>
                     <select name="client_id" id="client_id" class="form-select select2" required>
@@ -30,9 +28,7 @@
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-
             </div>
-
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label class="form-label">Case Title</label>
@@ -52,7 +48,7 @@
                 <div class="col-md-6">
                     <label class="form-label d-block">Status</label>
                     @php
-                        $statuses = ['done' => 'Done', 'pending' => 'Pending'];
+                        $statuses = ['done' => 'Done', 'pending' => 'Pending', 'draft' => 'Draft'];
                     @endphp
                     @foreach ($statuses as $key => $label)
                         <div class="form-check form-check-inline">

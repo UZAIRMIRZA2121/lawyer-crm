@@ -15,11 +15,12 @@ class CaseModel extends Model
         'case_title',
         'description',
         'status',
-         'priority', // ✅ added here after status
+        'priority', // ✅ added here after status
         'hearing_date',
         'judge_name',
         'case_nature',
         'amount', // ✅ add this line
+        'payment_status',   // ✅ new field
         'commission_amount', // ✅ add this line
         'created_at', // ✅ add this line
     ];

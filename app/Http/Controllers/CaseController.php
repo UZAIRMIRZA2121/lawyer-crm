@@ -79,54 +79,54 @@ class CaseController extends Controller
         return view('cases.create', compact('clients', 'users'));
     }
 
-public function store(Request $request)
-{
-    $request->validate([
-        'case_number' => 'nullable|unique:case_models,case_number',
-        'client_id' => 'nullable|exists:clients,id',
-        'case_title' => 'nullable|string',
-        'case_nature' => 'nullable|string',
-        'description' => 'nullable|string',
-        'status' => 'nullable|string',
-        'priority' => 'nullable|string',
-        'amount' => 'nullable|numeric',
-        'commission_amount' => 'nullable|numeric',
-        'judge_name' => 'nullable|string',
-        'hearing_date' => 'nullable|date',
-        'assigned_to' => 'nullable|array',
-        'assigned_to.*' => 'exists:users,id',
-        'created_at' => 'nullable|date', // <-- validation for created_at
-    ]);
+    public function store(Request $request)
+    {
+        $request->validate([
+            'case_number' => 'nullable|unique:case_models,case_number',
+            'client_id' => 'nullable|exists:clients,id',
+            'case_title' => 'nullable|string',
+            'case_nature' => 'nullable|string',
+            'description' => 'nullable|string',
+            'status' => 'nullable|string',
+            'priority' => 'nullable|string',
+            'amount' => 'nullable|numeric',
+            'commission_amount' => 'nullable|numeric',
+            'judge_name' => 'nullable|string',
+            'hearing_date' => 'nullable|date',
+            'assigned_to' => 'nullable|array',
+            'assigned_to.*' => 'exists:users,id',
+            'created_at' => 'nullable|date', // <-- validation for created_at
+        ]);
 
-    $data = $request->all();
+        $data = $request->all();
 
-    if ($request->filled('hearing_date')) {
-        $data['hearing_date'] = \Carbon\Carbon::parse($request->hearing_date);
-    }
-
-    if ($request->filled('created_at')) {
-        $data['created_at'] = \Carbon\Carbon::parse($request->created_at);
-    }
-
-    // Create the case with manual created_at if provided
-    $case = CaseModel::create($data);
-
-    // Assign users to the client through pivot with case_id
-    $client = $case->client;
-
-    if ($client && $request->has('assigned_to')) {
-        $assignedUserIds = $request->input('assigned_to', []);
-
-        $syncData = [];
-        foreach ($assignedUserIds as $userId) {
-            $syncData[$userId] = ['case_id' => $case->id];
+        if ($request->filled('hearing_date')) {
+            $data['hearing_date'] = \Carbon\Carbon::parse($request->hearing_date);
         }
 
-        $client->assignedUsers()->sync($syncData);
-    }
+        if ($request->filled('created_at')) {
+            $data['created_at'] = \Carbon\Carbon::parse($request->created_at);
+        }
 
-    return redirect()->route('cases.index')->with('success', 'Case created successfully.');
-}
+        // Create the case with manual created_at if provided
+        $case = CaseModel::create($data);
+
+        // Assign users to the client through pivot with case_id
+        $client = $case->client;
+
+        if ($client && $request->has('assigned_to')) {
+            $assignedUserIds = $request->input('assigned_to', []);
+
+            $syncData = [];
+            foreach ($assignedUserIds as $userId) {
+                $syncData[$userId] = ['case_id' => $case->id];
+            }
+
+            $client->assignedUsers()->sync($syncData);
+        }
+
+        return redirect()->route('cases.index')->with('success', 'Case created successfully.');
+    }
 
 
 
@@ -262,14 +262,22 @@ public function store(Request $request)
         return redirect()->route('cases.index')->with('success', 'Case and all related records deleted successfully.');
     }
 
-
-
-
-
     public function printReport($id)
     {
         $case = CaseModel::with(['client', 'againstClients', 'hearings'])->findOrFail($id);
 
         return view('cases.print_report', compact('case'));
     }
+    public function updateAmounts(Request $request, CaseModel $case)
+    {
+        $validated = $request->validate([
+            'amount' => 'required|numeric|min:0',
+            'commission_amount' => 'required|numeric|min:0',
+        ]);
+
+        $case->update($validated);
+
+        return redirect()->back()->with('success', 'Amounts updated successfully.');
+    }
+
 }
