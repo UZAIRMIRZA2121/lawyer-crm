@@ -77,6 +77,25 @@
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
+                <div class="col-md-6">
+                    <label class="form-label d-block">Sub Status</label>
+                    @php
+                        $subStatuses = ['draft' => 'Draft', 'pursue' => 'Pursue'];
+                        $selectedSubStatus = old('sub_status', $case->sub_status ?? null); // ✅ use old input or current value
+                    @endphp
+                    @foreach ($subStatuses as $key => $label)
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="sub_status"
+                                id="sub_status_{{ $key }}" value="{{ $key }}"
+                                {{ $selectedSubStatus === $key ? 'checked' : '' }}>
+                            <label class="form-check-label"
+                                for="sub_status_{{ $key }}">{{ $label }}</label>
+                        </div>
+                    @endforeach
+                    @error('sub_status')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
 
                 <div class="col-md-6">
                     <label class="form-label d-block">Priority</label>

@@ -20,6 +20,7 @@ class CaseModel extends Model
         'judge_name',
         'case_nature',
         'amount', // ✅ add this line
+        'sub_status', // ✅ add this line
         'payment_status',   // ✅ new field
         'commission_amount', // ✅ add this line
         'created_at', // ✅ add this line

@@ -24,9 +24,9 @@
     <div class="container py-4">
         <h1 class="mb-4">Cases List {{ $cases->count() }}</h1>
 
-     
-            <a href="{{ route('cases.create') }}" class="btn btn-primary mb-3">Add New Case</a>
-      
+
+        <a href="{{ route('cases.create') }}" class="btn btn-primary mb-3">Add New Case</a>
+
         @if (session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
@@ -74,7 +74,7 @@
                 <div class="row g-3 align-items-center">
 
                     <!-- Priority Filter -->
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-4">
                         <label class="form-label">Priority</label>
                         <div class="d-flex flex-wrap gap-1">
                             <a href="{{ route('cases.index', array_merge(request()->except('page', 'priority'), ['priority' => null])) }}"
@@ -120,6 +120,29 @@
                             @endforeach
                         </div>
                     </div>
+                    <!-- Sub Status Filter -->
+                    <div class="col-12 col-md-2">
+                        <label class="form-label">Sub Status</label>
+                        <div class="d-flex flex-wrap gap-1">
+                            <a href="{{ route('cases.index', array_merge(request()->except('page', 'sub_status'), ['sub_status' => null])) }}"
+                                class="btn btn-sm {{ request('sub_status') === null ? 'btn-primary' : '' }}">
+                                All
+                            </a>
+                            @php
+                                $subStatuses = [
+                                    'draft' => 'Draft',
+                                    'pursue' => 'Pursue',
+                                ];
+                            @endphp
+                            @foreach ($subStatuses as $key => $label)
+                                <a href="{{ route('cases.index', array_merge(request()->except('page'), ['sub_status' => $key])) }}"
+                                    class="btn btn-sm {{ request('sub_status') === $key ? 'btn-primary' : '' }}">
+                                    {{ $label }}
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
+
 
                     <!-- Print Button -->
                     <div class="col-12 col-md-2 d-flex justify-content-md-end">

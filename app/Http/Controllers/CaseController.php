@@ -60,6 +60,11 @@ class CaseController extends Controller
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
+        // ✅ New Sub Status filter
+        if ($sub_status = request('sub_status')) {
+            $query->where('sub_status', $sub_status);
+        }
+
 
         $cases = $query->latest()->paginate(15);
 
@@ -88,6 +93,7 @@ class CaseController extends Controller
             'case_nature' => 'nullable|string',
             'description' => 'nullable|string',
             'status' => 'nullable|string',
+            'sub_status' => 'nullable|in:draft,pursue', // ✅ added validation
             'priority' => 'nullable|string',
             'amount' => 'nullable|numeric',
             'commission_amount' => 'nullable|numeric',
@@ -193,6 +199,8 @@ class CaseController extends Controller
             'assigned_to' => 'nullable|array',
             'assigned_to.*' => 'exists:users,id',
             'amount' => 'nullable|numeric',
+            'sub_status' => 'nullable|in:draft,pursue', // ✅ added validation
+
         ]);
 
         // Update case fields
@@ -207,6 +215,7 @@ class CaseController extends Controller
             'priority' => $request->priority,
             'commission_amount' => $request->commission_amount,
             'amount' => $request->amount,
+            'sub_status' => $request->sub_status,
         ]);
 
         // Sync assigned users for the client related to this case

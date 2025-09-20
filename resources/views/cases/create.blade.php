@@ -45,10 +45,10 @@
                     @enderror
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-4 mt-1">
                     <label class="form-label d-block">Status</label>
                     @php
-                        $statuses = ['done' => 'Done', 'pending' => 'Pending', 'draft' => 'Draft'];
+                        $statuses = ['done' => 'Done', 'pending' => 'Pending'];
                     @endphp
                     @foreach ($statuses as $key => $label)
                         <div class="form-check form-check-inline">
@@ -61,7 +61,26 @@
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4 mt-1">
+                    <label class="form-label d-block">Sub Status</label>
+                    @php
+                        $subStatuses = ['draft' => 'Draft', 'pursue' => 'Pursue'];
+                    @endphp
+                    @foreach ($subStatuses as $key => $label)
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="sub_status"
+                                id="sub_status_{{ $key }}" value="{{ $key }}"
+                                {{ old('sub_status') == $key ? 'checked' : '' }}>
+                            <label class="form-check-label"
+                                for="sub_status_{{ $key }}">{{ $label }}</label>
+                        </div>
+                    @endforeach
+                    @error('sub_status')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-md-4 mt-1">
                     <label class="form-label d-block">Priority</label>
                     @php
                         $statuses = [
