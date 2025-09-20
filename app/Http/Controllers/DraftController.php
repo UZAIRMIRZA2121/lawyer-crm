@@ -16,7 +16,7 @@ public function index(Request $request)
     $status = $request->input('status'); // ✅ New status filter
 
     // Draft Cases
-    $draftCases = CaseModel::where('status', 'draft')
+    $draftCases = CaseModel::where('sub_status', 'draft')
         ->when($search, function ($q) use ($search) {
             $q->where('case_title', 'like', "%$search%")
                 ->orWhere('case_number', 'like', "%$search%");
