@@ -91,6 +91,44 @@
         </form>
     </div>
 
+    @if (Auth::id() == 8)
+        <div class="d-none d-md-block col-md-2 sidebar bg-white">
+            <a href="{{ route('profile.show') }}"
+                class="sidebar-link d-block {{ request()->routeIs('profile.*') ? 'active' : '' }}">My Profile</a>
+
+            <a href="{{ route('clients.index') }}"
+                class="sidebar-link {{ request()->routeIs('clients.*') ? 'active' : '' }}">Clients</a>
+
+            <a href="{{ route('case-against-clients.index') }}"
+                class="sidebar-link {{ request()->routeIs('case-against-clients.*') ? 'active' : '' }}">Against
+                Clients</a>
+            <a class="sidebar-link text-danger text-bold" href="{{ route('logout') }}"
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <b>logout</b>
+            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                @csrf
+            </form>
+        </div>
+    @endif
+    @if (Auth::id() == 9)
+        <div class="d-none d-md-block col-md-2 sidebar bg-white">
+            <a href="{{ route('profile.show') }}"
+                class="sidebar-link d-block {{ request()->routeIs('profile.*') ? 'active' : '' }}">My Profile</a>
+
+            <a href="{{ route('hearings.index') }}"
+                class="sidebar-link {{ request()->routeIs('hearings.*') ? 'active' : '' }}">Hearnigs</a>
+
+            <a class="sidebar-link text-danger text-bold" href="{{ route('logout') }}"
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <b>logout</b>
+            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                @csrf
+            </form>
+        </div>
+    @endif
+
     <!-- Mobile Offcanvas Sidebar -->
     <div class="offcanvas offcanvas-start d-md-none" tabindex="-1" id="sidebarMenu">
         <div class="offcanvas-header">
