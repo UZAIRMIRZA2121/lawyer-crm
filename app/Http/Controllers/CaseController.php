@@ -16,14 +16,14 @@ class CaseController extends Controller
         $query = CaseModel::with('client');
 
         // === TEAM ROLE: Restrict to assigned case IDs from client_user table ===
-        if ($user->role === 'team') {
-            $assignedCaseIds = \DB::table('client_user')
-                ->where('user_id', $user->id)
-                ->pluck('case_id')
-                ->toArray();
+        // if ($user->role === 'team') {
+        //     $assignedCaseIds = \DB::table('client_user')
+        //         ->where('user_id', $user->id)
+        //         ->pluck('case_id')
+        //         ->toArray();
 
-            $query->whereIn('id', $assignedCaseIds);
-        }
+        //     $query->whereIn('id', $assignedCaseIds);
+        // }
 
         // === ADMIN ROLE: Optional filtering by client_id
         if ($user->role === 'admin' && $request->filled('client_id')) {
@@ -148,26 +148,26 @@ class CaseController extends Controller
     {
         $user = auth()->user();
 
-        if ($user->role === 'team') {
-            $client = $case->client; // make sure CaseModel has client() relationship
+        // if ($user->role === 'team') {
+        //     $client = $case->client; // make sure CaseModel has client() relationship
 
-            // Check if the current user is assigned to this client
-            $isAssigned = $client->assignedUsers()
-                ->where('user_id', $user->id)
-                ->exists();
+        //     // Check if the current user is assigned to this client
+        //     $isAssigned = $client->assignedUsers()
+        //         ->where('user_id', $user->id)
+        //         ->exists();
 
-            if (!$isAssigned) {
-                abort(403, 'You are not assigned to this client.');
-            }
+        //     if (!$isAssigned) {
+        //         abort(403, 'You are not assigned to this client.');
+        //     }
 
-            // Get only clients assigned to this user
-            $clients = Client::whereHas('assignedUsers', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })->orderBy('name')->get();
-        } else {
+        //     // Get only clients assigned to this user
+        //     $clients = Client::whereHas('assignedUsers', function ($query) use ($user) {
+        //         $query->where('user_id', $user->id);
+        //     })->orderBy('name')->get();
+        // } else {
             // Admin or others get all clients
             $clients = Client::orderBy('name')->get();
-        }
+        // }
 
         // Get all team users for assigned_to select
         $users = User::where('role', 'team')->get();

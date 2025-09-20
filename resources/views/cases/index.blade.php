@@ -215,36 +215,43 @@
 
                             <td class="text-nowrap">
                                 <div class="d-flex flex-wrap gap-1">
-                                    <!-- 👇 Add this button -->
-                                    <a href="{{ route('case-against-clients.index') }}?case_id={{ $case->id }}"
-                                        class="btn btn-secondary btn-sm">
-                                        Against Client
-                                    </a>
-                                    <a href="{{ route('cases.show', $case) }}" class="btn btn-info btn-sm">View</a>
-                                    <a href="{{ route('cases.edit', $case) }}" class="btn btn-warning btn-sm">Edit</a>
-                                    <form action="{{ route('cases.destroy', $case) }}" method="POST"
-                                        onsubmit="return confirm('Delete this case?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-danger btn-sm" type="submit">Delete</button>
-                                    </form>
-                                    <a href="{{ route('cases.files.create', $case) }}" class="btn btn-primary btn-sm">
-                                        Upload Files
-                                    </a>
+                                    @if (Auth::id() == 9)
+                                        <a href="{{ route('hearings.index', ['case_id' => $case->id]) }}"
+                                            class="btn btn-success btn-sm">View Hearings</a>
+                                    @else
+                                        <a href="{{ route('hearings.index', ['case_id' => $case->id]) }}"
+                                            class="btn btn-success btn-sm">View Hearings</a>
+                                        <!-- 👇 Add this button -->
+                                        <a href="{{ route('case-against-clients.index') }}?case_id={{ $case->id }}"
+                                            class="btn btn-secondary btn-sm">
+                                            Against Client
+                                        </a>
+                                        <a href="{{ route('cases.show', $case) }}" class="btn btn-info btn-sm">View</a>
+                                        <a href="{{ route('cases.edit', $case) }}" class="btn btn-warning btn-sm">Edit</a>
+                                        <form action="{{ route('cases.destroy', $case) }}" method="POST"
+                                            onsubmit="return confirm('Delete this case?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                                        </form>
+                                        <a href="{{ route('cases.files.create', $case) }}" class="btn btn-primary btn-sm">
+                                            Upload Files
+                                        </a>
 
-                                    <a href="{{ route('hearings.index', ['case_id' => $case->id]) }}"
-                                        class="btn btn-success btn-sm">View Hearings</a>
 
-                                    @if (auth()->user()->role === 'admin')
-                                        <a href="{{ route('cases.transactions.index', $case) }}"
-                                            class="btn btn-primary btn-sm">
-                                            Payment
+                                        @if (auth()->user()->role === 'admin')
+                                            <a href="{{ route('cases.transactions.index', $case) }}"
+                                                class="btn btn-primary btn-sm">
+                                                Payment
+                                            </a>
+                                        @endif
+                                        <a href="{{ route('cases.printReport', $case->id) }}" target="_blank"
+                                            class="btn btn-dark btn-sm">
+                                            Print Report
                                         </a>
                                     @endif
-                                    <a href="{{ route('cases.printReport', $case->id) }}" target="_blank"
-                                        class="btn btn-dark btn-sm">
-                                        Print Report
-                                    </a>
+
+
 
 
                                 </div>

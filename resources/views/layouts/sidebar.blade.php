@@ -21,12 +21,10 @@
         }
     </style>
 
-
-
-    <!-- Toggle Button for mobile -->
+    <!-- Mobile Navbar Toggle -->
     <nav class="navbar navbar-light bg-white d-md-none">
         <div class="container-fluid d-flex justify-content-between align-items-center">
-            <a class="navbar-brand text-dark" href="{{ Auth::check() ? route('dashboard') : route('home') }}">
+            <a class="navbar-brand text-dark" href="{{ route(Auth::user()->role === 'admin' ? 'dashboard' : 'home') }}">
                 Lawyer CRM
             </a>
             <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
@@ -35,99 +33,58 @@
         </div>
     </nav>
 
+    @php
+        // Define menu items based on role/user
+        $sidebarItems = [];
 
+        if(Auth::user()->role == 'admin') {
+            $sidebarItems = [
+                ['route'=>'dashboard','label'=>'Dashboard'],
+                ['route'=>'users.index','label'=>'Team'],
+                ['route'=>'clients.index','label'=>'Clients'],
+                ['route'=>'case-against-clients.index','label'=>'Against Clients'],
+                ['route'=>'urgent.index','label'=>'Urgent'],
+                ['route'=>'draft.index','label'=>'Draft'],
+                ['route'=>'tasks.index','label'=>'Tasks'],
+                ['route'=>'remaining.amount','label'=>'Remaining Amount'],
+                ['route'=>'profile.show','label'=>'My Profile'],
+                ['route'=>'cases.index','label'=>'Cases'],
+                ['route'=>'hearings.index','label'=>'Hearings'],
+                ['route'=>'notices.index','label'=>'Notices'],
+            ];
+        } elseif(Auth::id() == 8) {
+            $sidebarItems = [
+                ['route'=>'profile.show','label'=>'My Profile'],
+                // ['route'=>'clients.index','label'=>'Clients'],
+                 ['route'=>'cases.index','label'=>'Cases'],
+            ];
+        } elseif(Auth::id() == 9) {
+            $sidebarItems = [
+                ['route'=>'profile.show','label'=>'My Profile'],
+                  ['route'=>'cases.index','label'=>'Cases'],
+                ['route'=>'hearings.index','label'=>'Hearings'],
+            ];
+        }
+    @endphp
 
-    <!-- Sidebar for larger screens -->
+    <!-- Sidebar for md+ screens -->
     <div class="d-none d-md-block col-md-2 sidebar bg-white">
-        @if (Auth::user()->role == 'admin')
-            <a href="{{ route('dashboard') }}"
-                class="sidebar-link d-block {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
-
-            <a href="{{ route('users.index') }}"
-                class="sidebar-link d-block {{ request()->routeIs('users.*') ? 'active' : '' }}">Team</a>
-            <a href="{{ route('clients.index') }}"
-                class="sidebar-link {{ request()->routeIs('clients.*') ? 'active' : '' }}">Clients</a>
-
-            <a href="{{ route('case-against-clients.index') }}"
-                class="sidebar-link {{ request()->routeIs('case-against-clients.*') ? 'active' : '' }}">Against
-                Clients</a>
-
-            <a href="{{ route('urgent.index') }}"
-                class="sidebar-link d-block {{ request()->routeIs('urgent.*') ? 'active' : '' }}">
-                Urgent
+        @foreach($sidebarItems as $item)
+            <a href="{{ route($item['route']) }}" 
+               class="sidebar-link {{ request()->routeIs(str_replace('.index','.*',$item['route'])) ? 'active' : '' }}">
+                {{ $item['label'] }}
             </a>
-            <a href="{{ route('draft.index') }}"
-                class="sidebar-link d-block {{ request()->routeIs('draft.*') ? 'active' : '' }}">
-                Draft
-            </a>
-            <a href="{{ route('tasks.index') }}"
-                class="sidebar-link d-block {{ request()->routeIs('tasks.*') ? 'active' : '' }}">
-                Tasks
-            </a>
-            <a href="{{ route('remaining.amount') }}"
-                class="sidebar-link {{ request()->routeIs('remaining.*') ? 'active' : '' }}">Remaining Amount</a>
-        @endif
-        <a href="{{ route('profile.show') }}"
-            class="sidebar-link d-block {{ request()->routeIs('profile.*') ? 'active' : '' }}">My Profile</a>
+        @endforeach
 
-
-
-
-        <a href="{{ route('cases.index') }}"
-            class="sidebar-link {{ request()->routeIs('cases.*') ? 'active' : '' }}">Cases</a>
-        <a href="{{ route('hearings.index') }}"
-            class="sidebar-link {{ request()->routeIs('hearings.*') ? 'active' : '' }}">Hearnigs</a>
-
-        <a href="{{ route('notices.index') }}"
-            class="sidebar-link {{ request()->routeIs('notices.*') ? 'active' : '' }}">Notices</a>
-
-
+        <!-- Logout -->
         <a class="sidebar-link text-danger text-bold" href="{{ route('logout') }}"
             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-            <b>logout</b>
+            <b>Logout</b>
         </a>
         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
             @csrf
         </form>
     </div>
-
-    @if (Auth::id() == 8)
-        <div class="d-none d-md-block col-md-2 sidebar bg-white">
-            <a href="{{ route('profile.show') }}"
-                class="sidebar-link d-block {{ request()->routeIs('profile.*') ? 'active' : '' }}">My Profile</a>
-
-            <a href="{{ route('clients.index') }}"
-                class="sidebar-link {{ request()->routeIs('clients.*') ? 'active' : '' }}">Clients</a>
-
-            <a href="{{ route('case-against-clients.index') }}"
-                class="sidebar-link {{ request()->routeIs('case-against-clients.*') ? 'active' : '' }}">Against
-                Clients</a>
-            <a class="sidebar-link text-danger text-bold" href="{{ route('logout') }}"
-                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                <b>logout</b>
-            </a>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                @csrf
-            </form>
-        </div>
-    @endif
-    @if (Auth::id() == 9)
-        <div class="d-none d-md-block col-md-2 sidebar bg-white">
-            <a href="{{ route('profile.show') }}"
-                class="sidebar-link d-block {{ request()->routeIs('profile.*') ? 'active' : '' }}">My Profile</a>
-
-            <a href="{{ route('hearings.index') }}"
-                class="sidebar-link {{ request()->routeIs('hearings.*') ? 'active' : '' }}">Hearnigs</a>
-
-            <a class="sidebar-link text-danger text-bold" href="{{ route('logout') }}"
-                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                <b>logout</b>
-            </a>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                @csrf
-            </form>
-        </div>
-    @endif
 
     <!-- Mobile Offcanvas Sidebar -->
     <div class="offcanvas offcanvas-start d-md-none" tabindex="-1" id="sidebarMenu">
@@ -136,39 +93,21 @@
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
         </div>
         <div class="offcanvas-body">
-            @if (Auth::user()->role == 'admin')
-                <a href="{{ route('dashboard') }}"
-                    class="sidebar-link d-block {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
+            @foreach($sidebarItems as $item)
+                <a href="{{ route($item['route']) }}" 
+                   class="sidebar-link {{ request()->routeIs(str_replace('.index','.*',$item['route'])) ? 'active' : '' }}">
+                    {{ $item['label'] }}
+                </a>
+            @endforeach
 
-                <a href="{{ route('users.index') }}"
-                    class="sidebar-link d-block {{ request()->routeIs('users.*') ? 'active' : '' }}">Team</a>
-
-                <a href="{{ route('clients.index') }}"
-                    class="sidebar-link d-block {{ request()->routeIs('clients.*') ? 'active' : '' }}">Clients</a>
-
-                <a href="{{ route('case-against-clients.index') }}"
-                    class="sidebar-link d-block {{ request()->routeIs('case-against-clients.*') ? 'active' : '' }}">Against
-                    Clients</a>
-            @endif
-
-            <a href="{{ route('profile.show') }}"
-                class="sidebar-link d-block {{ request()->routeIs('profile.*') ? 'active' : '' }}">My Profile</a>
-
-            <a href="{{ route('tasks.index') }}"
-                class="sidebar-link d-block {{ request()->routeIs('tasks.*') ? 'active' : '' }}">Tasks</a>
-
-            <a href="{{ route('cases.index') }}"
-                class="sidebar-link d-block {{ request()->routeIs('cases.*') ? 'active' : '' }}">Cases</a>
-
-            <a href="{{ route('notices.index') }}"
-                class="sidebar-link d-block {{ request()->routeIs('notices.*') ? 'active' : '' }}">Notices</a>
-
+            <!-- Logout -->
             <a class="sidebar-link text-danger text-bold" href="{{ route('logout') }}"
-                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();">
                 <b>Logout</b>
             </a>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
-
+            <form id="logout-form-mobile" action="{{ route('logout') }}" method="POST" class="d-none">
+                @csrf
+            </form>
         </div>
     </div>
 @endif
