@@ -45,11 +45,11 @@ class HearingController extends Controller
         }
 
         if ($startDate) {
-            $query->whereDate('created_at', '>=', $startDate);
+            $query->whereDate('next_hearing', '>=', $startDate);
         }
 
         if ($endDate) {
-            $query->whereDate('created_at', '<=', $endDate);
+            $query->whereDate('next_hearing', '<=', $endDate);
         }
 
         $hearings = $query->latest()->get();

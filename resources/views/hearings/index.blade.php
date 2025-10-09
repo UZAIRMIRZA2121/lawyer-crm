@@ -155,11 +155,11 @@
                                 <td>{{ $hearing->case->case_number ?? 'N/A' }}</td>
                                 <td>{{ $hearing->case->case_title ?? 'N/A' }}</td>
                                 <td>{{ $hearing->judge_name ?? 'N/A' }}</td>
-                                <td>{{ $hearing->judge_remarks  ?? 'N/A' }}</td>
-                                <td>{{ $hearing->my_remarks  ?? 'N/A' }}</td>
+                                <td>{{ $hearing->judge_remarks ?? 'N/A' }}</td>
+                                <td>{{ $hearing->my_remarks ?? 'N/A' }}</td>
                                 <td>{{ $hearing->next_hearing ? \Carbon\Carbon::parse($hearing->next_hearing)->format('d-m-Y h:i A') : 'N/A' }}
                                 </td>
-                                <td>{{ $hearing->nature ?? 'N/A'}}
+                                <td>{{ $hearing->nature ?? 'N/A' }}
                                 </td>
                                 <td>
                                     @php
@@ -172,7 +172,7 @@
                                         $priorityClass = $priorityClasses[$priority] ?? 'badge bg-secondary';
                                     @endphp
 
-                                    <span class="{{ $priorityClass }}">{{ ucfirst($priority)  }}</span>
+                                    <span class="{{ $priorityClass }}">{{ ucfirst($priority) }}</span>
                                 </td>
                                 <td>
                                     @if ($hearing->status === 'pending')
