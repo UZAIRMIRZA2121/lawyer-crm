@@ -85,7 +85,7 @@
 
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <label for="judge_remarks" class="form-label">Judge Remarks</label>
+                    <label for="judge_remarks" class="form-label">Current Proceeding</label>
                     <textarea name="judge_remarks" id="judge_remarks" rows="3"
                         class="form-control @error('judge_remarks') is-invalid @enderror">{{ old('judge_remarks') }}</textarea>
                     @error('judge_remarks')

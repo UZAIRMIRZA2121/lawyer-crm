@@ -162,7 +162,9 @@
                         <th>Client</th>
                         <th>Title</th>
                         <th>Status</th>
-                        <th>Next Hearing Date</th>
+                        <th style="
+                            width: 290px;
+                        ">Hearing Date</th>
                         <th>Procedure</th>
                         <th>Judge</th>
                         <th>Nature</th>
@@ -180,15 +182,28 @@
                             <td>{{ ucfirst($case->status) }}</td>
                             <td>
                                 @php
-                                    $nextHearing = $case->hearings->first();
+                                    // Get hearings ordered by date
+                                    $hearings = $case->hearings->sortBy('next_hearing')->values();
+                                    $firstHearing = $hearings->first();
+                                    $secondHearing = $hearings->skip(1)->first(); // second hearing
                                 @endphp
 
-                                @if ($nextHearing)
-                                    {{ \Carbon\Carbon::parse($nextHearing->next_hearing)->format('d M Y, h:i A') }}
+                                @if ($firstHearing)
+                                    <strong>Previous Hearing:</strong>
+
+                                    {{ \Carbon\Carbon::parse($firstHearing->next_hearing)->format('d M Y, h:i A') }}
                                 @else
                                     <span class="text-muted">No upcoming hearing</span>
                                 @endif
+
+                                @if ($secondHearing)
+                                    <br>
+                                    <strong>Next Hearing:</strong>
+
+                                    {{ \Carbon\Carbon::parse($secondHearing->next_hearing)->format('d M Y, h:i A') }}
+                                @endif
                             </td>
+
                             <td>
                                 @php
                                     $nextHearing = $case->hearings->first();
@@ -202,7 +217,6 @@
                             </td>
                             <td>{{ $case->judge_name ?? 'N/A' }}</td>
                             <td>{{ $case->case_nature ?? 'N/A' }}</td>
-                            {{-- New Assigned Users column --}}
                             <td>
                                 @if ($case->assignedUsers->count())
                                     @foreach ($case->assignedUsers as $user)

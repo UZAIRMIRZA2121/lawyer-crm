@@ -136,31 +136,68 @@
                 <table class="table table-bordered table-striped align-middle table-fixed-header">
                     <thead class="table-light">
                         <tr>
+                            <th>id #</th>
                             <th>Case #</th>
                             <th>Case Title</th>
                             <th>Judge Name</th>
-                            <th>Judge Remarks</th>
+                         
                             <th>My Remarks</th>
+                            <th>Previous Hearing Date</th>
+                            <th>Current Hearing Date</th>
                             <th>Next Hearing Date</th>
-                            <th>Next Proceeding </th>
+                               <th>Current Proceeding</th>
+                            <th>Next Proceeding</th>
                             <th>Priority</th>
                             <th>Status</th>
                             <th>Actions</th>
-
                         </tr>
                     </thead>
+
                     <tbody>
                         @foreach ($hearings as $hearing)
+                            @php
+                                // Get all hearings of this case ordered by date
+                                $caseHearings = $hearing->case
+                                    ? $hearing->case->hearings()->orderBy('next_hearing')->get()
+                                    : collect();
+
+                                // Find index of current hearing
+                                $currentIndex = $caseHearings->search(fn($h) => $h->id === $hearing->id);
+
+                                // Find previous and next hearings if exist
+                                $previousHearing = $caseHearings[$currentIndex - 1] ?? null;
+                                $nextHearing = $caseHearings[$currentIndex + 1] ?? null;
+                            @endphp
+
                             <tr>
+                                <td>{{ $hearing->id ?? 'N/A' }}</td>
                                 <td>{{ $hearing->case->case_number ?? 'N/A' }}</td>
-                                <td>{{ $hearing->case->case_title ?? 'N/A' }}</td>
+                                <td>{{ $hearing->case->case_title ?? 'N/A' }} {{ $hearing->case->case_nature ? "({$hearing->case->case_nature})" : '' }}</td>
                                 <td>{{ $hearing->judge_name ?? 'N/A' }}</td>
-                                <td>{{ $hearing->judge_remarks ?? 'N/A' }}</td>
+                        
                                 <td>{{ $hearing->my_remarks ?? 'N/A' }}</td>
-                                <td>{{ $hearing->next_hearing ? \Carbon\Carbon::parse($hearing->next_hearing)->format('d-m-Y h:i A') : 'N/A' }}
+
+                                {{-- Previous Hearing Date --}}
+                                <td>
+                                    {{ $previousHearing && $previousHearing->next_hearing
+                                        ? \Carbon\Carbon::parse($previousHearing->next_hearing)->format('d-m-Y h:i A')
+                                        : 'N/A' }}
                                 </td>
-                                <td>{{ $hearing->nature ?? 'N/A' }}
+
+                                {{-- Current Hearing Date --}}
+                                <td>
+                                    {{ $hearing->next_hearing ? \Carbon\Carbon::parse($hearing->next_hearing)->format('d-m-Y h:i A') : 'N/A' }}
                                 </td>
+
+                                {{-- Next Hearing Date --}}
+                                <td>
+                                    {{ $nextHearing && $nextHearing->next_hearing
+                                        ? \Carbon\Carbon::parse($nextHearing->next_hearing)->format('d-m-Y h:i A')
+                                        : 'N/A' }}
+                                </td>
+                                <td>{{ $hearing->judge_remarks ?? 'N/A' }}</td>
+                                <td>{{ $hearing->nature ?? 'N/A' }}</td>
+
                                 <td>
                                     @php
                                         $priorityClasses = [
@@ -171,9 +208,9 @@
                                         $priority = $hearing->priority ?? 'normal';
                                         $priorityClass = $priorityClasses[$priority] ?? 'badge bg-secondary';
                                     @endphp
-
                                     <span class="{{ $priorityClass }}">{{ ucfirst($priority) }}</span>
                                 </td>
+
                                 <td>
                                     @if ($hearing->status === 'pending')
                                         <span class="badge bg-warning text-dark">Pending</span>
@@ -184,12 +221,9 @@
                                     @endif
                                 </td>
 
-
                                 <td>
-
                                     <a href="{{ route('hearings.edit', $hearing) }}?case_id={{ $case->id ?? $hearing->case_id }}"
                                         class="btn btn-warning btn-sm">Edit</a>
-
 
                                     <form
                                         action="{{ route('hearings.destroy', $hearing) }}?case_id={{ $case->id ?? $hearing->case_id }}"
@@ -199,16 +233,12 @@
                                         @method('DELETE')
 
                                         <input type="hidden" name="case_id" value="{{ $case->id ?? '' }}">
-
                                         <button class="btn btn-danger btn-sm" type="submit">Delete</button>
                                     </form>
-
-
                                 </td>
-
-
                             </tr>
                         @endforeach
+
                     </tbody>
                 </table>
             </div>

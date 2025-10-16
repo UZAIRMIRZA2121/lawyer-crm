@@ -351,7 +351,7 @@
                             <th>Case #</th>
                             <th>Case Title</th>
                             <th>Judge Name</th>
-                            <th>Judge Remarks</th>
+                            <th>Current Proceeding</th>
                             <th>My Remarks</th>
                             <th>Next Hearing Date</th>
                             <th>Next Proceeding </th>

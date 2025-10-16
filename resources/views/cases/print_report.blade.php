@@ -275,7 +275,7 @@
                     <tr>
                         <th>#</th>
                         <th>Judge Name</th>
-                        <th>Judge Remarks</th>
+                        <th>Current Proceeding</th>
                         <th>My Remarks</th>
                         <th>Next Hearing</th>
                         <th>Priority</th>
