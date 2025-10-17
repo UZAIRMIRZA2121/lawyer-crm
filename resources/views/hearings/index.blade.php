@@ -172,7 +172,8 @@
                             <tr>
                                 <td>{{ $hearing->id ?? 'N/A' }}</td>
                                 <td>{{ $hearing->case->case_number ?? 'N/A' }}</td>
-                                <td>{{ $hearing->case->case_title ?? 'N/A' }} {{ $hearing->case->case_nature ? "({$hearing->case->case_nature})" : '' }}</td>
+                                <td>{{ $hearing->case->case_title ?? 'N/A' }} {{ optional($hearing->case)->case_nature ? '(' . optional($hearing->case)->case_nature . ')' : '' }}
+</td>
                                 <td>{{ $hearing->judge_name ?? 'N/A' }}</td>
                         
                                 <td>{{ $hearing->my_remarks ?? 'N/A' }}</td>
