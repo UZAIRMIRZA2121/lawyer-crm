@@ -136,7 +136,7 @@
                 <table class="table table-bordered table-striped align-middle table-fixed-header">
                     <thead class="table-light">
                         <tr>
-                            <th>id #</th>
+                            {{-- <th>id #</th> --}}
                             <th>Case #</th>
                             <th>Case Title</th>
                             <th>Judge Name</th>
@@ -170,7 +170,7 @@
                             @endphp
 
                             <tr>
-                                <td>{{ $hearing->id ?? 'N/A' }}</td>
+                                {{-- <td>{{ $hearing->id ?? 'N/A' }}</td> --}}
                                 <td>{{ $hearing->case->case_number ?? 'N/A' }}</td>
                                 <td>{{ $hearing->case->case_title ?? 'N/A' }} {{ optional($hearing->case)->case_nature ? '(' . optional($hearing->case)->case_nature . ')' : '' }}
 </td>
