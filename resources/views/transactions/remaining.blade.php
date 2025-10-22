@@ -78,7 +78,7 @@
 
                         <tr class="text-center">
                             <td>
-                                <a href="" class="text-decoration-none">
+                                <a href="{{ route('clients.show', $case->client_id) }}" class="text-decoration-none">
                                     {{ $case->case_number ?? '' }}
                                 </a>
                             </td>
