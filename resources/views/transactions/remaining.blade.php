@@ -42,14 +42,8 @@
                 </div>
             </div>
         </div>
-        
+
         @foreach ($cases->groupBy('user_id') as $clientId => $clientCases)
-            <h4 class="mb-3">
-                Client:
-                <a href="" class="text-decoration-none">
-                    {{ $clientCases->first()->client->name ?? 'Unknown Client' }}
-                </a>
-            </h4>
             <table class="table table-bordered table-striped align-middle mb-5">
                 <thead class="table-dark">
                     <tr class="text-center">

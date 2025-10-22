@@ -170,7 +170,6 @@
             <div class="col-12 col-md-2 d-flex justify-content-md-end">
                 <button type="button" class="btn btn-outline-dark w-100 w-md-auto" onclick="printTable()">🖨️ Print
                     Table</button>
-    All Cases Grouped by Client
 
 
             </div>
