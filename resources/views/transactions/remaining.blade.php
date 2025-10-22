@@ -41,152 +41,75 @@
                     @endforeach
                 </div>
             </div>
-
         </div>
-
-
-
+        
         @foreach ($cases->groupBy('user_id') as $clientId => $clientCases)
-            <div class="mb-5">
+            <h4 class="mb-3">
+                Client:
+                <a href="" class="text-decoration-none">
+                    {{ $clientCases->first()->client->name ?? 'Unknown Client' }}
+                </a>
+            </h4>
+            <table class="table table-bordered table-striped align-middle mb-5">
+                <thead class="table-dark">
+                    <tr class="text-center">
+                        <th>Case #</th>
+                        <th>Total Amount</th>
+                        <th>Paid Amount</th>
+                        <th>Remaining</th>
+                        <th>Commission</th>
+                        <th>Commission Paid</th>
+                        <th>Remaining Commission</th>
+                        <th>Status</th>
+                        <th>Payment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($clientCases as $case)
+                        @php
+                            $paid = $case->transactions->where('status', 'paid')->sum('amount');
+                            $commissionPaid = $case->transactions->where('status', 'commission')->sum('amount');
 
+                            if ($paid == 0) {
+                                $status = 'Unpaid';
+                                $badge = 'bg-danger';
+                            } elseif ($paid >= $case->amount) {
+                                $status = 'Paid';
+                                $badge = 'bg-success';
+                            } else {
+                                $status = 'Partial Paid';
+                                $badge = 'bg-warning';
+                            }
+                        @endphp
 
-                @foreach ($clientCases as $case)
-                    @php
-                        $paid = $case->transactions->where('status', 'paid')->sum('amount');
-                        $status = 'Unpaid';
-                        if ($paid == 0) {
-                            $status = 'Unpaid';
-                        } elseif ($paid >= $case->amount) {
-                            $status = 'Paid';
-                        } else {
-                            $status = 'Partial Paid';
-                        }
-                    @endphp
-
-
-                    <div class="card mb-4">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <div>
-                                <a href="{{ route('clients.show', $case->client_id) }}" class="text-decoration-none">
-                                    <strong>Case #{{ $case->case_number ?? '' }}</strong>
+                        <tr class="text-center">
+                            <td>
+                                <a href="" class="text-decoration-none">
+                                    {{ $case->case_number ?? '' }}
                                 </a>
+                            </td>
+                            <td>Rs {{ number_format($case->amount, 0) }}</td>
+                            <td>Rs {{ number_format($paid, 0) }}</td>
+                            <td>Rs {{ number_format($case->amount - $paid, 0) }}</td>
+                            <td>Rs {{ number_format($case->commission_amount, 0) }}</td>
+                            <td>Rs {{ number_format($commissionPaid, 0) }}</td>
+                            <td>Rs {{ number_format($case->commission_amount - $commissionPaid, 0) }}</td>
+                            <td><span class="badge {{ $badge }}">{{ $status }}</span></td>
+                            <td>
+                                @if ($status != 'Paid')
+                                    <a href="{{ route('cases.transactions.index', $case->id) }}"
+                                        class="btn btn-sm btn-primary">
+                                        Payment
+                                    </a>
+                                @endif
+                            </td>
+                        </tr>
 
-                                <span
-                                    class="badge 
-            {{ $status == 'Paid' ? 'bg-success' : ($status == 'Partial Paid' ? 'bg-warning' : 'bg-danger') }}">
-                                    {{ $status }}
-                                </span>
-                            </div>
-
-                            @if ($status != 'Paid')
-                                <a href="{{ route('cases.transactions.index', $case->id) }}"
-                                    class="btn btn-primary btn-sm">
-                                    Payment
-                                </a>
-                            @endif
-                        </div>
-
-                        <div class="card-body">
-
-                            <div class="row text-center mb-3">
-                                <!-- Total -->
-                                <div class="col-md-4">
-                                    <div class="p-3 border rounded">
-                                        <h4>Rs {{ number_format($case->amount, 0) }}</h4>
-                                        <small>Total Amount</small>
-                                    </div>
-                                </div>
-
-                                <!-- Paid -->
-                                <div class="col-md-4">
-                                    <div class="p-3 border rounded">
-                                        @php
-                                            $paid = $case->transactions->where('status', 'paid')->sum('amount');
-                                        @endphp
-                                        <h4>Rs {{ number_format($paid, 0) }}</h4>
-                                        <small>Paid Amount</small>
-                                    </div>
-                                </div>
-
-                                <!-- Remaining -->
-                                <div class="col-md-4">
-                                    <div class="p-3 border rounded">
-                                        <h4>Rs {{ number_format($case->amount - $paid, 0) }}</h4>
-                                        <small>Remaining Amount</small>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Commission -->
-                            <div class="row text-center mb-3">
-                                <div class="col-md-4">
-                                    <div class="p-3 border rounded">
-                                        <h4>Rs {{ number_format($case->commission_amount, 0) }}</h4>
-                                        <small>Total Commission</small>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <div class="p-3 border rounded">
-                                        @php
-                                            $commissionPaid = $case->transactions
-                                                ->where('status', 'commission')
-                                                ->sum('amount');
-                                        @endphp
-                                        <h4>Rs {{ number_format($commissionPaid, 0) }}</h4>
-                                        <small>Commission Paid</small>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <div class="p-3 border rounded">
-                                        <h4>Rs {{ number_format($case->commission_amount - $commissionPaid, 0) }}</h4>
-                                        <small>Remaining Commission</small>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Transactions Table -->
-                            @if ($case->transactions->count())
-                                <table class="table table-sm table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Amount</th>
-                                            <th>Type</th>
-                                            <th>Payment Method</th>
-                                            <th>Date</th>
-                                            <th>Description</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($case->transactions as $transaction)
-                                            <tr>
-                                                <td>{{ number_format($transaction->amount, 2) }}</td>
-                                                <td>{{ ucfirst($transaction->type) }}</td>
-                                                <td>{{ ucfirst($transaction->payment_method) }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($transaction->transaction_date)->format('d-m-Y H:i') }}
-                                                </td>
-                                                <td>{{ $transaction->description ?? '-' }}</td>
-                                                <td>
-                                                    @if ($transaction->status === 'paid')
-                                                        <span class="badge bg-success">Paid</span>
-                                                    @else
-                                                        <span class="badge bg-info">Commission</span>
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @else
-                                <p>No transactions found for this case.</p>
-                            @endif
-
-                        </div>
-                    </div>
-                @endforeach
-            </div>
+                
+                    @endforeach
+                </tbody>
+            </table>
         @endforeach
+
     </div>
 @endsection

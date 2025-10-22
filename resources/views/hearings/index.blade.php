@@ -1,25 +1,70 @@
 @extends('layouts.app')
 
 @section('content')
+
+    <!-- ✅ Print Styles -->
     <style>
         @media print {
+            @page {
+                size: A4 landscape;
+                /* You can change to portrait if preferred */
+                margin: 1cm;
+            }
+
             body * {
                 visibility: hidden;
             }
 
-            .table-responsive,
-            .table-responsive * {
+            .print-area,
+            .print-area * {
                 visibility: visible;
             }
 
-            .table-responsive {
+            .print-area {
                 position: absolute;
                 left: 0;
                 top: 0;
                 width: 100%;
+                overflow: visible !important;
+            }
+
+            /* Hide Actions column completely */
+            th:last-child,
+            td:last-child,
+            .no-print {
+                display: none !important;
+            }
+
+            /* Clean print-friendly table */
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 11px;
+            }
+
+            th,
+            td {
+                border: 1px solid #000;
+                padding: 4px;
+            }
+
+            thead {
+                display: table-header-group;
+            }
+
+            tr {
+                page-break-inside: avoid;
+            }
+
+            /* Hide buttons and UI */
+            button,
+            .btn,
+            form {
+                display: none !important;
             }
         }
     </style>
+
     <div class="container">
         @if ($case)
             <h4>Hearings for Case: {{ $case->case_number }}</h4>
@@ -125,6 +170,9 @@
             <div class="col-12 col-md-2 d-flex justify-content-md-end">
                 <button type="button" class="btn btn-outline-dark w-100 w-md-auto" onclick="printTable()">🖨️ Print
                     Table</button>
+    All Cases Grouped by Client
+
+
             </div>
 
         </div>
@@ -132,20 +180,18 @@
 
 
         @if ($hearings->count())
-            <div class="table-responsive" style="max-height: 70vh; overflow-y: auto;">
+            <div class="table-responsive print-area">
                 <table class="table table-bordered table-striped align-middle table-fixed-header">
                     <thead class="table-light">
                         <tr>
-                            {{-- <th>id #</th> --}}
                             <th>Case #</th>
                             <th>Case Title</th>
                             <th>Judge Name</th>
-                         
                             <th>My Remarks</th>
                             <th>Previous Hearing Date</th>
                             <th>Current Hearing Date</th>
                             <th>Next Hearing Date</th>
-                               <th>Current Proceeding</th>
+                            <th>Current Proceeding</th>
                             <th>Next Proceeding</th>
                             <th>Priority</th>
                             <th>Status</th>
@@ -156,46 +202,40 @@
                     <tbody>
                         @foreach ($hearings as $hearing)
                             @php
-                                // Get all hearings of this case ordered by date
                                 $caseHearings = $hearing->case
                                     ? $hearing->case->hearings()->orderBy('next_hearing')->get()
                                     : collect();
 
-                                // Find index of current hearing
                                 $currentIndex = $caseHearings->search(fn($h) => $h->id === $hearing->id);
 
-                                // Find previous and next hearings if exist
                                 $previousHearing = $caseHearings[$currentIndex - 1] ?? null;
                                 $nextHearing = $caseHearings[$currentIndex + 1] ?? null;
                             @endphp
 
                             <tr>
-                                {{-- <td>{{ $hearing->id ?? 'N/A' }}</td> --}}
                                 <td>{{ $hearing->case->case_number ?? 'N/A' }}</td>
-                                <td>{{ $hearing->case->case_title ?? 'N/A' }} {{ optional($hearing->case)->case_nature ? '(' . optional($hearing->case)->case_nature . ')' : '' }}
-</td>
+                                <td>{{ $hearing->case->case_title ?? 'N/A' }}
+                                    {{ optional($hearing->case)->case_nature ? '(' . optional($hearing->case)->case_nature . ')' : '' }}
+                                </td>
                                 <td>{{ $hearing->judge_name ?? 'N/A' }}</td>
-                        
                                 <td>{{ $hearing->my_remarks ?? 'N/A' }}</td>
 
-                                {{-- Previous Hearing Date --}}
                                 <td>
                                     {{ $previousHearing && $previousHearing->next_hearing
                                         ? \Carbon\Carbon::parse($previousHearing->next_hearing)->format('d-m-Y h:i A')
                                         : 'N/A' }}
                                 </td>
 
-                                {{-- Current Hearing Date --}}
                                 <td>
                                     {{ $hearing->next_hearing ? \Carbon\Carbon::parse($hearing->next_hearing)->format('d-m-Y h:i A') : 'N/A' }}
                                 </td>
 
-                                {{-- Next Hearing Date --}}
                                 <td>
                                     {{ $nextHearing && $nextHearing->next_hearing
                                         ? \Carbon\Carbon::parse($nextHearing->next_hearing)->format('d-m-Y h:i A')
                                         : 'N/A' }}
                                 </td>
+
                                 <td>{{ $hearing->judge_remarks ?? 'N/A' }}</td>
                                 <td>{{ $hearing->nature ?? 'N/A' }}</td>
 
@@ -222,7 +262,7 @@
                                     @endif
                                 </td>
 
-                                <td>
+                                <td class="no-print">
                                     <a href="{{ route('hearings.edit', $hearing) }}?case_id={{ $case->id ?? $hearing->case_id }}"
                                         class="btn btn-warning btn-sm">Edit</a>
 
@@ -239,10 +279,10 @@
                                 </td>
                             </tr>
                         @endforeach
-
                     </tbody>
                 </table>
             </div>
+
 
             {{-- {{ $hearings->links() }} --}}
         @else
@@ -250,40 +290,11 @@
         @endif
     </div>
 
+
+    <!-- ✅ Print Function -->
     <script>
         function printTable() {
-            // Hide the Actions column before printing
-            const actionColIndexes = [];
-            const ths = document.querySelectorAll('table thead th');
-            ths.forEach((th, index) => {
-                if (th.innerText.trim().toLowerCase() === 'actions') {
-                    actionColIndexes.push(index);
-                }
-            });
-
-            // Hide Action column cells
-            const rows = document.querySelectorAll('table tr');
-            rows.forEach(row => {
-                actionColIndexes.forEach(i => {
-                    if (row.children[i]) {
-                        row.children[i].style.display = 'none';
-                    }
-                });
-            });
-
-            // Trigger print
             window.print();
-
-            // Restore Action column after printing
-            setTimeout(() => {
-                rows.forEach(row => {
-                    actionColIndexes.forEach(i => {
-                        if (row.children[i]) {
-                            row.children[i].style.display = '';
-                        }
-                    });
-                });
-            }, 1000);
         }
     </script>
 
