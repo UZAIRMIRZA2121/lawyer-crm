@@ -66,7 +66,8 @@ class CaseController extends Controller
         }
 
 
-        $cases = $query->latest()->get();
+       $cases = $query->orderBy('id', 'desc')->get();
+
 
         // === Admin-only: total transactions
         $totalTransactionsAmount = null;
