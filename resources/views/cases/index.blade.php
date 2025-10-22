@@ -1,25 +1,73 @@
 @extends('layouts.app')
 
 @section('content')
-    <style>
-        @media print {
-            body * {
-                visibility: hidden;
-            }
-
-            .table-responsive,
-            .table-responsive * {
-                visibility: visible;
-            }
-
-            .table-responsive {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-            }
+<style>
+    @media print {
+        @page {
+            size: A4 portrait;
+            margin: 1cm;
         }
-    </style>
+
+        body * {
+            visibility: hidden;
+        }
+
+        .print-area,
+        .print-area * {
+            visibility: visible;
+        }
+
+        .print-area {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            overflow: visible !important;
+        }
+
+        /* Hide Actions column completely */
+        th:nth-last-child(1),
+        td:nth-last-child(1) {
+            display: none !important;
+        }
+
+        /* Table adjustments for print */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            page-break-inside: auto;
+        }
+
+        thead {
+            display: table-header-group;
+        }
+
+        tfoot {
+            display: table-footer-group;
+        }
+
+        tr {
+            page-break-inside: avoid;
+            page-break-after: auto;
+        }
+
+        /* Optional: style cleanup for print */
+        .btn,
+        .alert,
+        form,
+        .row,
+        .filter-form,
+        a.btn {
+            display: none !important;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+    }
+</style>
+
 
     <div class="container py-4">
         <h1 class="mb-4">Cases List {{ $cases->count() }}</h1>
@@ -154,8 +202,8 @@
             </form>
         </div>
         <hr>
-        <div class="table-responsive" style="max-height: 70vh; overflow-y: auto;">
-            <table class="table table-bordered table-striped align-middle table-fixed-header">
+      <div class="table-responsive print-area">
+    <table class="table table-bordered table-striped align-middle table-fixed-header">
                 <thead class="table-light">
                     <tr>
                         <th>Case Number</th>
@@ -176,8 +224,8 @@
                 <tbody>
                     @forelse($cases as $case)
                         <tr>
-                            <td>{{ $case->case_number }}</td>
-                            <td>{{ $case->client->name ?? 'N/A' }}</td>
+                            <td>{{ $case->case_number ?? '' }}</td>
+                            <td>{{ $case->client->name ?? '' }}</td>
                             <td>{{ $case->case_title }}</td>
                             <td>{{ ucfirst($case->status) }}</td>
                             <td>
@@ -283,46 +331,14 @@
             </table>
         </div>
 
-        <div class="mt-3">
-            {{ $cases->links() }}
-        </div>
+   
     </div>
 
-    <script>
-        function printTable() {
-            // Hide the Actions column before printing
-            const actionColIndexes = [];
-            const ths = document.querySelectorAll('table thead th');
-            ths.forEach((th, index) => {
-                if (th.innerText.trim().toLowerCase() === 'actions') {
-                    actionColIndexes.push(index);
-                }
-            });
+<script>
+    function printTable() {
+        window.print();
+    }
+</script>
 
-            // Hide Action column cells
-            const rows = document.querySelectorAll('table tr');
-            rows.forEach(row => {
-                actionColIndexes.forEach(i => {
-                    if (row.children[i]) {
-                        row.children[i].style.display = 'none';
-                    }
-                });
-            });
-
-            // Trigger print
-            window.print();
-
-            // Restore Action column after printing
-            setTimeout(() => {
-                rows.forEach(row => {
-                    actionColIndexes.forEach(i => {
-                        if (row.children[i]) {
-                            row.children[i].style.display = '';
-                        }
-                    });
-                });
-            }, 1000);
-        }
-    </script>
 
 @endsection

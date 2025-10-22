@@ -66,7 +66,7 @@ class CaseController extends Controller
         }
 
 
-        $cases = $query->latest()->paginate(15);
+        $cases = $query->latest()->get();
 
         // === Admin-only: total transactions
         $totalTransactionsAmount = null;
