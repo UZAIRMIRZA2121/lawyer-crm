@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <h2>All Cases Grouped by Client</h2>
+        <h2>All Cases Payments</h2>
         <div class="mb-4">
             <form method="GET" action="{{ route('remaining.amount') }}" class="row g-2 align-items-end">
                 <!-- Search -->
@@ -48,6 +48,7 @@
                 <thead class="table-dark">
                     <tr class="text-center">
                         <th>Case #</th>
+                        <th>Case title</th>
                         <th>Total Amount</th>
                         <th>Paid Amount</th>
                         <th>Remaining</th>
@@ -82,6 +83,7 @@
                                     {{ $case->case_number ?? '' }}
                                 </a>
                             </td>
+                            <td>  <a href="{{ route('cases.show', $case->id) }}" class="text-decoration-none">{{ $case->case_title }}</a></td>
                             <td>Rs {{ number_format($case->amount, 0) }}</td>
                             <td>Rs {{ number_format($paid, 0) }}</td>
                             <td>Rs {{ number_format($case->amount - $paid, 0) }}</td>

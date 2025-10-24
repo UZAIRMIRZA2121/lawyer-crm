@@ -232,24 +232,16 @@
                                 @php
                                     // Get hearings ordered by date
                                     $hearings = $case->hearings->sortBy('next_hearing')->values();
-                                    $firstHearing = $hearings->first();
-                                    $secondHearing = $hearings->skip(1)->first(); // second hearing
+                                    $firstHearing = $hearings->last();
                                 @endphp
 
                                 @if ($firstHearing)
-                                    <strong>Previous Hearing:</strong>
-
+                                
                                     {{ \Carbon\Carbon::parse($firstHearing->next_hearing)->format('d M Y, h:i A') }}
                                 @else
                                     <span class="text-muted">No upcoming hearing</span>
                                 @endif
 
-                                @if ($secondHearing)
-                                    <br>
-                                    <strong>Next Hearing:</strong>
-
-                                    {{ \Carbon\Carbon::parse($secondHearing->next_hearing)->format('d M Y, h:i A') }}
-                                @endif
                             </td>
 
                             <td>
