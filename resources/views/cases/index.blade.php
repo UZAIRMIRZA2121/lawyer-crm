@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<style>
-    @media print {
+    <style>
+        @media print {
         @page {
             size: A4 portrait;
             margin: 1cm;
@@ -35,21 +35,27 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 12px;
+            font-size: 16px;
             page-break-inside: auto;
         }
 
-        thead {
-            display: table-header-group;
+        /* Add dark borders to all table cells */
+        table,
+        th,
+        td {
+            border: 1px solid #000 !important;
         }
 
-        tfoot {
-            display: table-footer-group;
+        th {
+            background: #f2f2f2;
+            /* optional */
+            font-weight: bold;
         }
 
         tr {
             page-break-inside: avoid;
             page-break-after: auto;
+            border: 1px solid #000 !important;
         }
 
         /* Optional: style cleanup for print */
@@ -65,8 +71,9 @@
         h1 {
             margin-bottom: 10px;
         }
-    }
-</style>
+
+        }
+    </style>
 
 
     <div class="container py-4">
@@ -202,8 +209,8 @@
             </form>
         </div>
         <hr>
-      <div class="table-responsive print-area">
-    <table class="table table-bordered table-striped align-middle table-fixed-header">
+        <div class="table-responsive print-area">
+            <table class="table table-bordered table-striped align-middle table-fixed-header">
                 <thead class="table-light">
                     <tr>
                         <th>Case Number</th>
@@ -236,7 +243,6 @@
                                 @endphp
 
                                 @if ($firstHearing)
-                                
                                     {{ \Carbon\Carbon::parse($firstHearing->next_hearing)->format('d M Y, h:i A') }}
                                 @else
                                     <span class="text-muted">No upcoming hearing</span>
@@ -323,14 +329,14 @@
             </table>
         </div>
 
-   
+
     </div>
 
-<script>
-    function printTable() {
-        window.print();
-    }
-</script>
+    <script>
+        function printTable() {
+            window.print();
+        }
+    </script>
 
 
 @endsection

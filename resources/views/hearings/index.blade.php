@@ -39,7 +39,7 @@
             table {
                 width: 100%;
                 border-collapse: collapse;
-                font-size: 11px;
+                font-size: 16px;
             }
 
             th,
@@ -55,6 +55,13 @@
             tr {
                 page-break-inside: avoid;
             }
+
+            table,
+            th,
+            td {
+                border: 1px solid #000 !important;
+            }
+
 
             /* Hide buttons and UI */
             button,

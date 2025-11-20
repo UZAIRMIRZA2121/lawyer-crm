@@ -14,6 +14,15 @@
             td.actions-column {
                 display: none !important;
             }
+            table{
+                font-size: 16px large;
+            }
+            table,
+            th,
+            td {
+                border: 1px solid #000 !important;
+            }
+
 
             /* Optional: hide any buttons or links not needed in print */
             .btn {

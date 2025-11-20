@@ -1,6 +1,94 @@
 @extends('layouts.app')
 
 @section('content')
+    <style>
+        /* ================================
+       PRINT STYLES
+       ================================ */
+        @media print {
+
+            /* Reset layout */
+            body {
+                font-family: Arial, sans-serif;
+                font-size: 12px;
+                color: #000;
+                background: #fff !important;
+            }
+
+            /* Hide everything except main container */
+            header,
+            footer,
+            nav,
+            .btn,
+            .alert,
+            .filter-form,
+            form,
+            a.btn,
+            .view-task-btn {
+                display: none !important;
+            }
+
+            /* Keep container visible */
+            .container {
+                visibility: visible !important;
+                padding: 0;
+                margin: 0;
+                width: 100%;
+            }
+
+            /* Tables */
+            table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                page-break-inside: auto;
+                margin-bottom: 20px !important;
+            }
+
+            table,
+            th,
+            td {
+                border: 1px solid #000 !important;
+                /* Dark border */
+            }
+
+            th,
+            td {
+                padding: 8px !important;
+                text-align: left !important;
+            }
+
+            thead {
+                background-color: #f2f2f2 !important;
+                display: table-header-group !important;
+            }
+
+            tr {
+                page-break-inside: avoid !important;
+                border: 1px solid #000 !important;
+                /* Dark border for every row */
+            }
+
+            /* Remove Actions column */
+            th:last-child,
+            td:last-child {
+                display: none !important;
+            }
+
+            /* Titles */
+            h1,
+            h2 {
+                margin-top: 20px !important;
+                margin-bottom: 10px !important;
+                color: #000 !important;
+            }
+
+            /* Ensure modal content never prints */
+            .modal,
+            .modal-backdrop {
+                display: none !important;
+            }
+        }
+    </style>
     <div class="container">
         <h1>All Urgent Items</h1>
         <form method="GET" action="{{ route('urgent.index') }}" class="mb-4">
@@ -9,14 +97,17 @@
                     <input type="text" name="search" class="form-control" placeholder="Search keyword..."
                         value="{{ request('search') }}">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}">
                 </div>
                 <div class="col-md-2">
                     <button type="submit" class="btn btn-primary w-100">Filter</button>
+                </div>
+                <div class="col-md-2">
+                    <button  onclick="printAllTables()" class="btn btn-primary w-100">Print All Tables</button>
                 </div>
 
                 <!-- Status Filter -->
@@ -39,12 +130,7 @@
                     </div>
                 </div>
 
-                <!-- Status Filter -->
-                <div class="col-md-4 mt-5">
-                    <button class="btn btn-dark mb-3" onclick="printAllTables()">🖨 Print All Tables</button>
-
-                </div>
-
+            
 
             </div>
 
@@ -363,9 +449,9 @@
                     <tbody>
                         @foreach ($urgentHearings as $hearing)
                             <tr>
-                                <td>{{ $hearing->case->case_number }}</td>
-                                <td>{{ $hearing->case->case_title }}</td>
-                                <td>{{ $hearing->judge_name }}</td>
+                                <td>{{ $hearing->case->case_number ?? '' }}</td>
+                                <td>{{ $hearing->case->case_title ?? '' }}</td>
+                                <td>{{ $hearing->judge_name ?? '' }}</td>
                                 <td>{{ $hearing->judge_remarks ?? 'N/A' }}</td>
                                 <td>{{ $hearing->my_remarks ?? 'N/A' }}</td>
                                 <td>{{ $hearing->next_hearing ? \Carbon\Carbon::parse($hearing->next_hearing)->format('d-m-Y h:i A') : 'N/A' }}

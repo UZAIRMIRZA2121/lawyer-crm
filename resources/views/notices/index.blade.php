@@ -18,6 +18,15 @@
                 top: 0;
                 width: 100%;
             }
+            table {
+                font-size: 16px;
+            }
+            table,
+            th,
+            td {
+                border: 1px solid #000 !important;
+            }
+
         }
     </style>
     <div class="container">
@@ -31,7 +40,7 @@
 
         <!-- Filters -->
         <div class="row mb-3">
-            
+
             <div class="col-md-4">
                 <label class="form-label">Priority</label>
                 <div class="d-flex flex-wrap gap-1">
@@ -69,14 +78,14 @@
                     @endforeach
                 </div>
             </div>
-             <!-- Print Button -->
-        <div class="col-md-4">
-            <button type="button" class="btn btn-outline-dark " onclick="printTable()">🖨️ Print
-                Table</button>
-        </div>
+            <!-- Print Button -->
+            <div class="col-md-4">
+                <button type="button" class="btn btn-outline-dark " onclick="printTable()">🖨️ Print
+                    Table</button>
+            </div>
 
         </div>
-       
+
         <div class="table-responsive" style="max-height: 70vh; overflow-y: auto;">
             <table class="table table-bordered table-striped align-middle table-fixed-header">
                 <thead class="table-light">
