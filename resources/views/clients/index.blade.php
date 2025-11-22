@@ -29,6 +29,10 @@
                 max-height: none !important;
                 overflow: visible !important;
             }
+            table{
+                font-size: 16px ;
+                font-weight: 600;
+            }
 
             /* Borders & formatting */
             table,
@@ -87,8 +91,7 @@
                     <button type="submit" class="btn btn-primary w-100">Search</button>
                 </div>
                 <div class="col-md-2">
-                    <button onclick="printTable()" class="btn btn-primary w-100">Print
-                        Table</button>
+                    <button onclick="printTable()" class="btn btn-primary w-100">Print Table</button>
                 </div>
 
 

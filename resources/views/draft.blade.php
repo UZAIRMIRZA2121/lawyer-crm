@@ -274,7 +274,8 @@
                 <style>
                     @page { size: A4; margin: 10mm; }
                     body { font-family: Arial, sans-serif; font-size: 12px; color: #000; }
-                    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; page-break-after: auto; }
+                    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; page-break-after: auto;      font-size: 16px ;
+                font-weight: 600; }
                     table, th, td { border: 1px solid #000; }
                     th, td { padding: 8px; text-align: left; }
                     thead { background-color: #f2f2f2; }

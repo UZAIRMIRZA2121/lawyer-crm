@@ -40,6 +40,7 @@
                 width: 100%;
                 border-collapse: collapse;
                 font-size: 16px;
+                font-weight: 600;
             }
 
             th,
@@ -96,7 +97,7 @@
                 <div class="row g-3 align-items-end mb-4">
 
                     <!-- Search (full width on xs, half on md+) -->
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-4">
                         <label for="search" class="form-label">Search</label>
                         <div class="input-group">
                             <input type="text" name="search" class="form-control"
@@ -129,6 +130,12 @@
                     <div class="col-6 col-md-1">
                         <a href="{{ route('cases.index') }}" class="btn btn-secondary w-100">Reset</a>
                     </div>
+                    <!-- Filter Button -->
+                    <div class="col-6 col-md-1">
+                        <button onclick="printTable()" form="filterForm" class="btn btn-primary w-100">Print</button>
+
+                    </div>
+                  
                 </div>
 
             </form>
@@ -172,14 +179,7 @@
                     @endforeach
                 </div>
             </div>
-            <!-- Print Button -->
-            <!-- Print Button -->
-            <div class="col-12 col-md-2 d-flex justify-content-md-end">
-                <button type="button" class="btn btn-outline-dark w-100 w-md-auto" onclick="printTable()">🖨️ Print
-                    Table</button>
 
-
-            </div>
 
         </div>
 
@@ -219,31 +219,31 @@
                             @endphp
 
                             <tr>
-                                <td>{{ $hearing->case->case_number ?? 'N/A' }}</td>
-                                <td>{{ $hearing->case->case_title ?? 'N/A' }}
+                                <td>{{ $hearing->case->case_number ?? '' }}</td>
+                                <td>{{ $hearing->case->case_title ?? '' }}
                                     {{ optional($hearing->case)->case_nature ? '(' . optional($hearing->case)->case_nature . ')' : '' }}
                                 </td>
-                                <td>{{ $hearing->judge_name ?? 'N/A' }}</td>
-                                <td>{{ $hearing->my_remarks ?? 'N/A' }}</td>
+                                <td>{{ $hearing->judge_name ?? '' }}</td>
+                                <td>{{ $hearing->my_remarks ?? '' }}</td>
 
                                 <td>
                                     {{ $previousHearing && $previousHearing->next_hearing
                                         ? \Carbon\Carbon::parse($previousHearing->next_hearing)->format('d-m-Y h:i A')
-                                        : 'N/A' }}
+                                        : '' }}
                                 </td>
 
                                 <td>
-                                    {{ $hearing->next_hearing ? \Carbon\Carbon::parse($hearing->next_hearing)->format('d-m-Y h:i A') : 'N/A' }}
+                                    {{ $hearing->next_hearing ? \Carbon\Carbon::parse($hearing->next_hearing)->format('d-m-Y h:i A') : '' }}
                                 </td>
 
                                 <td>
                                     {{ $nextHearing && $nextHearing->next_hearing
                                         ? \Carbon\Carbon::parse($nextHearing->next_hearing)->format('d-m-Y h:i A')
-                                        : 'N/A' }}
+                                        : '' }}
                                 </td>
 
-                                <td>{{ $hearing->judge_remarks ?? 'N/A' }}</td>
-                                <td>{{ $hearing->nature ?? 'N/A' }}</td>
+                                <td>{{ $hearing->judge_remarks ?? '' }}</td>
+                                <td>{{ $hearing->nature ?? '' }}</td>
 
                                 <td>
                                     @php

@@ -3,74 +3,75 @@
 @section('content')
     <style>
         @media print {
-        @page {
-            size: A4 portrait;
-            margin: 1cm;
-        }
+            @page {
+                size: A4 portrait;
+                margin: 1cm;
+            }
 
-        body * {
-            visibility: hidden;
-        }
+            body * {
+                visibility: hidden;
+            }
 
-        .print-area,
-        .print-area * {
-            visibility: visible;
-        }
+            .print-area,
+            .print-area * {
+                visibility: visible;
+            }
 
-        .print-area {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            overflow: visible !important;
-        }
+            .print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                overflow: visible !important;
+            }
 
-        /* Hide Actions column completely */
-        th:nth-last-child(1),
-        td:nth-last-child(1) {
-            display: none !important;
-        }
+            /* Hide Actions column completely */
+            th:nth-last-child(1),
+            td:nth-last-child(1) {
+                display: none !important;
+            }
 
-        /* Table adjustments for print */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 16px;
-            page-break-inside: auto;
-        }
+            /* Table adjustments for print */
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 16px;
+                font-weight: 600;
+                page-break-inside: auto;
+            }
 
-        /* Add dark borders to all table cells */
-        table,
-        th,
-        td {
-            border: 1px solid #000 !important;
-        }
+            /* Add dark borders to all table cells */
+            table,
+            th,
+            td {
+                border: 1px solid #000 !important;
+            }
 
-        th {
-            background: #f2f2f2;
-            /* optional */
-            font-weight: bold;
-        }
+            th {
+                background: #f2f2f2;
+                /* optional */
+                font-weight: bold;
+            }
 
-        tr {
-            page-break-inside: avoid;
-            page-break-after: auto;
-            border: 1px solid #000 !important;
-        }
+            tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+                border: 1px solid #000 !important;
+            }
 
-        /* Optional: style cleanup for print */
-        .btn,
-        .alert,
-        form,
-        .row,
-        .filter-form,
-        a.btn {
-            display: none !important;
-        }
+            /* Optional: style cleanup for print */
+            .btn,
+            .alert,
+            form,
+            .row,
+            .filter-form,
+            a.btn {
+                display: none !important;
+            }
 
-        h1 {
-            margin-bottom: 10px;
-        }
+            h1 {
+                margin-bottom: 10px;
+            }
 
         }
     </style>
@@ -90,7 +91,7 @@
                 <div class="row g-3 align-items-end mb-4">
 
                     <!-- Search (full width on xs, half on md+) -->
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-4">
                         <label for="search" class="form-label">Search</label>
                         <div class="input-group">
                             <input type="text" name="search" class="form-control"
@@ -121,6 +122,11 @@
                     <!-- Reset Button -->
                     <div class="col-6 col-md-1">
                         <a href="{{ route('cases.index') }}" class="btn btn-secondary w-100">Reset</a>
+                    </div>
+
+                    <!-- Filter Button -->
+                    <div class="col-6 col-md-2">
+                        <button form="filterForm"  onclick="printTable()" class="btn btn-primary w-100">Print</button>
                     </div>
                 </div>
 
@@ -199,11 +205,7 @@
                     </div>
 
 
-                    <!-- Print Button -->
-                    <div class="col-12 col-md-2 d-flex justify-content-md-end">
-                        <button type="button" class="btn btn-outline-dark w-100 w-md-auto" onclick="printTable()">🖨️ Print
-                            Table</button>
-                    </div>
+                
 
                 </div>
             </form>
@@ -294,7 +296,8 @@
                                             @method('DELETE')
                                             <button class="btn btn-danger btn-sm" type="submit">Delete</button>
                                         </form>
-                                        <a href="{{ route('cases.files.create', $case) }}" class="btn btn-primary btn-sm">
+                                        <a href="{{ route('cases.files.create', $case) }}"
+                                            class="btn btn-primary btn-sm">
                                             Upload Files
                                         </a>
 

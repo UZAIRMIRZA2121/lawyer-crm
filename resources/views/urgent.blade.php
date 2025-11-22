@@ -3,8 +3,8 @@
 @section('content')
     <style>
         /* ================================
-       PRINT STYLES
-       ================================ */
+           PRINT STYLES
+           ================================ */
         @media print {
 
             /* Reset layout */
@@ -42,6 +42,8 @@
                 border-collapse: collapse !important;
                 page-break-inside: auto;
                 margin-bottom: 20px !important;
+                font-size: 16px;
+                font-weight: 600;
             }
 
             table,
@@ -107,7 +109,7 @@
                     <button type="submit" class="btn btn-primary w-100">Filter</button>
                 </div>
                 <div class="col-md-2">
-                    <button  onclick="printAllTables()" class="btn btn-primary w-100">Print All Tables</button>
+                    <button onclick="printAllTables()" class="btn btn-primary w-100">Print All Tables</button>
                 </div>
 
                 <!-- Status Filter -->
@@ -130,7 +132,7 @@
                     </div>
                 </div>
 
-            
+
 
             </div>
 
@@ -556,6 +558,8 @@
                 border-collapse: collapse;
                 margin-bottom: 20px;
                 page-break-after: auto;
+                       font-size: 16px ;
+                font-weight: 600;
             }
             table, th, td {
                 border: 1px solid #000;

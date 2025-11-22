@@ -20,6 +20,7 @@
             }
             table {
                 font-size: 16px;
+                font-weight: 600;
             }
             table,
             th,
@@ -36,8 +37,13 @@
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
+     <!-- Print Button -->
+            <div class="col-md-4">
         <a href="{{ route('notices.create') }}" class="btn btn-primary mb-3">Add Notice</a>
 
+                <button type="button" class="btn btn-primary mb-3 " onclick="printTable()">🖨️ Print
+                    Table</button>
+            </div>
         <!-- Filters -->
         <div class="row mb-3">
 
@@ -48,12 +54,12 @@
                         $priorities = ['normal' => 'Normal', 'urgent' => 'Urgent', 'important' => 'Important'];
                     @endphp
                     <a href="{{ route('notices.index', array_merge(request()->except(['page', 'priority']), ['priority' => null])) }}"
-                        class="btn btn-sm {{ request('priority') === null ? 'btn-primary' : 'btn-outline-primary' }}">
+                        class="btn btn-sm {{ request('priority') === null ? 'btn-primary' : '' }}">
                         All
                     </a>
                     @foreach ($priorities as $key => $label)
                         <a href="{{ route('notices.index', array_merge(request()->except('page'), ['priority' => $key])) }}"
-                            class="btn btn-sm {{ request('priority') === $key ? 'btn-primary' : 'btn-outline-primary' }}">
+                            class="btn btn-sm {{ request('priority') === $key ? 'btn-primary' : '' }}">
                             {{ $label }}
                         </a>
                     @endforeach
@@ -67,22 +73,18 @@
                         $statuses = ['pending' => 'Pending', 'done' => 'Done'];
                     @endphp
                     <a href="{{ route('notices.index', array_merge(request()->except(['page', 'status']), ['status' => null])) }}"
-                        class="btn btn-sm {{ request('status') === null ? 'btn-primary' : 'btn-outline-primary' }}">
+                        class="btn btn-sm {{ request('status') === null ? 'btn-primary' : '' }}">
                         All
                     </a>
                     @foreach ($statuses as $key => $label)
                         <a href="{{ route('notices.index', array_merge(request()->except('page'), ['status' => $key])) }}"
-                            class="btn btn-sm {{ request('status') === $key ? 'btn-primary' : 'btn-outline-primary' }}">
+                            class="btn btn-sm {{ request('status') === $key ? 'btn-primary' : '' }}">
                             {{ $label }}
                         </a>
                     @endforeach
                 </div>
             </div>
-            <!-- Print Button -->
-            <div class="col-md-4">
-                <button type="button" class="btn btn-outline-dark " onclick="printTable()">🖨️ Print
-                    Table</button>
-            </div>
+       
 
         </div>
 

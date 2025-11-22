@@ -14,9 +14,12 @@
             td.actions-column {
                 display: none !important;
             }
-            table{
-                font-size: 16px large;
+
+            table {
+                font-size: 16px;
+                font-weight: 600;
             }
+
             table,
             th,
             td {
@@ -342,6 +345,16 @@
                         th, td { border: 1px solid #333; padding: 8px; text-align: left; }
                         th { background: #f2f2f2; }
                         .actions-column { display: none; } /* Hide action buttons */
+
+                          table{
+                font-size: 16px ;
+                font-weight: 600;
+            }
+            table,
+            th,
+            td {
+                border: 1px solid #000 !important;
+            }
                     </style>
                 </head>
                 <body>
@@ -412,6 +425,16 @@
                             th, td { border: 1px solid #333; padding: 8px; text-align: left; }
                             th { background: #f2f2f2; }
                             .actions-column { display: none; } /* Hide action buttons */
+
+                              table{
+                font-size: 16px ;
+                font-weight: 600;
+            }
+            table,
+            th,
+            td {
+                border: 1px solid #000 !important;
+            }
                         </style>
                     </head>
                     <body>
@@ -452,6 +475,15 @@
                             h2 { text-align: center; margin-bottom: 20px; }
                             .task-info { margin-bottom: 15px; }
                             .task-info strong { width: 120px; display: inline-block; }
+                              table{
+                font-size: 16px ;
+                font-weight: 600;
+            }
+            table,
+            th,
+            td {
+                border: 1px solid #000 !important;
+            }
                         </style>
                     </head>
                     <body>
