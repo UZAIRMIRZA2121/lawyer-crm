@@ -9,53 +9,65 @@ use Illuminate\Http\Request;
 class HearingController extends Controller
 {
     // Show list of hearings for a case
-    public function index(Request $request)
-    {
-        $caseId = $request->query('case_id');
-        $priority = $request->query('priority');
-        $status = $request->query('status');
-        $search = $request->query('search');
-        $startDate = $request->query('start_date');
-        $endDate = $request->query('end_date');
+  public function index(Request $request)
+{
+    $caseId = $request->query('case_id');
+    $priority = $request->query('priority');
+    $status = $request->query('status');
+    $search = $request->query('search');
+    $startDate = $request->query('start_date');
+    $endDate = $request->query('end_date');
 
-        $query = Hearing::query();
+    $query = Hearing::query();
 
-        if ($caseId) {
-            $case = CaseModel::find($caseId);
-            if ($case) {
-                $query = $case->hearings();
-            }
-        } else {
-            $case = null;
+    if ($caseId) {
+        $case = CaseModel::find($caseId);
+        if ($case) {
+            $query = $case->hearings();   // case-specific hearings
         }
-
-        if ($priority) {
-            $query->where('priority', $priority);
-        }
-
-        if ($status) {
-            $query->where('status', $status);
-        }
-
-        if ($search) {
-            $query->whereHas('case', function ($q) use ($search) {
-                $q->where('case_title', 'like', "%{$search}%")
-                    ->orWhere('case_number', 'like', "%{$search}%");
-            });
-        }
-
-        if ($startDate) {
-            $query->whereDate('next_hearing', '>=', $startDate);
-        }
-
-        if ($endDate) {
-            $query->whereDate('next_hearing', '<=', $endDate);
-        }
-
-        $hearings = $query->latest()->get();
-
-        return view('hearings.index', compact('case', 'hearings'));
+    } else {
+        $case = null;
     }
+
+    // === Priority filter
+    if ($priority) {
+        $query->where('priority', $priority);
+    }
+
+    // === Status filter
+    if ($status) {
+        $query->where('status', $status);
+    }
+
+    // === Search filter (case + hearing fields)
+    if ($search) {
+        $query->where(function ($q) use ($search) {
+            // Search hearing fields
+            $q->where('nature', 'like', "%{$search}%")
+             
+
+            // Search case fields
+              ->orWhereHas('case', function ($q2) use ($search) {
+                  $q2->where('case_title', 'like', "%{$search}%")
+                     ->orWhere('case_number', 'like', "%{$search}%");
+              });
+        });
+    }
+
+    // === Date filters
+    if ($startDate) {
+        $query->whereDate('next_hearing', '>=', $startDate);
+    }
+
+    if ($endDate) {
+        $query->whereDate('next_hearing', '<=', $endDate);
+    }
+
+    $hearings = $query->latest()->get();
+
+    return view('hearings.index', compact('case', 'hearings'));
+}
+
 
 
     // Show form to create hearing

@@ -128,7 +128,7 @@
 
                     <!-- Reset Button -->
                     <div class="col-6 col-md-1">
-                        <a href="{{ route('cases.index') }}" class="btn btn-secondary w-100">Reset</a>
+                        <a href="{{ route('hearings.index') }}" class="btn btn-secondary w-100">Reset</a>
                     </div>
                     <!-- Filter Button -->
                     <div class="col-6 col-md-1">

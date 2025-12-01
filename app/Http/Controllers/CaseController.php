@@ -13,17 +13,7 @@ class CaseController extends Controller
     {
         $user = auth()->user();
 
-        $query = CaseModel::with('client');
-
-        // === TEAM ROLE: Restrict to assigned case IDs from client_user table ===
-        // if ($user->role === 'team') {
-        //     $assignedCaseIds = \DB::table('client_user')
-        //         ->where('user_id', $user->id)
-        //         ->pluck('case_id')
-        //         ->toArray();
-
-        //     $query->whereIn('id', $assignedCaseIds);
-        // }
+        $query = CaseModel::with(['client', 'hearings']); // include hearings
 
         // === ADMIN ROLE: Optional filtering by client_id
         if ($user->role === 'admin' && $request->filled('client_id')) {
@@ -46,11 +36,17 @@ class CaseController extends Controller
                 $q->where('case_number', 'like', "%{$search}%")
                     ->orWhere('case_title', 'like', "%{$search}%")
                     ->orWhere('status', 'like', "%{$search}%")
+                    // Search in client table
                     ->orWhereHas('client', function ($q2) use ($search) {
                         $q2->where('name', 'like', "%{$search}%");
+                    })
+                    // 🔍 Search inside hearings table (includes nature)
+                    ->orWhereHas('hearings', function ($q3) use ($search) {
+                        $q3->where('nature', 'like', "%{$search}%");
                     });
             });
         }
+
         // === Priority Filter ===
         if ($request->filled('priority')) {
             $query->where('priority', $request->priority);
@@ -60,14 +56,13 @@ class CaseController extends Controller
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
-        // ✅ New Sub Status filter
-        if ($sub_status = request('sub_status')) {
+
+        // === Sub Status filter ===
+        if ($sub_status = $request->sub_status) {
             $query->where('sub_status', $sub_status);
         }
 
-
-       $cases = $query->orderBy('id', 'desc')->get();
-
+        $cases = $query->orderBy('id', 'desc')->get();
 
         // === Admin-only: total transactions
         $totalTransactionsAmount = null;
@@ -166,8 +161,8 @@ class CaseController extends Controller
         //         $query->where('user_id', $user->id);
         //     })->orderBy('name')->get();
         // } else {
-            // Admin or others get all clients
-            $clients = Client::orderBy('name')->get();
+        // Admin or others get all clients
+        $clients = Client::orderBy('name')->get();
         // }
 
         // Get all team users for assigned_to select
