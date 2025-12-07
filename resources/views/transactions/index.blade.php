@@ -1,16 +1,66 @@
 @extends('layouts.app')
 
 @section('content')
+    <style>
+        /* ===========================
+                           PRINT SETTINGS
+                           =========================== */
+        @media print {
+
+            /* Hide everything */
+            body * {
+                visibility: hidden !important;
+            }
+
+            /* Show only print area */
+            .print-area,
+            .print-area * {
+                visibility: visible !important;
+            }
+
+            /* Place at top left */
+            .print-area {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+            }
+
+            /* Hide Actions column (last column) */
+            table tr th:last-child,
+            table tr td:last-child {
+                display: none !important;
+            }
+
+            /* Hide Print button */
+            .print-btn {
+                display: none !important;
+            }
+        }
+    </style>
+
     <div class="container">
         <h2>Transactions for Case: {{ $case->case_number ?? '' }}</h2>
+        <div class="d-flex justify-content-between align-items-center mb-3">
 
-        <div class="d-flex justify-content-between mb-3">
-            <a href="{{ route('cases.transactions.create', $case) }}" class="btn btn-primary">
-                Add Transaction
-            </a>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editAmountModal">
-                Edit Case Amounts
-            </button>
+            <!-- Left Side -->
+            <div>
+                <a href="{{ route('cases.transactions.create', $case) }}" class="btn btn-primary">
+                    Add Transaction
+                </a>
+            </div>
+
+            <!-- Right Side -->
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editAmountModal">
+                    Edit Case Amounts
+                </button>
+
+                <button class="btn btn-primary print-btn" onclick="window.print()">
+                    Print
+                </button>
+            </div>
+
         </div>
 
 
@@ -92,57 +142,58 @@
             </div>
         </div>
 
-
-        @if ($transactions->count())
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Amount</th>
-                        <th>Type</th>
-                        <th>Payment Method</th>
-                        <th>Date</th>
-                        <th>Description</th>
-                        <th>Status</th> <!-- ✅ Added -->
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($transactions as $transaction)
+        <div class="print-area">
+            @if ($transactions->count())
+                <table class="table table-bordered">
+                    <thead>
                         <tr>
-                            <td>{{ number_format($transaction->amount, 2) }}</td>
-                            <td>{{ ucfirst($transaction->type) }}</td>
-                            <td>{{ ucfirst($transaction->payment_method) }}</td>
-                            <td>{{ \Carbon\Carbon::parse($transaction->transaction_date)->format('d-m-Y H:i') }}</td>
-                            <td>{{ $transaction->description ?? '-' }}</td>
-                            <td>
-                                @if ($transaction->status === 'paid')
-                                    <span class="badge bg-success">Paid</span>
-                                @else
-                                    <span class="badge bg-success">Commission Amount</span>
-                                @endif
-                            </td>
-                            <td>
-                                <a href="{{ route('cases.transactions.edit', [$case, $transaction]) }}"
-                                    class="btn btn-warning btn-sm">Edit</a>
-
-                                <form action="{{ route('cases.transactions.destroy', [$case, $transaction]) }}"
-                                    method="POST" style="display:inline-block;"
-                                    onsubmit="return confirm('Delete this transaction?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-danger btn-sm">Delete</button>
-                                </form>
-                            </td>
+                            <th>Amount</th>
+                            <th>Type</th>
+                            <th>Payment Method</th>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Status</th> <!-- ✅ Added -->
+                            <th>Actions</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach ($transactions as $transaction)
+                            <tr>
+                                <td>{{ number_format($transaction->amount, 2) }}</td>
+                                <td>{{ ucfirst($transaction->type) }}</td>
+                                <td>{{ ucfirst($transaction->payment_method) }}</td>
+                                <td>{{ \Carbon\Carbon::parse($transaction->transaction_date)->format('d-m-Y H:i') }}</td>
+                                <td>{{ $transaction->description ?? '-' }}</td>
+                                <td>
+                                    @if ($transaction->status === 'paid')
+                                        <span class="badge bg-success">Paid</span>
+                                    @else
+                                        <span class="badge bg-success">Commission Amount</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <a href="{{ route('cases.transactions.edit', [$case, $transaction]) }}"
+                                        class="btn btn-warning btn-sm">Edit</a>
 
-            {{ $transactions->links() }}
-        @else
-            <p>No transactions found.</p>
-        @endif
+                                    <form action="{{ route('cases.transactions.destroy', [$case, $transaction]) }}"
+                                        method="POST" style="display:inline-block;"
+                                        onsubmit="return confirm('Delete this transaction?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
 
+                {{ $transactions->links() }}
+            @else
+                <p>No transactions found.</p>
+            @endif
+
+        </div>
     </div>
 
 

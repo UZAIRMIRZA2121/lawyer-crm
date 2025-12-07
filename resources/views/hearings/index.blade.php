@@ -135,7 +135,7 @@
                         <button onclick="printTable()" form="filterForm" class="btn btn-primary w-100">Print</button>
 
                     </div>
-                  
+
                 </div>
 
             </form>
@@ -194,10 +194,10 @@
                             <th>Case Title</th>
                             <th>Judge Name</th>
                             <th>My Remarks</th>
-                            <th>Previous Hearing Date</th>
-                            <th>Current Hearing Date</th>
-                            <th>Next Hearing Date</th>
-                            <th>Current Proceeding</th>
+                            <th>Previous Hearing Date <hr> Proceeding</th>
+                            <th>Current Hearing Date <hr> Proceeding</th>
+                            <th>Next Hearing Date <hr> Proceeding</th>
+                            {{-- <th>Current Proceeding</th> --}}
                             <th>Next Proceeding</th>
                             <th>Priority</th>
                             <th>Status</th>
@@ -219,7 +219,7 @@
                             @endphp
 
                             <tr>
-                                <td>{{ $hearing->case->case_number ?? '' }}</td>
+                                <td>{{ $hearing->case->case_number ?? '' }}  </td>
                                 <td>{{ $hearing->case->case_title ?? '' }}
                                     {{ optional($hearing->case)->case_nature ? '(' . optional($hearing->case)->case_nature . ')' : '' }}
                                 </td>
@@ -230,19 +230,25 @@
                                     {{ $previousHearing && $previousHearing->next_hearing
                                         ? \Carbon\Carbon::parse($previousHearing->next_hearing)->format('d-m-Y h:i A')
                                         : '' }}
+                                    <hr>
+                                    {{ $previousHearing->judge_remarks ?? '' }}
                                 </td>
 
                                 <td>
                                     {{ $hearing->next_hearing ? \Carbon\Carbon::parse($hearing->next_hearing)->format('d-m-Y h:i A') : '' }}
+                                    <hr>
+                                    {{ $hearing->judge_remarks ?? '' }}
                                 </td>
 
                                 <td>
                                     {{ $nextHearing && $nextHearing->next_hearing
                                         ? \Carbon\Carbon::parse($nextHearing->next_hearing)->format('d-m-Y h:i A')
                                         : '' }}
+                                    <hr>
+                                    {{ $nextHearing->judge_remarks ?? '' }}
                                 </td>
 
-                                <td>{{ $hearing->judge_remarks ?? '' }}</td>
+                                {{-- <td>{{ $hearing->judge_remarks ?? '' }}</td> --}}
                                 <td>{{ $hearing->nature ?? '' }}</td>
 
                                 <td>

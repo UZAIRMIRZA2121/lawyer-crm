@@ -115,7 +115,7 @@
             <a href="{{ route('hearings.index', $case) }}" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
-    <script>
+    {{-- <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('hearingForm');
             const nextHearingInput = document.getElementById('next_hearing');
@@ -135,5 +135,5 @@
                 }
             });
         });
-    </script>
+    </script> --}}
 @endsection

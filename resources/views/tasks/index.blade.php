@@ -212,8 +212,9 @@
                 </thead>
                 <tbody>
                     @foreach ($groupTasks as $task)
+                        @if ($task->user)
                         <tr>
-                            <td>{{ $task->user->name ?? 'N/A' }}</td>
+                            <td>{{ $task->user->name ?? '' }}</td>
                             <td>{!! \Illuminate\Support\Str::limit(strip_tags($task->task), 30) !!}</td>
                             <td>{{ ucfirst($task->priority) }}</td>
                             <td>{{ $task->submit_date }}</td>
@@ -248,7 +249,7 @@
                             <td class="actions-column">
                                 <!-- Button -->
                                 <button class="btn btn-sm btn-info view-task-btn" data-task-id="{{ $task->id }}"
-                                    data-user="{{ $task->user->name }}" data-priority="{{ ucfirst($task->priority) }}"
+                                    data-user="{{ $task->user->name ?? '' }}" data-priority="{{ ucfirst($task->priority) }}"
                                     data-date="{{ $task->submit_date }}" data-status="{{ ucfirst($task->status) }}">
                                     View
                                 </button>
@@ -260,7 +261,7 @@
 
                                 <!-- Print Button -->
                                 <button class="btn btn-sm btn-secondary print-task-btn" data-title="{{ $task->title }}"
-                                    data-task="{{ htmlspecialchars($task->task) }}" data-user="{{ $task->user->name }}"
+                                    data-task="{{ htmlspecialchars($task->task) }}" data-user="{{ $task->user->name   ?? ''}}"
                                     data-priority="{{ ucfirst($task->priority) }}" data-date="{{ $task->submit_date }}"
                                     data-status="{{ ucfirst($task->status) }}">
                                     Print
@@ -284,14 +285,12 @@
                                 @endif
                             </td>
                         </tr>
+                          @endif 
                     @endforeach
                 </tbody>
             </table>
         @endforeach
-
     </div>
-
-
     <div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">

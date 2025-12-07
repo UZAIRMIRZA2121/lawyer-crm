@@ -254,7 +254,7 @@
 
                             <td>
                                 @php
-                                    $nextHearing = $case->hearings->first();
+                                    $nextHearing = $case->hearings->last();
                                 @endphp
 
                                 @if ($nextHearing)
