@@ -14,6 +14,9 @@
             td.actions-column {
                 display: none !important;
             }
+            #task_title{
+                display: block;
+            }
 
             table {
                 font-size: 16px;
@@ -182,7 +185,7 @@
                 $groupTitle = $groupTasks->first()->title ?? 'No Title';
             @endphp
 
-            <h4>
+            <h4 id="task_title">
                 Title: {{ $groupTitle }}
                 <form action="{{ route('tasks.destroyGroup', $groupId) }}" method="POST" class="d-inline"
                     onsubmit="return confirm('Are you sure you want to delete this entire group?');">
@@ -202,6 +205,7 @@
                 <thead>
                     <tr>
                         <th>User</th>
+                        <th>Title</th>
                         <th>Task</th>
                         <th>Priority</th>
                         <th>Submit Date</th>
@@ -215,6 +219,7 @@
                         @if ($task->user)
                         <tr>
                             <td>{{ $task->user->name ?? '' }}</td>
+                            <td>{{ $task->title ?? '' }}</td>
                             <td>{!! \Illuminate\Support\Str::limit(strip_tags($task->task), 30) !!}</td>
                             <td>{{ ucfirst($task->priority) }}</td>
                             <td>{{ $task->submit_date }}</td>

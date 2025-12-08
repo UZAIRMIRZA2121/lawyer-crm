@@ -198,7 +198,7 @@
                             <th>Current Hearing Date <hr> Proceeding</th>
                             <th>Next Hearing Date <hr> Proceeding</th>
                             {{-- <th>Current Proceeding</th> --}}
-                            <th>Next Proceeding</th>
+                            {{-- <th>Next Proceeding</th> --}}
                             <th>Priority</th>
                             <th>Status</th>
                             <th>Actions</th>
@@ -249,7 +249,7 @@
                                 </td>
 
                                 {{-- <td>{{ $hearing->judge_remarks ?? '' }}</td> --}}
-                                <td>{{ $hearing->nature ?? '' }}</td>
+                                {{-- <td>{{ $hearing->nature ?? '' }}</td> --}}
 
                                 <td>
                                     @php
