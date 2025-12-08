@@ -354,7 +354,7 @@
                         @foreach ($urgentTasks as $task)
                             <tr>
                                 <td>{{ $task->user->name ?? 'N/A' }}</td>
-                                <td>{!! \Illuminate\Support\Str::limit(strip_tags($task->task), 30) !!}</td>
+                                <td>{!! \Illuminate\Support\Str::limit(strip_tags($task->title), 30) !!}</td>
                                 <td>{{ $task->submit_date }}</td>
                                 <td>
                                     @php
