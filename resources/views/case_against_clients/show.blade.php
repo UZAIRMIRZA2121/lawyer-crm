@@ -36,8 +36,8 @@
                 @if ($client->cnic_front)
                     <div class="col-md-6 mb-3 text-center">
                         <div class="fw-semibold mb-2 text-muted">CNIC Front:</div>
-                        <a href="{{ asset('public/storage/' . $client->cnic_front) }}" target="_blank" class="d-inline-block border rounded shadow-sm overflow-hidden" style="max-width: 320px;">
-                            <img src="{{ asset('storage/' . $client->cnic_front) }}" alt="CNIC Front" class="img-fluid" style="max-height: 200px; object-fit: contain;">
+                        <a href="{{ asset('storage/' . $client->cnic_front) }}" target="_blank" class="d-inline-block border rounded shadow-sm overflow-hidden" style="max-width: 320px;">
+                            <img src="{{ Storage::url($client->cnic_front) }}" alt="CNIC Front" class="img-fluid" style="max-height: 200px; object-fit: contain;">
                         </a>
                     </div>
                 @endif
@@ -45,8 +45,8 @@
                 @if ($client->cnic_back)
                     <div class="col-md-6 mb-3 text-center">
                         <div class="fw-semibold mb-2 text-muted">CNIC Back:</div>
-                        <a href="{{ asset('public/storage/' . $client->cnic_back) }}" target="_blank" class="d-inline-block border rounded shadow-sm overflow-hidden" style="max-width: 320px;">
-                            <img src="{{ asset('storage/' . $client->cnic_back) }}" alt="CNIC Back" class="img-fluid" style="max-height: 200px; object-fit: contain;">
+                        <a href="{{ asset('storage/' . $client->cnic_back) }}" target="_blank" class="d-inline-block border rounded shadow-sm overflow-hidden" style="max-width: 320px;">
+                            <img src="{{ asset('public/storage/' . $client->cnic_back) }}" alt="CNIC Back" class="img-fluid" style="max-height: 200px; object-fit: contain;">
                         </a>
                     </div>
                 @endif
