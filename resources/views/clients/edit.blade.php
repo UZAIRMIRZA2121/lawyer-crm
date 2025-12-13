@@ -48,7 +48,7 @@
 
                     @if (!empty($client->cnic_front))
                         <small class="d-block mt-1">Current:</small>
-                        <a href="{{ asset('storage/' . $client->cnic_front) }}" target="_blank" class="d-inline-block mb-2">
+                        <a href="{{ asset('public/storage/' . $client->cnic_front) }}" target="_blank" class="d-inline-block mb-2">
                             <img src="{{ asset('storage/' . $client->cnic_front) }}" alt="CNIC Front"
                                 style="max-width: 150px; max-height: 100px; object-fit: contain; border: 1px solid #ddd; border-radius: 4px;">
                         </a>
@@ -61,7 +61,7 @@
 
                     @if (!empty($client->cnic_back))
                         <small class="d-block mt-1">Current:</small>
-                        <a href="{{ asset('storage/' . $client->cnic_back) }}" target="_blank" class="d-inline-block mb-2">
+                        <a href="{{ asset('public/storage/' . $client->cnic_back) }}" target="_blank" class="d-inline-block mb-2">
                             <img src="{{ asset('storage/' . $client->cnic_back) }}" alt="CNIC Back"
                                 style="max-width: 150px; max-height: 100px; object-fit: contain; border: 1px solid #ddd; border-radius: 4px;">
                         </a>
