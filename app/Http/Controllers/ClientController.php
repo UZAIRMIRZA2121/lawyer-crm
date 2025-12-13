@@ -217,7 +217,7 @@ class ClientController extends Controller
             $client->assignedUsers()->detach();
         }
 
-        return redirect()->back()->with('success', 'Client updated successfully.');
+        return redirect()->route('clients.show')->with('success', 'Client updated successfully.');
     }
 
 
