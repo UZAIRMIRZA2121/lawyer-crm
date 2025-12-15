@@ -35,6 +35,7 @@ class CaseController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('case_number', 'like', "%{$search}%")
                     ->orWhere('case_title', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%")
                     ->orWhere('status', 'like', "%{$search}%")
                     // Search in client table
                     ->orWhereHas('client', function ($q2) use ($search) {
@@ -42,7 +43,7 @@ class CaseController extends Controller
                     })
                     // 🔍 Search inside hearings table (includes nature)
                     ->orWhereHas('hearings', function ($q3) use ($search) {
-                        $q3->where('nature', 'like', "%{$search}%");
+                        $q3->where('judge_remarks', 'like', "%{$search}%");
                     });
             });
         }

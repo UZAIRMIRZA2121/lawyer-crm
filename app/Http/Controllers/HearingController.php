@@ -43,7 +43,7 @@ class HearingController extends Controller
     if ($search) {
         $query->where(function ($q) use ($search) {
             // Search hearing fields
-            $q->where('nature', 'like', "%{$search}%")
+            $q->where('judge_remarks', 'like', "%{$search}%")
              
 
             // Search case fields
