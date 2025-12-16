@@ -238,7 +238,8 @@
             });
         </script>
     @endif
-
+    <!-- Before closing </body> -->
+    @stack('scripts')
     <!-- jQuery (required) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -277,9 +278,8 @@
             });
         });
     </script>
- 
-    <!-- Before closing </body> -->
-    @stack('scripts')
+
+
 </body>
 
 </html>
