@@ -38,7 +38,7 @@
                     @foreach ($statuses as $key => $label)
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="status" id="status_{{ $key }}"
-                                value="{{ $key }}" {{ old('status') == $key ? 'checked' : '' }} required>
+                                value="{{ $key }}" {{ old('status') == $key ? 'checked' : '' }} >
                             <label class="form-check-label" for="status_{{ $key }}">{{ $label }}</label>
                         </div>
                     @endforeach
@@ -59,7 +59,7 @@
                     @foreach ($priorities as $key => $label)
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="priority" id="priority_{{ $key }}"
-                                value="{{ $key }}" {{ old('priority') == $key ? 'checked' : '' }} required>
+                                value="{{ $key }}" {{ old('priority') == $key ? 'checked' : '' }} >
                             <label class="form-check-label" for="priority_{{ $key }}">{{ $label }}</label>
                         </div>
                     @endforeach

@@ -64,9 +64,9 @@ class NoticeController extends Controller
     {
         // Validate all fields
         $request->validate([
-            'case_id' => 'nullable|exists:case_models,id',
-            'user_id' => 'nullable|exists:users,id',
-            'against_client_id' => 'nullable|exists:case_against_clients,id',
+            'case_id' => 'nullable',
+            'user_id' => 'nullable',
+            'against_client_id' => 'nullable',
             'notice' => 'nullable|string',
             'status' => 'nullable|in:pending,done',            // Updated
             'priority' => 'nullable|in:normal,urgent,important', // Added
