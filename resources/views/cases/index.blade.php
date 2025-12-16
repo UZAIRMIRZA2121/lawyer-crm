@@ -126,7 +126,7 @@
 
                     <!-- Filter Button -->
                     <div class="col-6 col-md-2">
-                        <button form="filterForm"  onclick="printTable()" class="btn btn-primary w-100">Print</button>
+                        <button form="filterForm" onclick="printTable()" class="btn btn-primary w-100">Print</button>
                     </div>
                 </div>
 
@@ -205,7 +205,7 @@
                     </div>
 
 
-                
+
 
                 </div>
             </form>
@@ -277,92 +277,89 @@
                                 @endif
                             </td>
 
-                         <td class="text-nowrap">
-    <div class="d-flex align-items-center gap-2">
+                            <td class="text-nowrap">
+                                <div class="d-flex align-items-center gap-2">
 
-        {{-- Always visible --}}
-        <a href="{{ route('hearings.index', ['case_id' => $case->id]) }}"
-           class="btn btn-success btn-sm">
-            View Hearings
-        </a>
+                                    {{-- Always visible --}}
+                                    <a href="{{ route('hearings.index', ['case_id' => $case->id]) }}"
+                                        class="btn btn-success btn-sm">
+                                        View Hearings
+                                    </a>
 
-        {{-- Extra actions for non-team users --}}
-        @if (Auth::user()->role !== 'team')
-            <div class="dropdown">
-                <button class="btn btn-secondary btn-sm dropdown-toggle"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                     Actions
-                </button>
+                                    {{-- Extra actions for non-team users --}}
+                                    @if (Auth::user()->role !== 'team')
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                Actions
+                                            </button>
 
-                <ul class="dropdown-menu dropdown-menu-end">
+                                            <ul class="dropdown-menu dropdown-menu-end">
 
-                    <li>
-                        <a class="dropdown-item"
-                           href="{{ route('case-against-clients.index') }}?case_id={{ $case->id }}">
-                            Against Client
-                        </a>
-                    </li>
+                                                <li>
+                                                    <a class="dropdown-item"
+                                                        href="{{ route('case-against-clients.index') }}?case_id={{ $case->id }}">
+                                                        Against Client
+                                                    </a>
+                                                </li>
 
-                    <li>
-                        <a class="dropdown-item"
-                           href="{{ route('cases.show', $case) }}">
-                            View Case
-                        </a>
-                    </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="{{ route('cases.show', $case) }}">
+                                                        View Case
+                                                    </a>
+                                                </li>
 
-                    <li>
-                        <a class="dropdown-item"
-                           href="{{ route('cases.edit', $case) }}">
-                            Edit Case
-                        </a>
-                    </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="{{ route('cases.edit', $case) }}">
+                                                        Edit Case
+                                                    </a>
+                                                </li>
 
-                    <li>
-                        <a class="dropdown-item"
-                           href="{{ route('cases.files.create', $case) }}">
-                            Upload Files
-                        </a>
-                    </li>
+                                                <li>
+                                                    <a class="dropdown-item"
+                                                        href="{{ route('cases.files.create', $case) }}">
+                                                        Upload Files
+                                                    </a>
+                                                </li>
 
-                    @if (auth()->user()->role === 'admin')
-                        <li>
-                            <a class="dropdown-item"
-                               href="{{ route('cases.transactions.index', $case) }}">
-                                Payment
-                            </a>
-                        </li>
-                    @endif
+                                                @if (auth()->user()->role === 'admin')
+                                                    <li>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('cases.transactions.index', $case) }}">
+                                                            Payment
+                                                        </a>
+                                                    </li>
+                                                @endif
 
-                    <li>
-                        <a class="dropdown-item"
-                           href="{{ route('cases.printReport', $case->id) }}"
-                           target="_blank">
-                            Print Report
-                        </a>
-                    </li>
+                                                <li>
+                                                    <a class="dropdown-item"
+                                                        href="{{ route('cases.printReport', $case->id) }}"
+                                                        target="_blank">
+                                                        Print Report
+                                                    </a>
+                                                </li>
 
-                    <li><hr class="dropdown-divider"></li>
+                                                <li>
+                                                    <hr class="dropdown-divider">
+                                                </li>
 
-                    <li>
-                        <form action="{{ route('cases.destroy', $case) }}"
-                              method="POST"
-                              onsubmit="return confirm('Delete this case?')">
-                            @csrf
-                            @method('DELETE')
-                            <button class="dropdown-item text-danger" type="submit">
-                                Delete Case
-                            </button>
-                        </form>
-                    </li>
+                                                <li>
+                                                    <form action="{{ route('cases.destroy', $case) }}" method="POST"
+                                                        onsubmit="return confirm('Delete this case?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button class="dropdown-item text-danger" type="submit">
+                                                            Delete Case
+                                                        </button>
+                                                    </form>
+                                                </li>
 
-                </ul>
-            </div>
-        @endif
+                                            </ul>
+                                        </div>
+                                    @endif
 
-    </div>
-</td>
+                                </div>
+                            </td>
 
                         </tr>
                     @empty
