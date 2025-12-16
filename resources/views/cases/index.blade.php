@@ -218,12 +218,12 @@
                         <th>Case Number</th>
                         <th>Client</th>
                         <th>Title</th>
-                        <th>Desc</th>
+                        {{-- <th>Desc</th> --}}
                         <th>Status</th>
                         <th style="
                             width: 290px;
                         ">Hearing Date</th>
-                        <th>Procedure</th>
+                        <th>Proceeding</th>
                         <th>Judge</th>
                         <th>Nature</th>
                         <th>Assigned Users</th> {{-- New column --}}
@@ -237,7 +237,7 @@
                             <td>{{ $case->case_number ?? '' }}</td>
                             <td>{{ $case->client->name ?? '' }}</td>
                             <td>{{ $case->case_title }}</td>
-                            <td>{!! $case->description !!}</td>
+                            {{-- <td>{!! $case->description !!}</td> --}}
                             <td>{{ ucfirst($case->status) }}</td>
                             <td>
                                 @php
@@ -260,7 +260,7 @@
                                 @endphp
 
                                 @if ($nextHearing)
-                                    {{ $nextHearing->nature }}
+                                    {{ $nextHearing->judge_remarks }}
                                 @else
                                     <span class="text-muted">No upcoming hearing</span>
                                 @endif
