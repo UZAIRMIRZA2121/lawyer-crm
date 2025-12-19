@@ -194,9 +194,15 @@
                             <th>Case Title</th>
                             <th>Judge Name</th>
                             <th>My Remarks</th>
-                            <th>Previous Hearing Date <hr> Proceeding</th>
-                            <th>Current Hearing Date <hr> Proceeding</th>
-                            <th>Next Hearing Date <hr> Proceeding</th>
+                            <th>Previous Hearing Date
+                                <hr> Proceeding
+                            </th>
+                            <th>Current Hearing Date
+                                <hr> Proceeding
+                            </th>
+                            <th>Next Hearing Date
+                                <hr> Proceeding
+                            </th>
                             {{-- <th>Current Proceeding</th> --}}
                             {{-- <th>Next Proceeding</th> --}}
                             <th>Priority</th>
@@ -217,9 +223,21 @@
                                 $previousHearing = $caseHearings[$currentIndex - 1] ?? null;
                                 $nextHearing = $caseHearings[$currentIndex + 1] ?? null;
                             @endphp
+                            @php
+                                $talbiClasses = [
+                                    'Notice' => 'badge bg-primary',
+                                    'Warrant' => 'badge bg-danger',
+                                    'Newspaper' => 'badge bg-warning text-dark',
+                                    'AD/Registry' => 'badge bg-success',
+                                    '' => 'badge bg-secondary', // None or empty
+                                    null => 'badge bg-secondary', // Null fallback
+                                ];
+                            @endphp
+
+
 
                             <tr>
-                                <td>{{ $hearing->case->case_number ?? '' }}  </td>
+                                <td>{{ $hearing->case->case_number ?? '' }} </td>
                                 <td>{{ $hearing->case->case_title ?? '' }}
                                     {{ optional($hearing->case)->case_nature ? '(' . optional($hearing->case)->case_nature . ')' : '' }}
                                 </td>
@@ -232,12 +250,24 @@
                                         : '' }}
                                     <hr>
                                     {{ $previousHearing->judge_remarks ?? '' }}
+                                    @php
+                                        $talbi = $previousHearing->talbi ?? '';
+                                        $talbiClass = $talbiClasses[$talbi] ?? 'badge bg-secondary';
+                                    @endphp
+                                    <span class="{{ $talbiClass }}">{{ $talbi !== '' ? $talbi : '' }}</span>
+
                                 </td>
 
                                 <td>
                                     {{ $hearing->next_hearing ? \Carbon\Carbon::parse($hearing->next_hearing)->format('d-m-Y h:i A') : '' }}
                                     <hr>
                                     {{ $hearing->judge_remarks ?? '' }}
+                                    @php
+                                        $talbi = $hearing->talbi ?? '';
+                                        $talbiClass = $talbiClasses[$talbi] ?? 'badge bg-secondary';
+                                    @endphp
+                                    <span class="{{ $talbiClass }}">{{ $talbi !== '' ? $talbi : '' }}</span>
+
                                 </td>
 
                                 <td>
@@ -245,7 +275,14 @@
                                         ? \Carbon\Carbon::parse($nextHearing->next_hearing)->format('d-m-Y h:i A')
                                         : '' }}
                                     <hr>
+
                                     {{ $nextHearing->judge_remarks ?? '' }}
+                                    @php
+                                        $talbi = $nextHearing->talbi ?? '';
+                                        $talbiClass = $talbiClasses[$talbi] ?? 'badge bg-secondary';
+                                    @endphp
+                                    <span class="{{ $talbiClass }}">{{ $talbi !== '' ? $talbi : '' }}</span>
+
                                 </td>
 
                                 {{-- <td>{{ $hearing->judge_remarks ?? '' }}</td> --}}

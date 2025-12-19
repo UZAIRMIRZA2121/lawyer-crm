@@ -11,7 +11,7 @@
             <div class="row mb-3">
                 <div class="col-md-3">
                     <label for="judge_name" class="form-label">Judge Name <span class="text-danger">*</span></label>
-                    <input type="text" name="judge_name" id="judge_name" 
+                    <input type="text" name="judge_name" id="judge_name"
                         class="form-control @error('judge_name') is-invalid @enderror" value="{{ $case->judge_name }}"
                         required>
                     @error('judge_name')
@@ -33,7 +33,7 @@
                     @enderror
                 </div>
                 <!-- Status Radio Buttons -->
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="form-label d-block">Status <span class="text-danger">*</span></label>
 
                     <div class="form-check form-check-inline">
@@ -81,9 +81,46 @@
                     @enderror
                 </div>
 
+
+
             </div>
 
             <div class="row mb-3">
+                <!-- Talbi Radio Buttons (Optional with None option) -->
+                <div class="col-md-12 ">
+                    <label class="form-label d-block">
+                        Talbi </span>
+                    </label>
+
+                    @php
+                        $talbiOptions = ['Notice', 'Warrant', 'Newspaper', 'AD/Registry'];
+                        $selectedTalbi = old('talbi', $hearing->talbi ?? null);
+                    @endphp
+
+                    <!-- None option -->
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="talbi" id="talbi_none" value=""
+                            {{ is_null($selectedTalbi) || $selectedTalbi === '' ? 'checked' : '' }}>
+                        <label class="form-check-label" for="talbi_none">None</label>
+                    </div>
+
+                    <!-- Talbi ENUM options -->
+                    @foreach ($talbiOptions as $option)
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="talbi"
+                                id="talbi_{{ Str::slug($option) }}" value="{{ $option }}"
+                                {{ $selectedTalbi === $option ? 'checked' : '' }}>
+                            <label class="form-check-label" for="talbi_{{ Str::slug($option) }}">
+                                {{ $option }}
+                            </label>
+                        </div>
+                    @endforeach
+
+                    @error('talbi')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                    @enderror
+                </div>
+
                 <div class="col-md-6">
                     <label for="judge_remarks" class="form-label">Current Proceeding</label>
                     <textarea name="judge_remarks" id="judge_remarks" rows="3"

@@ -18,6 +18,7 @@ class Hearing extends Model
         'status',       // ✅ Add status before priority
         'priority',
         'nature',
+         'talbi', // ✅ added
     ];
 
     // Relation to case

@@ -76,6 +76,49 @@
         }
     </style>
 
+    <style>
+        .custom-dropdown {
+            position: relative;
+        }
+
+        .custom-dropdown-menu {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            min-width: 180px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            display: none;
+            z-index: 1000;
+            padding: 6px 0;
+        }
+
+        .custom-dropdown-menu .dropdown-item {
+            padding: 8px 14px;
+            display: block;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .custom-dropdown-menu .dropdown-item:hover {
+            background: #f5f5f5;
+        }
+
+        .custom-dropdown-menu .dropdown-divider {
+            height: 1px;
+            background: #e5e5e5;
+            margin: 6px 0;
+        }
+
+        .custom-dropdown.open .custom-dropdown-menu {
+            display: block;
+        }
+    </style>
+
+
 
     <div class="container py-4">
         <h1 class="mb-4">Cases List {{ $cases->count() }}</h1>
@@ -278,7 +321,7 @@
                             </td>
 
                             <td class="text-nowrap">
-                                <div class="d-flex align-items-center gap-2">
+                                <div class="d-flex align-items-center gap-2 position-relative">
 
                                     {{-- Always visible --}}
                                     <a href="{{ route('hearings.index', ['case_id' => $case->id]) }}"
@@ -288,79 +331,61 @@
 
                                     {{-- Extra actions for non-team users --}}
                                     @if (Auth::user()->role !== 'team')
-                                        <div class="dropdown">
-                                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
-                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                        <div class="custom-dropdown">
+
+                                            <button type="button" class="btn btn-secondary btn-sm custom-dropdown-toggle"
+                                                onclick="toggleDropdown(this)">
                                                 Actions
                                             </button>
 
-                                            <ul class="dropdown-menu dropdown-menu-end">
+                                            <div class="custom-dropdown-menu">
 
-                                                <li>
-                                                    <a class="dropdown-item"
-                                                        href="{{ route('case-against-clients.index') }}?case_id={{ $case->id }}">
-                                                        Against Client
-                                                    </a>
-                                                </li>
+                                                <a class="dropdown-item"
+                                                    href="{{ route('case-against-clients.index') }}?case_id={{ $case->id }}">
+                                                    Against Client
+                                                </a>
 
-                                                <li>
-                                                    <a class="dropdown-item" href="{{ route('cases.show', $case) }}">
-                                                        View Case
-                                                    </a>
-                                                </li>
+                                                <a class="dropdown-item" href="{{ route('cases.show', $case) }}">
+                                                    View Case
+                                                </a>
 
-                                                <li>
-                                                    <a class="dropdown-item" href="{{ route('cases.edit', $case) }}">
-                                                        Edit Case
-                                                    </a>
-                                                </li>
+                                                <a class="dropdown-item" href="{{ route('cases.edit', $case) }}">
+                                                    Edit Case
+                                                </a>
 
-                                                <li>
-                                                    <a class="dropdown-item"
-                                                        href="{{ route('cases.files.create', $case) }}">
-                                                        Upload Files
-                                                    </a>
-                                                </li>
+                                                <a class="dropdown-item" href="{{ route('cases.files.create', $case) }}">
+                                                    Upload Files
+                                                </a>
 
                                                 @if (auth()->user()->role === 'admin')
-                                                    <li>
-                                                        <a class="dropdown-item"
-                                                            href="{{ route('cases.transactions.index', $case) }}">
-                                                            Payment
-                                                        </a>
-                                                    </li>
+                                                    <a class="dropdown-item"
+                                                        href="{{ route('cases.transactions.index', $case) }}">
+                                                        Payment
+                                                    </a>
                                                 @endif
 
-                                                <li>
-                                                    <a class="dropdown-item"
-                                                        href="{{ route('cases.printReport', $case->id) }}"
-                                                        target="_blank">
-                                                        Print Report
-                                                    </a>
-                                                </li>
+                                                <a class="dropdown-item" href="{{ route('cases.printReport', $case->id) }}"
+                                                    target="_blank">
+                                                    Print Report
+                                                </a>
 
-                                                <li>
-                                                    <hr class="dropdown-divider">
-                                                </li>
+                                                <div class="dropdown-divider"></div>
 
-                                                <li>
-                                                    <form action="{{ route('cases.destroy', $case) }}" method="POST"
-                                                        onsubmit="return confirm('Delete this case?')">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button class="dropdown-item text-danger" type="submit">
-                                                            Delete Case
-                                                        </button>
-                                                    </form>
-                                                </li>
+                                                <form action="{{ route('cases.destroy', $case) }}" method="POST"
+                                                    onsubmit="return confirm('Delete this case?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="dropdown-item text-danger" type="submit">
+                                                        Delete Case
+                                                    </button>
+                                                </form>
 
-                                            </ul>
+                                            </div>
                                         </div>
                                     @endif
 
                                 </div>
                             </td>
-
                         </tr>
                     @empty
                         <tr>
@@ -381,6 +406,28 @@
         }
     </script>
 
+    <script>
+        function toggleDropdown(button) {
+            // Close all other dropdowns
+            document.querySelectorAll('.custom-dropdown').forEach(dropdown => {
+                if (dropdown !== button.closest('.custom-dropdown')) {
+                    dropdown.classList.remove('open');
+                }
+            });
+
+            // Toggle current
+            button.closest('.custom-dropdown').classList.toggle('open');
+        }
+
+        // Close on outside click
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.custom-dropdown')) {
+                document.querySelectorAll('.custom-dropdown').forEach(dropdown => {
+                    dropdown.classList.remove('open');
+                });
+            }
+        });
+    </script>
 
 
 @endsection
