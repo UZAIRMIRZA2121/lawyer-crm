@@ -179,6 +179,31 @@
                     @endforeach
                 </div>
             </div>
+            <!-- Talbi Filter -->
+            <div class="col-md-4">
+                <label class="form-label">Talbi</label>
+                <div class="d-flex flex-wrap gap-1">
+                    @php
+                        $talbis = [
+                            'notice' => 'Notice',
+                            'warrant' => 'Warrant',
+                            'newspaper' => 'Newspaper',
+                            'ad_registry' => 'AD/Registry',
+                        ];
+                    @endphp
+                    <a href="{{ route('hearings.index', array_merge(request()->except(['page', 'talbi']), ['talbi' => null])) }}"
+                        class="btn btn-sm {{ request('talbi') === null ? 'btn-primary' : 'btn-outline-primary' }}">
+                        All
+                    </a>
+                    @foreach ($talbis as $key => $label)
+                        <a href="{{ route('hearings.index', array_merge(request()->except('page'), ['talbi' => $key])) }}"
+                            class="btn btn-sm {{ request('talbi') === $key ? 'btn-primary' : 'btn-outline-primary' }}">
+                            {{ $label }}
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+
 
 
         </div>

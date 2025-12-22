@@ -14,6 +14,7 @@ class HearingController extends Controller
         $caseId = $request->query('case_id');
         $priority = $request->query('priority');
         $status = $request->query('status');
+        $talbi = $request->query('talbi');
         $search = $request->query('search');
         $startDate = $request->query('start_date');
         $endDate = $request->query('end_date');
@@ -37,6 +38,11 @@ class HearingController extends Controller
         // === Status filter
         if ($status) {
             $query->where('status', $status);
+        }
+
+        // === Talbi filter
+        if ($talbi) {
+            $query->where('talbi', $talbi);
         }
 
         // === Search filter (case + hearing fields)
