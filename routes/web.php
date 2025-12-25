@@ -15,8 +15,13 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UrgentController;
 
-// Home (public landing page)
+
 Route::get('/', function () {
+    // If user is logged in, redirect to dashboard
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+
     return view('home'); // Create resources/views/home.blade.php if you want a homepage
 })->name('home');
 Route::get('/services', function () {
@@ -37,8 +42,9 @@ Route::get('/contact', function () {
 Auth::routes();
 
 
+
 // Protected routes (only authenticated users can access)
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'check.status'])->group(function () {
     Route::get('/profile', [UserController::class, 'show'])->name('profile.show');
     Route::post('/profile', [UserController::class, 'profileupdate'])->name('profile.update');
     Route::resource('users', UserController::class);

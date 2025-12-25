@@ -13,7 +13,8 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::where('role', 'team')->get();
+        $roles = ['sub-admin', 'clerk', 'team'];
+        $users = User::whereIn('role', $roles)->get();
         return view('users.index', compact('users'));
     }
 
@@ -29,7 +30,13 @@ class UserController extends Controller
             'name' => 'required|string',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6',
-            'role' => 'nullable|string',
+
+            // role validation
+            'role' => 'nullable|in:sub-admin,clerk,team',
+
+            // status validation
+            'status' => 'nullable|in:0,1',
+
             'qualification' => 'nullable|string',
             'contact' => 'nullable|string',
             'facebook' => 'nullable|url',
@@ -40,32 +47,35 @@ class UserController extends Controller
             'profile_img' => 'nullable|image|max:2048',
         ]);
 
-        $data = $request->except(['profile_img', 'password']);
+        $data = $request->except(['profile_img']);
 
         // Hash password
         $data['password'] = Hash::make($request->password);
 
-        // Set default role if not provided
-        $data['role'] = 'team';
+        // Default role
+        $data['role'] = $request->role ?? 'team';
+
+        // Default status (Active)
+        $data['status'] = $request->has('status')
+            ? (int) $request->status
+            : 1;
 
         // Handle image upload
         if ($request->hasFile('profile_img')) {
-            $data['profile_img'] = $request->file('profile_img')->store('profile_imgs', 'public');
+            $data['profile_img'] = $request->file('profile_img')
+                ->store('profile_imgs', 'public');
         }
 
         User::create($data);
-
-        return redirect()->route('users.index')->with('success', 'User created successfully.');
+    
+        return redirect()
+            ->route('users.index')
+            ->with('success', 'User created successfully.');
     }
-
-
     public function edit(User $user)
     {
         return view('users.edit', compact('user'));
     }
-
-
-
     public function update(Request $request, User $user)
     {
         try {
@@ -74,15 +84,19 @@ class UserController extends Controller
                 'name' => 'nullable|string',
                 'email' => 'nullable|email|unique:users,email,' . $user->id,
                 'password' => 'nullable|string|min:6',
-                'role' => 'nullable|string',
+                // role validation (important)
+                'role' => 'nullable|in:sub-admin,clerk,team',
+
                 'qualification' => 'nullable|string',
                 'contact' => 'nullable|string',
                 'facebook' => 'nullable|url',
                 'twitter' => 'nullable|url',
                 'linkedin' => 'nullable|url',
                 'profile_img' => 'nullable|image|max:2048',
-                  'position' => 'nullable|string',
-            'position_title' => 'nullable|string',
+                'position' => 'nullable|string',
+                'position_title' => 'nullable|string',
+                // status validation
+                'status' => 'nullable|in:0,1',
             ]);
 
             $data = $request->except(['profile_img', 'password']);

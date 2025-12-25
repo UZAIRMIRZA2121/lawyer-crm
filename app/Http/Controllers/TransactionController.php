@@ -155,7 +155,7 @@ class TransactionController extends Controller
 
     public function remaining_amount(Request $request)
     {
-        if(auth()->user()->role === 'team') {
+        if(auth()->user()->role !== 'admin') {
             return redirect()->back()->with('error', 'You do not have access to this page.');
         }
         $query = CaseModel::with(['client', 'transactions']);

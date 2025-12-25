@@ -29,11 +29,39 @@
                         <small>Leave blank to keep current password</small>
                     @endif
                 </div>
-                <div class="mb-3 col-md-6">
-                    <label>Role</label>
-                    <input type="text" name="role" class="form-control" value="{{ old('role', $user->role ?? '') }}"
-                        readonly>
+                <div class="mb-3 col-md-3">
+                    <label>User Role</label>
+                    <select name="role" class="form-control">
+                        <option value="">Select Role</option>
+
+                        <option value="sub-admin" {{ old('role', $user->role ?? '') == 'sub-admin' ? 'selected' : '' }}>
+                            Sub Admin
+                        </option>
+
+                        <option value="clerk" {{ old('role', $user->role ?? '') == 'clerk' ? 'selected' : '' }}>
+                            Clerk
+                        </option>
+
+                        <option value="team" {{ old('role', $user->position_title ?? '') == 'team' ? 'selected' : '' }}>
+                            Team
+                        </option>
+                    </select>
                 </div>
+                <div class="mb-3 col-md-2">
+                    
+                    <label>User Status</label>
+                    <select name="status" class="form-control">
+                      
+                        <option value="1" {{$user->status  == 1 ? 'selected' : '' }}>
+                            Active
+                        </option>
+
+                        <option value="0" {{  $user->status   == 0 ? 'selected' : '' }}>
+                            Inactive
+                        </option>
+                    </select>
+                </div>
+
             </div>
 
             <div class="row">

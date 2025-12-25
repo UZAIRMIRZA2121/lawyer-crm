@@ -37,19 +37,53 @@
             </div>
 
             <div class="row">
-                <div class="mb-3 col-md-4">
+                <div class="mb-3 col-md-2">
+                    <label>User Role</label>
+                    <select name="role" class="form-control">
+                        <option value="">Select Role</option>
+
+                        <option value="sub-admin" {{ old('role', $user->role ?? '') == 'sub-admin' ? 'selected' : '' }}>
+                            Sub Admin
+                        </option>
+
+                        <option value="clerk" {{ old('role', $user->role ?? '') == 'clerk' ? 'selected' : '' }}>
+                            Clerk
+                        </option>
+
+                        <option value="team" {{ old('role', $user->position_title ?? '') == 'team' ? 'selected' : '' }}>
+                            Team
+                        </option>
+                    </select>
+                </div>
+                <div class="mb-3 col-md-2">
+                    <label>User Status</label>
+                    <select name="status" class="form-control">
+                        <option value="">Select Status</option>
+
+                        <option value="1" {{ old('status', $user->status ?? '') == 1 ? 'selected' : 'selected' }}>
+                            Active
+                        </option>
+
+                        <option value="0" {{ old('status', $user->status ?? '') === 0 ? 'selected' : '' }}>
+                            Inactive
+                        </option>
+                    </select>
+                </div>
+
+
+                <div class="mb-3 col-md-2">
                     <label>Degree Title</label>
                     <input type="text" name="position_title" class="form-control"
                         value="{{ old('position_title', $user->position_title ?? '') }}">
                 </div>
 
 
-                <div class="mb-3 col-md-4">
+                <div class="mb-3 col-md-3">
                     <label>Contact</label>
                     <input type="text" name="contact" class="form-control"
                         value="{{ old('contact', $user->contact ?? '') }}">
                 </div>
-                <div class="mb-3 col-md-4">
+                <div class="mb-3 col-md-3">
                     <label>Profile Image</label>
                     <input type="file" name="profile_img" class="form-control">
                     @if (isset($user) && $user->profile_img)

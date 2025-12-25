@@ -16,6 +16,8 @@ class RedirectIfNotAuthenticated
      */
     public function handle(Request $request, Closure $next)
     {
+
+       
         if (!Auth::check()) {
             // Redirect to home if not authenticated
             return redirect()->route('home');

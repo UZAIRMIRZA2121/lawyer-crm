@@ -176,7 +176,6 @@
                 <hr>
 
                 <div class="row g-3 align-items-center">
-
                     <!-- Priority Filter -->
                     <div class="col-12 col-md-4">
                         <label class="form-label">Priority</label>

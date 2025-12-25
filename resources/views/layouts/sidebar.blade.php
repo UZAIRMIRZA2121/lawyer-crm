@@ -37,41 +37,52 @@
         // Define menu items based on role/user
         $sidebarItems = [];
 
-        if(Auth::user()->role == 'admin') {
+        if (Auth::user()->role == 'admin') {
             $sidebarItems = [
-                ['route'=>'dashboard','label'=>'Dashboard'],
-                ['route'=>'users.index','label'=>'Team'],
-                ['route'=>'clients.index','label'=>'Clients'],
-                ['route'=>'case-against-clients.index','label'=>'Against Clients'],
-                ['route'=>'urgent.index','label'=>'Urgent'],
-                ['route'=>'draft.index','label'=>'Draft'],
-                ['route'=>'tasks.index','label'=>'Tasks'],
-                ['route'=>'remaining.amount','label'=>'Remaining Amount'],
-                ['route'=>'profile.show','label'=>'My Profile'],
-                ['route'=>'cases.index','label'=>'Cases'],
-                ['route'=>'hearings.index','label'=>'Hearings'],
-                ['route'=>'notices.index','label'=>'Notices'],
+                ['route' => 'dashboard', 'label' => 'Dashboard'],
+                ['route' => 'users.index', 'label' => 'Team'],
+                ['route' => 'clients.index', 'label' => 'Clients'],
+                ['route' => 'case-against-clients.index', 'label' => 'Against Clients'],
+                ['route' => 'urgent.index', 'label' => 'Urgent'],
+                ['route' => 'draft.index', 'label' => 'Draft'],
+                ['route' => 'tasks.index', 'label' => 'Tasks'],
+                ['route' => 'remaining.amount', 'label' => 'Remaining Amount'],
+                ['route' => 'profile.show', 'label' => 'My Profile'],
+                ['route' => 'cases.index', 'label' => 'Cases'],
+                ['route' => 'hearings.index', 'label' => 'Hearings'],
+                ['route' => 'notices.index', 'label' => 'Notices'],
             ];
-        } elseif(Auth::id() == 8) {
+        } elseif (Auth::user()->role === 'sub-admin') {
             $sidebarItems = [
-                ['route'=>'profile.show','label'=>'My Profile'],
-                // ['route'=>'clients.index','label'=>'Clients'],
-                 ['route'=>'cases.index','label'=>'Cases'],
+                ['route' => 'dashboard', 'label' => 'Dashboard'],
+                ['route' => 'users.index', 'label' => 'Team'],
+                ['route' => 'clients.index', 'label' => 'Clients'],
+                ['route' => 'case-against-clients.index', 'label' => 'Against Clients'],
+                ['route' => 'urgent.index', 'label' => 'Urgent'],
+                ['route' => 'draft.index', 'label' => 'Draft'],
+                ['route' => 'tasks.index', 'label' => 'Tasks'],
+                // ['route' => 'remaining.amount', 'label' => 'Remaining Amount'],
+                ['route' => 'profile.show', 'label' => 'My Profile'],
+                ['route' => 'cases.index', 'label' => 'Cases'],
+                ['route' => 'hearings.index', 'label' => 'Hearings'],
+                ['route' => 'notices.index', 'label' => 'Notices'],
             ];
-        } elseif(Auth::id() == 9) {
+        } elseif (Auth::user()->role === 'clerk') {
             $sidebarItems = [
-                ['route'=>'profile.show','label'=>'My Profile'],
-                  ['route'=>'cases.index','label'=>'Cases'],
-                ['route'=>'hearings.index','label'=>'Hearings'],
+                ['route' => 'profile.show', 'label' => 'My Profile'],
+                ['route' => 'tasks.index', 'label' => 'Tasks'],
+                ['route' => 'cases.index', 'label' => 'Cases'],
+                ['route' => 'hearings.index', 'label' => 'Hearings'],
+                ['route' => 'notices.index', 'label' => 'Notices'],
             ];
         }
     @endphp
 
     <!-- Sidebar for md+ screens -->
     <div class="d-none d-md-block col-md-2 sidebar bg-white">
-        @foreach($sidebarItems as $item)
-            <a href="{{ route($item['route']) }}" 
-               class="sidebar-link {{ request()->routeIs(str_replace('.index','.*',$item['route'])) ? 'active' : '' }}">
+        @foreach ($sidebarItems as $item)
+            <a href="{{ route($item['route']) }}"
+                class="sidebar-link {{ request()->routeIs(str_replace('.index', '.*', $item['route'])) ? 'active' : '' }}">
                 {{ $item['label'] }}
             </a>
         @endforeach
@@ -93,9 +104,9 @@
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
         </div>
         <div class="offcanvas-body">
-            @foreach($sidebarItems as $item)
-                <a href="{{ route($item['route']) }}" 
-                   class="sidebar-link {{ request()->routeIs(str_replace('.index','.*',$item['route'])) ? 'active' : '' }}">
+            @foreach ($sidebarItems as $item)
+                <a href="{{ route($item['route']) }}"
+                    class="sidebar-link {{ request()->routeIs(str_replace('.index', '.*', $item['route'])) ? 'active' : '' }}">
                     {{ $item['label'] }}
                 </a>
             @endforeach
