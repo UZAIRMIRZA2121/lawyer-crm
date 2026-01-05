@@ -70,6 +70,15 @@
             form {
                 display: none !important;
             }
+              /* Remove badge styling but keep text */
+            .badge {
+                background: none !important;
+                color: #000 !important;
+                padding: 0 !important;
+                border-radius: 0 !important;
+                font-size: 14px !important;
+                font-weight: normal !important;
+            }
         }
     </style>
 

@@ -18,16 +18,27 @@
                 top: 0;
                 width: 100%;
             }
+
             table {
                 font-size: 16px;
                 font-weight: 600;
             }
+
             table,
             th,
             td {
                 border: 1px solid #000 !important;
             }
 
+            /* Remove badge styling but keep text */
+            .badge {
+                background: none !important;
+                color: #000 !important;
+                padding: 0 !important;
+                border-radius: 0 !important;
+                font-size: 14px !important;
+                font-weight: normal !important;
+            }
         }
     </style>
     <div class="container">
@@ -37,13 +48,13 @@
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
-     <!-- Print Button -->
-            <div class="col-md-4">
-        <a href="{{ route('notices.create') }}" class="btn btn-primary mb-3">Add Notice</a>
+        <!-- Print Button -->
+        <div class="col-md-4">
+            <a href="{{ route('notices.create') }}" class="btn btn-primary mb-3">Add Notice</a>
 
-                <button type="button" class="btn btn-primary mb-3 " onclick="printTable()">🖨️ Print
-                    Table</button>
-            </div>
+            <button type="button" class="btn btn-primary mb-3 " onclick="printTable()">🖨️ Print
+                Table</button>
+        </div>
         <!-- Filters -->
         <div class="row mb-3">
 
@@ -84,7 +95,7 @@
                     @endforeach
                 </div>
             </div>
-       
+
 
         </div>
 

@@ -4,9 +4,14 @@
     <style>
         /* Hide everything when printing */
         @media print {
-            body * {
-                visibility: hidden !important;
-            }
+             body {
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        color: #000;
+        background: #fff !important;
+          visibility: hidden !important;
+    }
+
 
             /* Only show the table area */
             .print-area,
@@ -27,6 +32,24 @@
             table tr td:last-child {
                 display: none !important;
             }
+               table, th, td {
+        border: 1px solid #000 !important;   /* Dark border */
+    }
+
+    th, td {
+        padding: 8px !important;
+        text-align: left !important;
+    }
+
+            /* Remove badge styling but keep text */
+            .badge {
+                background: none !important;
+                color: #000 !important;
+                padding: 0 !important;
+                border-radius: 0 !important;
+                font-size: 14px !important;
+                font-weight: normal !important;
+            }
         }
     </style>
 
@@ -46,7 +69,7 @@
                 <div class="col-md-2 d-grid">
                     <button type="submit" class="btn btn-primary">Search</button>
                 </div>
-                  <div class="col-md-2 d-grid">
+                <div class="col-md-2 d-grid">
                     <button class="btn btn-primary" onclick="window.print()">Print</button>
                 </div>
 

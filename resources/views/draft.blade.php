@@ -234,7 +234,7 @@
                                 <td>
                                     <button class="btn btn-sm btn-info view-task-btn"
                                         data-task="{{ htmlspecialchars($task->task) }}"
-                                        data-user="{{ $task->user->name }}"
+                                        data-user="{{ $task->user?->name }}"
                                         data-priority="{{ ucfirst($task->priority) }}"
                                         data-date="{{ $task->submit_date }}"
                                         data-status="{{ ucfirst($task->status) }}">

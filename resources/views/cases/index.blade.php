@@ -72,7 +72,14 @@
             h1 {
                 margin-bottom: 10px;
             }
-
+            .badge {
+                background: none !important;
+                color: #000 !important;
+                padding: 0 !important;
+                border-radius: 0 !important;
+                font-size: 14px !important;
+                font-weight: normal !important;
+            }
         }
     </style>
 
@@ -116,6 +123,7 @@
         .custom-dropdown.open .custom-dropdown-menu {
             display: block;
         }
+        
     </style>
 
 
