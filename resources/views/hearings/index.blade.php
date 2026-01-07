@@ -2,85 +2,83 @@
 
 @section('content')
 
-    <!-- ✅ Print Styles -->
-    <style>
-        @media print {
-            @page {
-                size: A4 portrait;
-                /* You can change to portrait if preferred */
-                margin: 1cm;
-            }
+   <!-- ✅ Print Styles (Vertical / Portrait with Left & Right Margins) -->
+<style>
+    @media print {
 
-            body * {
-                visibility: hidden;
-            }
-
-            .print-area,
-            .print-area * {
-                visibility: visible;
-            }
-
-            .print-area {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                overflow: visible !important;
-            }
-
-            /* Hide Actions column completely */
-            th:last-child,
-            td:last-child,
-            .no-print {
-                display: none !important;
-            }
-
-            /* Clean print-friendly table */
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                font-size: 16px;
-                font-weight: 600;
-            }
-
-            th,
-            td {
-                border: 1px solid #000;
-                padding: 4px;
-            }
-
-            thead {
-                display: table-header-group;
-            }
-
-            tr {
-                page-break-inside: avoid;
-            }
-
-            table,
-            th,
-            td {
-                border: 1px solid #000 !important;
-            }
-
-
-            /* Hide buttons and UI */
-            button,
-            .btn,
-            form {
-                display: none !important;
-            }
-              /* Remove badge styling but keep text */
-            .badge {
-                background: none !important;
-                color: #000 !important;
-                padding: 0 !important;
-                border-radius: 0 !important;
-                font-size: 14px !important;
-                font-weight: normal !important;
-            }
+        @page {
+            size: A4 portrait;     /* Vertical page */
+            margin: 1.5cm 2cm;     /* top-bottom | left-right */
         }
-    </style>
+
+        body * {
+            visibility: hidden;
+        }
+
+        .print-area,
+        .print-area * {
+            visibility: visible;
+        }
+
+        .print-area {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            padding: 0 10px;       /* Extra inner spacing */
+            box-sizing: border-box;
+            overflow: visible !important;
+        }
+
+        /* Hide Actions column */
+        th:last-child,
+        td:last-child,
+        .no-print {
+            display: none !important;
+        }
+
+        /* Print-friendly table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        th,
+        td {
+            border: 1px solid #000 !important;
+            padding: 6px;
+            text-align: left;
+        }
+
+        thead {
+            display: table-header-group;
+        }
+
+        tr {
+            page-break-inside: avoid;
+        }
+
+        /* Hide buttons and UI */
+        button,
+        .btn,
+        form {
+            display: none !important;
+        }
+
+        /* Keep badge text only */
+        .badge {
+            background: none !important;
+            color: #000 !important;
+            padding: 0 !important;
+            border-radius: 0 !important;
+            font-size: 14px !important;
+            font-weight: normal !important;
+        }
+    }
+</style>
+
 
     <div class="container">
         @if ($case)

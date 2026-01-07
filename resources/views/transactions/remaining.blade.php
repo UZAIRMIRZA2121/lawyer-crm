@@ -10,6 +10,7 @@
         color: #000;
         background: #fff !important;
           visibility: hidden !important;
+       
     }
 
 
@@ -25,6 +26,7 @@
                 top: 0;
                 left: 0;
                 width: 100%;
+                
             }
 
             /* Hide last column (Action/Payment) */
@@ -136,12 +138,12 @@
 
                             <tr class="text-center">
                                 <td>
-                                    <a href="{{ route('clients.show', $case->client_id) }}" class="text-decoration-none">
+                                    <a href="{{ route('clients.show', $case->client_id) }}" class="text-decoration-none text-dark">
                                         {{ $case->case_number ?? '' }}
                                     </a>
                                 </td>
                                 <td> <a href="{{ route('cases.show', $case->id) }}"
-                                        class="text-decoration-none">{{ $case->case_title }}</a></td>
+                                        class="text-decoration-none text-dark">{{ $case->case_title }}</a></td>
                                 <td>Rs {{ number_format($case->amount, 0) }}</td>
                                 <td>Rs {{ number_format($paid, 0) }}</td>
                                 <td>Rs {{ number_format($case->amount - $paid, 0) }}</td>

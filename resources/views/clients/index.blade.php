@@ -22,6 +22,7 @@
                 top: 0;
                 left: 0;
                 width: 100% !important;
+                    padding: 0 10px;       /* Extra inner spacing */
             }
 
             /* Remove scroll */

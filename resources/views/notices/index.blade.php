@@ -39,6 +39,22 @@
                 font-size: 14px !important;
                 font-weight: normal !important;
             }
+
+            
+        .print-area,
+        .print-area * {
+            visibility: visible;
+        }
+
+        .print-area {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            padding: 0 10px;       /* Extra inner spacing */
+            box-sizing: border-box;
+            overflow: visible !important;
+        }
         }
     </style>
     <div class="container">
@@ -99,7 +115,7 @@
 
         </div>
 
-        <div class="table-responsive" style="max-height: 70vh; overflow-y: auto;">
+        <div class="table-responsive print-area" style="max-height: 70vh; overflow-y: auto;">
             <table class="table table-bordered table-striped align-middle table-fixed-header">
                 <thead class="table-light">
                     <thead>

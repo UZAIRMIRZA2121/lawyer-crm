@@ -13,19 +13,21 @@
             }
 
             /* Show only print area */
-            .print-area,
-            .print-area * {
-                visibility: visible !important;
-            }
+           
+        .print-area,
+        .print-area * {
+            visibility: visible;
+        }
 
-            /* Place at top left */
-            .print-area {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-            }
-
+        .print-area {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            padding: 0 10px;       /* Extra inner spacing */
+            box-sizing: border-box;
+            overflow: visible !important;
+        }
             /* Hide Actions column (last column) */
             table tr th:last-child,
             table tr td:last-child {

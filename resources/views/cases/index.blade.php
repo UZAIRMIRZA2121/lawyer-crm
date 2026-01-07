@@ -12,19 +12,21 @@
                 visibility: hidden;
             }
 
-            .print-area,
-            .print-area * {
-                visibility: visible;
-            }
+          
+        .print-area,
+        .print-area * {
+            visibility: visible;
+        }
 
-            .print-area {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                overflow: visible !important;
-            }
-
+        .print-area {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            padding: 0 10px;       /* Extra inner spacing */
+            box-sizing: border-box;
+            overflow: visible !important;
+        }
             /* Hide Actions column completely */
             th:nth-last-child(1),
             td:nth-last-child(1) {
@@ -262,7 +264,7 @@
         </div>
         <hr>
         <div class="table-responsive print-area">
-            <table class="table table-bordered table-striped align-middle table-fixed-header">
+            <table class="table table-bordered table-striped align-middle table-fixed-header ">
                 <thead class="table-light">
                     <tr>
                         <th>Case Number</th>
@@ -270,9 +272,7 @@
                         <th>Title</th>
                         {{-- <th>Desc</th> --}}
                         <th>Status</th>
-                        <th style="
-                            width: 290px;
-                        ">Hearing Date</th>
+                        <th>Hearing Date</th>
                         <th>Proceeding</th>
                         <th>Judge</th>
                         <th>Nature</th>
@@ -299,7 +299,7 @@
                                 @if ($firstHearing)
                                     {{ \Carbon\Carbon::parse($firstHearing->next_hearing)->format('d M Y, h:i A') }}
                                 @else
-                                    <span class="text-muted">No upcoming hearing</span>
+                                    {{-- <span class="text-muted">No upcoming hearing</span> --}}
                                 @endif
 
                             </td>
@@ -312,18 +312,17 @@
                                 @if ($nextHearing)
                                     {{ $nextHearing->judge_remarks }}
                                 @else
-                                    <span class="text-muted">No upcoming hearing</span>
+                                    {{-- <span class="text-muted">No upcoming hearing</span> --}}
                                 @endif
                             </td>
-                            <td>{{ $case->judge_name ?? 'N/A' }}</td>
-                            <td>{{ $case->case_nature ?? 'N/A' }}</td>
+                            <td>{{ $case->judge_name ?? '' }}</td>
+                            <td>{{ $case->case_nature ?? '' }}</td>
                             <td>
                                 @if ($case->assignedUsers->count())
                                     @foreach ($case->assignedUsers as $user)
                                         <span class="badge bg-primary">{{ $user->name }}</span>
                                     @endforeach
-                                @else
-                                    <span class="text-muted">No assigned users</span>
+                            
                                 @endif
                             </td>
 
