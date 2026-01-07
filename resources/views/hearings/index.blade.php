@@ -6,7 +6,7 @@
     <style>
         @media print {
             @page {
-                size: A4 landscape;
+                size: A4 portrait;
                 /* You can change to portrait if preferred */
                 margin: 1cm;
             }
