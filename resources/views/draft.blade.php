@@ -145,7 +145,7 @@
                             <tr>
                                 <td>{{ $case->case_number }}</td>
                                 <td>{{ $case->client->name ?? 'N/A' }}</td>
-                                <td>{{ $case->case_title }}</td>
+                                <td>{{ $case->case_title }} ({{ $case->case_nature }})</td>
                                 <td>{{ ucfirst($case->status) }}</td>
                                 <td>
                                     @php
